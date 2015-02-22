@@ -14,7 +14,7 @@ public class Pokemon extends SugarRecord<Pokemon> {
 
 
     public Pokemon(int pkdx_id, String name){
-        String a =this.description;
+        //String a =this.description;
         this.pkdx_id = pkdx_id;
         this.name = name;
     }
