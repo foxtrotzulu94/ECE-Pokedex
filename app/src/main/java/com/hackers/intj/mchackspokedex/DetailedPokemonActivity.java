@@ -65,6 +65,12 @@ public class DetailedPokemonActivity extends Activity {
         placeholderTypes.setText(types);
 
 
+        //Set Stats
+        //Set types
+        TextView placeholderStats = (TextView) findViewById(R.id.stats);
+        String stats = String.format("STATS \nHP:%d \nATT:%d \nDEF:%d \nSP.ATT:%d \nSP.DEF:%d \nSPEED:%d",fullPokemon.getHp(),fullPokemon.getAttack(),fullPokemon.getDefense(), fullPokemon.getSp_att(),fullPokemon.getSp_def(),fullPokemon.getSpeed());
+           placeholderStats.setText(stats);
+
         //Test with ImageButton
         ImageView placeholderImage = (ImageView) findViewById(R.id.imageView);
         int id = this.getResources().getIdentifier("p"+String.valueOf(describePokemon), "mipmap", "com.hackers.intj.mchackspokedex");
