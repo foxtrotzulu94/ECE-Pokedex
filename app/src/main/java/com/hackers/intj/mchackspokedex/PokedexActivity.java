@@ -164,7 +164,10 @@ public class PokedexActivity extends ActionBarActivity {
 
     public void switchToDetail(View view){
         Intent intent = new Intent(this,DetailedPokemonActivity.class);
-        //view.get
+        //Avoid sending a Pokemon ID of Zero! We Don't want Missingno bothering us!
+        if(pokemonInView<1){
+            pokemonInView = 1;
+        }
         intent.putExtra("pkdxid", pokemonInView);
         startActivity(intent);
     }
