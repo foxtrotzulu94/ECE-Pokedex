@@ -29,7 +29,8 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="0.3"
                 android:src="@mipmap/prof_oak"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                android:onClick="switchToDetail"/>
 
             <LinearLayout
                 android:orientation="vertical"
