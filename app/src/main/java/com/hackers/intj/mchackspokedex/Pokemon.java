@@ -81,16 +81,16 @@ public class Pokemon  {
         description = C.getString(8);
 
         //TODO: To be fixed
-//        Type1 = new Type(C.getInt(31), database);
-//        Type2 = new Type(C.getInt(32), database);
+        Type1 = new Type(C.getInt(C.getColumnIndex("type1")), database);
+        Type2 = new Type(C.getInt(C.getColumnIndex("type2")), database);
 
-        //TODO: Populate Abilities in Memory (Requires class model)
+//        //TODO: Populate Abilities in Memory (Requires class model)
 //        for(int i = 0; i<3; i++){
 //
 //            if(C.getInt(i+1)==-1){
 //                break;
 //            }
-//            abilities[i] = new Ability(C.getInt(i));
+//            abilities[i] = new Ability(C.getInt(C.getColumnIndex("ability1")), database);
 //
 //        }
 

@@ -17,10 +17,12 @@
         </activity>
         <activity
             android:name=".PokedexActivity"
-            android:label="@string/pokedex_view" >
+            android:label="@string/pokedex_view"
+            android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.hackers.intj.mchackspokedex.MainActivity" />
+                android:value="com.hackers.intj.mchackspokedex.MainActivity"
+                />
 
         </activity>
         <activity

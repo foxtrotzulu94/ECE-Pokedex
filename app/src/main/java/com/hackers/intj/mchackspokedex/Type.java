@@ -11,11 +11,11 @@ public class Type {
             Cursor C = database.rawQuery("Select name from type where id=" + id, null);
             C.moveToFirst();
 
-            name = C.getString(6);
+            name = C.getString(C.getColumnIndex("name"));
             this.id = id;
         }else
         {
-            name =null;
+            name = null;
             this.id = -1;
         }
     }
