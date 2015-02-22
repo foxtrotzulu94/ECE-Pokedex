@@ -7,11 +7,17 @@ public class Type {
 
     public Type (int id, SQLiteDatabase database){
 
-        Cursor C = database.rawQuery("Select name from type where id="+id,null);
-        C.moveToFirst();
+        if(id!=-1) {
+            Cursor C = database.rawQuery("Select name from type where id=" + id, null);
+            C.moveToFirst();
 
-        name = C.getString(6);
-        this.id = id;
+            name = C.getString(6);
+            this.id = id;
+        }else
+        {
+            name =null;
+            this.id = -1;
+        }
     }
 
     String name;
