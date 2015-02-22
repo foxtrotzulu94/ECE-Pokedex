@@ -5,7 +5,8 @@
     <application
         android:allowBackup="true"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
+        <meta-data android:name="DATABASE" android:value="test2db.db"/>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
@@ -40,5 +41,8 @@
                 android:value="com.hackers.intj.mchackspokedex.MainActivity" />
         </activity>
     </application>
+
+
+
 
 </manifest>
