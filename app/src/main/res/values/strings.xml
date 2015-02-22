@@ -1,7 +1,12 @@
 <resources>
     <string name="app_name">McHacksPokedex</string>
+    <color name="default_background">#4752E0</color>
 
     <string name="hello_world">Hello world!</string>
+    <string name="work_in_progress">Hey This is a Work in progress screen!</string>
+    <string name="legal_disclaimer">This is has no permission from Nintendo Of America\n
+        Nor the permission of Game Freak.\n
+        That is all</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_pokedex">Pokedex</string>
     <string name="title_activity_detailed_pokemon">DetailedPokemon</string>
