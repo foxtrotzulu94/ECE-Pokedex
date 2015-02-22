@@ -80,8 +80,8 @@ public class Pokemon  {
         name = C.getString(24);
         description = C.getString(8);
 
-        Type1 = new Type(C.getInt(31), database);
-        Type2 = new Type(C.getInt(32), database);
+//        Type1 = new Type(C.getInt(31), database);
+//        Type2 = new Type(C.getInt(32), database);
 
         //TODO: Populate Abilities in Memory (Requires class model)
 //        for(int i = 0; i<3; i++){

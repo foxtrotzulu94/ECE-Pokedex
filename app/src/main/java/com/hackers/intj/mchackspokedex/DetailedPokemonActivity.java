@@ -3,12 +3,16 @@ package com.hackers.intj.mchackspokedex;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.ImageView;
+import android.graphics.drawable.*;
 
 /*
  * TODO: Fix the back button for this view. It crashes when using the ActionBar one :/
@@ -42,6 +46,25 @@ public class DetailedPokemonActivity extends Activity {
         temp+=("Selected Pokemon: "+fullPokemon.getName()+"\n");
         temp+=("Description: "+fullPokemon.getDescription()+"\n");
         placeholder.setText(temp);
+
+        //Set name
+        TextView placeholderName = (TextView) findViewById(R.id.name);
+        placeholderName.setText(fullPokemon.getName());
+
+        //Set types
+        TextView placeholderTypes = (TextView) findViewById(R.id.types);
+        placeholderTypes.setText("# "+String.valueOf(describePokemon));
+
+        //Test with ImageButton
+        ImageView placeholderImage = (ImageView) findViewById(R.id.imageView);
+        //android:src="@mipmap/p1"
+//        String r1 = "R.mipmap.p"+String.valueOf(describePokemon);
+//        Resources res = getResources();
+//        Drawable drawable = res.getDrawable();
+        int i = R.mipmap.p1;
+        int id = this.getResources().getIdentifier("p"+String.valueOf(describePokemon), "mipmap", "R");
+        int j = id;
+        placeholderImage.setImageResource(id);
 
     }
 

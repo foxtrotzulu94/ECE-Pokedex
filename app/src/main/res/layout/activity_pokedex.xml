@@ -28,7 +28,7 @@
                 android:id="@+id/pokemonSprite"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="0.3"
-                android:src="@mipmap/bulbatest"
+                android:src="@mipmap/p1"
                 android:scaleType="centerCrop" />
 
             <LinearLayout
