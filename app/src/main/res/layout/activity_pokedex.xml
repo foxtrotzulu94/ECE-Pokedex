@@ -51,7 +51,8 @@
                 android:layout_height="92dp"
                 android:text="Detail View"
                 android:id="@+id/detailButton"
-                android:gravity="center_horizontal|top" />
+                android:gravity="center_horizontal|top"
+                android:onClick="switchToDetail"/>
         </LinearLayout>
 
         <LinearLayout

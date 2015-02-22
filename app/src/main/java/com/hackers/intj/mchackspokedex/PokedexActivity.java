@@ -30,6 +30,7 @@ public class PokedexActivity extends ActionBarActivity {
     private static final String DB_NAME = "pokedex.db";
 
     //UI Elements in Activity
+    private int pokemonInView;
     private ImageButton pokemonSprite; //android:id="@+id/pokemonSprite"
     private TextView pokemonDescriber; //android:id="@+id/pokemonDescriber"
     private ListView pokemonList; //android:id="@+id/listView"
@@ -84,7 +85,8 @@ public class PokedexActivity extends ActionBarActivity {
                 String data=(String)parent.getItemAtPosition(position);
                 String ID = data.split("[. ]+")[0];
                 Toast.makeText(getBaseContext(),ID,Toast.LENGTH_LONG);
-                UpdateColumn(Integer.parseInt(ID));
+                pokemonInView = Integer.parseInt(ID);
+                UpdateColumn(pokemonInView);
             }
 
         });
@@ -156,9 +158,10 @@ public class PokedexActivity extends ActionBarActivity {
         //Call the Column Object and tell it to update all of this stuff, NOW
     }
 
-    public void switchToDetailedView(View view){
+    public void switchToDetail(View view){
         Intent intent = new Intent(this,DetailedPokemonActivity.class);
-        //intent.putExtra("BoxText",pokemons);
+        //view.get
+        intent.putExtra("pkdxid", pokemonInView);
         startActivity(intent);
     }
 
