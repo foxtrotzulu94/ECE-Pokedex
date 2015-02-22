@@ -3,4 +3,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_pokedex">Pokedex</string>
+    <string name="title_activity_detailed_pokemon">DetailedPokemon</string>
+    <string name="title_activity_wip">WIP</string>
 </resources>
