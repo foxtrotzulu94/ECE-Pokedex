@@ -13,11 +13,12 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+  </intent-filter>
         </activity>
         <activity
             android:name=".PokedexActivity"
             android:label="@string/pokedex_view"
+            android:windowSoftInputMode="stateHidden">
             android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -25,7 +26,7 @@
                 />
 
         </activity>
-        <activity
+            <activity
             android:name=".DetailedPokemonActivity"
             android:label="@string/pokedex_view_detailed" >
             <meta-data
@@ -47,4 +48,4 @@
 
 
 
-</manifest>
+ </manifest>

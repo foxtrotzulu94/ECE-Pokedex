@@ -3,9 +3,9 @@ package com.hackers.intj.mchackspokedex;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.io.FileOutputStream;
-import java.io.IOException;
+	import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+					import java.io.OutputStream;
 
 import android.content.Context;
 import android.database.SQLException;
@@ -58,12 +58,12 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         try {
             String path = DB_PATH + DB_NAME;
             checkDb = SQLiteDatabase.openDatabase(path, null,
-                    SQLiteDatabase.OPEN_READONLY);
+                SQLiteDatabase.OPEN_READONLY);
         } catch (SQLException e) {
             Log.e(this.getClass().toString(), "Error while checking db");
         }
 //Android doesn’t like resource leaks, everything should
-        // be closed
+			// be closed
         if (checkDb != null) {
             checkDb.close();
         }
@@ -76,7 +76,7 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
 //The stream source is located in the assets
         InputStream externalDbStream = context.getAssets().open(DB_NAME);
 
-//Path to the created empty database on your Android device
+	//Path to the created empty database on your Android device
         String outFileName = DB_PATH + DB_NAME;
 
 //Now create a stream for writing the database byte by byte
@@ -92,7 +92,6 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         localDbStream.close();
         externalDbStream.close();
     }
-
     public SQLiteDatabase openDataBase() throws SQLException {
         String path = DB_PATH + DB_NAME;
         if (database == null) {
@@ -108,7 +107,7 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         if (database != null) {
             database.close();
         }
-        super.close();
+    super.close();
     }
     @Override
     public void onCreate(SQLiteDatabase db) {}
