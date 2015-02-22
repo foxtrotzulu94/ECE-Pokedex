@@ -57,13 +57,7 @@ public class DetailedPokemonActivity extends Activity {
 
         //Test with ImageButton
         ImageView placeholderImage = (ImageView) findViewById(R.id.imageView);
-        //android:src="@mipmap/p1"
-//        String r1 = "R.mipmap.p"+String.valueOf(describePokemon);
-//        Resources res = getResources();
-//        Drawable drawable = res.getDrawable();
-        int i = R.mipmap.p1;
-        int id = this.getResources().getIdentifier("p"+String.valueOf(describePokemon), "mipmap", "R");
-        int j = id;
+        int id = this.getResources().getIdentifier("p"+String.valueOf(describePokemon), "mipmap", "com.hackers.intj.mchackspokedex");
         placeholderImage.setImageResource(id);
 
     }
