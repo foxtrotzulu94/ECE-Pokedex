@@ -55,10 +55,17 @@
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1">
+
+            <!-- Editext for Search -->
+            <EditText android:id="@+id/inputSearch"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="Search pokemon.."
+                android:inputType="textVisiblePassword"/>
 
             <ListView
                 android:layout_width="fill_parent"
