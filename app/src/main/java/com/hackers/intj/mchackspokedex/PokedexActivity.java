@@ -75,16 +75,16 @@ public class PokedexActivity extends ActionBarActivity {
                 //TODO: Just update our column
                 //Toast.makeText(getBaseContext(), "Some Stuff=" + id + " Pos=" + position, Toast.LENGTH_LONG).show();
             //Old Code that switched to the Detailed
-                Intent intent = new Intent(PokedexActivity.this, DetailedPokemonActivity.class);
-                String data=(String)parent.getItemAtPosition(position);
-                String ID = data.split("[. ]+")[0];
-                intent.putExtra("pkdxid", Integer.parseInt(ID));
-                startActivity(intent);
-            //End Old Code
+//                Intent intent = new Intent(PokedexActivity.this, DetailedPokemonActivity.class);
 //                String data=(String)parent.getItemAtPosition(position);
 //                String ID = data.split("[. ]+")[0];
-//                Toast.makeText(getBaseContext(),ID,Toast.LENGTH_LONG);
-//                UpdateColumn(Integer.parseInt(ID));
+//                intent.putExtra("pkdxid", Integer.parseInt(ID));
+//                startActivity(intent);
+            //End Old Code
+                String data=(String)parent.getItemAtPosition(position);
+                String ID = data.split("[. ]+")[0];
+                Toast.makeText(getBaseContext(),ID,Toast.LENGTH_LONG);
+                UpdateColumn(Integer.parseInt(ID));
             }
 
         });
@@ -140,7 +140,7 @@ public class PokedexActivity extends ActionBarActivity {
         Cursor current = database.rawQuery(String.format("SELECT %s FROM pokemon WHERE pkdx_id=%s", "name,description",String.valueOf(pkdx_id)), null);
         current.moveToFirst();
         String temp = new String();
-        temp+=String.format("%i. %s \n",
+        temp+=String.format("%d. %s \n",
                 pkdx_id,
                 current.getString(current.getColumnIndexOrThrow("name")));
         temp+=String.format("\n Description: %s",
