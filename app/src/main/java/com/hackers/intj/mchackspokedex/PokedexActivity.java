@@ -73,11 +73,18 @@ public class PokedexActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //TODO: Just update our column
-                Toast.makeText(getBaseContext(), "Some Stuff=" + id + " Pos=" + position, Toast.LENGTH_LONG).show();
+                //Toast.makeText(getBaseContext(), "Some Stuff=" + id + " Pos=" + position, Toast.LENGTH_LONG).show();
+            //Old Code that switched to the Detailed
                 Intent intent = new Intent(PokedexActivity.this, DetailedPokemonActivity.class);
-                //HACK: Hardcoded the "id+1" to be able to use directly as a Primary Key when querying DB
-                intent.putExtra("pkdxid", (int) id + 1);
+                String data=(String)parent.getItemAtPosition(position);
+                String ID = data.split("[. ]+")[0];
+                intent.putExtra("pkdxid", Integer.parseInt(ID));
                 startActivity(intent);
+            //End Old Code
+//                String data=(String)parent.getItemAtPosition(position);
+//                String ID = data.split("[. ]+")[0];
+//                Toast.makeText(getBaseContext(),ID,Toast.LENGTH_LONG);
+//                UpdateColumn(Integer.parseInt(ID));
             }
 
         });
@@ -96,7 +103,6 @@ public class PokedexActivity extends ActionBarActivity {
         a.addTextChangedListener( new TextWatcher() {
                             @Override
                             public void onTextChanged(CharSequence a, int b, int c, int d){
-                                Toast.makeText(getBaseContext(), "Some Stuff", Toast.LENGTH_LONG).show();
                                 PokedexActivity.this.arrayAdapter.getFilter().filter(a);
                             }
                             @Override
@@ -141,7 +147,11 @@ public class PokedexActivity extends ActionBarActivity {
                 current.getString(current.getColumnIndexOrThrow("description")));
 
         //pokemonDescriber.setText(current.getString(current.getColumnIndexOrThrow("description")));
+
+        //Change the TextField
         pokemonDescriber.setText(temp);
+
+        //Change the Picture
 
         //Call the Column Object and tell it to update all of this stuff, NOW
     }
