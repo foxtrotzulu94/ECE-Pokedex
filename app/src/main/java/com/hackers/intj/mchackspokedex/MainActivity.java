@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity {
 
-    private static final String DB_NAME = "pokemon.db";
+    private static final String DB_NAME = "pokedex.db";
     private SQLiteDatabase database;
     private ArrayList pokemons;
 
@@ -63,7 +63,7 @@ public class MainActivity extends ActionBarActivity {
 
         pokemons = new ArrayList<String>();
         Cursor nameCursor = database.query("pokemon", new String[] {"pkdx_id",
-                "name"}, null, null, null, null, "name");
+                "name"}, null, null, null, null, "pkdx_id");
 
         nameCursor.moveToFirst();
         if(!nameCursor.isAfterLast()) {

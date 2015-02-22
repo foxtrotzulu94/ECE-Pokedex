@@ -7,6 +7,11 @@ import com.orm.SugarRecord;
  */
 public class Type {
 
+    public Type (int id){
+
+
+    }
+
     String name;
     int id;
 

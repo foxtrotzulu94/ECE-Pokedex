@@ -7,4 +7,9 @@ public class Ability {
 
     String Name;
     String Description;
+
+   public Ability (int id) {
+
+
+   }
 }
