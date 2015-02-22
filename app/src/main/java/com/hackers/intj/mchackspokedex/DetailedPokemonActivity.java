@@ -51,9 +51,19 @@ public class DetailedPokemonActivity extends Activity {
         TextView placeholderName = (TextView) findViewById(R.id.name);
         placeholderName.setText(fullPokemon.getName());
 
+        //Set number
+        TextView placeholderNum = (TextView) findViewById(R.id.num);
+        placeholderNum.setText("# "+String.valueOf(describePokemon));
+
         //Set types
         TextView placeholderTypes = (TextView) findViewById(R.id.types);
-        placeholderTypes.setText("# "+String.valueOf(describePokemon));
+        String types = String.valueOf(fullPokemon.getType1().getName());
+        if(fullPokemon.getType2().getName() != null)
+        {
+            types+="/"+String.valueOf(fullPokemon.getType2().getName());
+        }
+        placeholderTypes.setText(types);
+
 
         //Test with ImageButton
         ImageView placeholderImage = (ImageView) findViewById(R.id.imageView);

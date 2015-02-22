@@ -139,4 +139,15 @@ public class Pokemon  {
     public int getUniqueId(){
         return pkdx_id;
     }
+
+    public Type getType1(){
+
+        return Type1;
+    }
+
+    public Type getType2(){
+
+        return Type2;
+    }
+
 }
