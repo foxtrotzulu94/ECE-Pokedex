@@ -28,7 +28,7 @@
                 android:id="@+id/pokemonSprite"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="0.3"
-                android:src="@mipmap/p1"
+                android:src="@mipmap/prof_oak"
                 android:scaleType="centerCrop" />
 
             <LinearLayout
@@ -42,7 +42,7 @@
                 <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:text="[Description TBD]"
+                    android:text="@string/pokedex_entry"
                     android:id="@+id/pokemonDescriber" />
             </LinearLayout>
 
