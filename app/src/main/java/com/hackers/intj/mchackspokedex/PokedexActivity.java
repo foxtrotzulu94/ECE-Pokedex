@@ -1,17 +1,29 @@
 package com.hackers.intj.mchackspokedex;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
 
 
 public class PokedexActivity extends ActionBarActivity {
+
+    String DisplayText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pokedex);
+        Intent intent = getIntent();
+        DisplayText = intent.getStringExtra("BoxText");
+        TextView t;
+
+
+        t=(TextView)findViewById(R.id.test);
+        t.setText(DisplayText);
     }
 
 

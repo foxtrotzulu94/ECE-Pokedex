@@ -1,9 +1,11 @@
 package com.hackers.intj.mchackspokedex;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 
@@ -42,4 +44,11 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void switchToPokedex(View view){
+        Intent intent = new Intent(this,PokedexActivity.class);
+        intent.putExtra("BoxText","This should be a Pokedex");
+        startActivity(intent);
+    }
+
 }

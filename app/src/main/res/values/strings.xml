@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">McHacksPokedex</string>
+    <string name="pokedex_view">NationalPokedex</string>
+    <string name="pokedex_view_detailed"></string>
+    <string name="wip_view">Coming Soon!</string>
+
     <color name="default_background">#4752E0</color>
+    <color name="detail_background">#464136</color>
 
     <string name="hello_world">Hello world!</string>
     <string name="work_in_progress">Hey This is a Work in progress screen!</string>
