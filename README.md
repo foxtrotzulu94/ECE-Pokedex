@@ -1,4 +1,4 @@
-# McHacksPokedex
+			# McHacksPokedex
 An android app for those that want to be the very best
 
 Android App built using API 19 (Android 4.2.2 "Kit Kat") on Android Studio
