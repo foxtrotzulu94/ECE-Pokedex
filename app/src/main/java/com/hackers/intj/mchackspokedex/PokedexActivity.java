@@ -5,8 +5,12 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class PokedexActivity extends ActionBarActivity {
@@ -19,11 +23,14 @@ public class PokedexActivity extends ActionBarActivity {
         setContentView(R.layout.activity_pokedex);
         Intent intent = getIntent();
         DisplayText = intent.getStringExtra("BoxText");
-        TextView t;
-
-
-        t=(TextView)findViewById(R.id.test);
-        t.setText(DisplayText);
+        List<String> value = new ArrayList<String>();
+        value.add(DisplayText);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_list_item_1,
+                value);
+        ListView pokeList = (ListView) findViewById(R.id.listView);
+        pokeList.setAdapter(arrayAdapter);
     }
 
 
