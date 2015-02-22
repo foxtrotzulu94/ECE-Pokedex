@@ -15,18 +15,43 @@
         android:layout_alignParentStart="true">
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:background="@color/detail_background">
+            android:background="@color/detail_background"
+            android:weightSum="1">
+
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/imageButton"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="0.3"
+                android:src="@mipmap/bulbatest"
+                android:scaleType="centerCrop" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="336dp"
+                android:layout_gravity="bottom"
+                android:gravity="bottom"
+                android:layout_weight="0.4">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:text="[Description TBD]"
+                    android:id="@+id/textView3" />
+            </LinearLayout>
 
             <Button
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="New Button"
+                android:layout_height="92dp"
+                android:text="Detail View"
                 android:id="@+id/button2"
-                android:layout_gravity="center_vertical|bottom" />
+                android:gravity="center_horizontal|top" />
         </LinearLayout>
 
         <LinearLayout

@@ -23,8 +23,11 @@ public class PokedexActivity extends ActionBarActivity {
         setContentView(R.layout.activity_pokedex);
         Intent intent = getIntent();
         DisplayText = intent.getStringArrayListExtra("BoxText");
-        //List<String> value = new ArrayList<String>();
-        //value = DisplayText;
+//        List<String> value = new ArrayList<String>();
+//
+//        for(int i=0; i<720; i++)
+//            value.add(DisplayText);
+
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                 this,
                 android.R.layout.simple_list_item_1,
