@@ -25,4 +25,5 @@
     <string name="title_activity_pokedex">Pokedex</string>
     <string name="title_activity_detailed_pokemon">DetailedPokemon</string>
     <string name="title_activity_wip">WIP</string>
+    <string name="title_activity_credit">CreditActivity</string>
 </resources>

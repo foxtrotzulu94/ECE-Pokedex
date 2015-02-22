@@ -85,4 +85,9 @@ public class MainActivity extends ActionBarActivity {
         startActivity(intent);
     }
 
+    public void switchToCredits(MenuItem menuItem){
+        Intent intent = new Intent(this,CreditActivity.class);
+        startActivity(intent);
+    }
+
 }

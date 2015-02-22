@@ -6,7 +6,7 @@ import simplejson
 conn = sqlite.connect('pokedex.db')
 
 cursor = conn.cursor()
-
+cursor.execute("DROP TABLE IF EXISTS pokemon")
 cursor.execute('create table pokemon(pkdx_id integer PRIMARY KEY , ability1 integer, ability2 integer, ability3 integer, attack integer, catch_rate integer, created varchar, defense integer, description varchar, egg_cycles integer, egg_group1 integer, egg_group2 integer, ev_yield varchar, evolution_level integer, evolution_detail varchar, evolution_method varchar, evolution integer, exp integer, growth_rate varchar, happiness integer, height varchar, hp integer, male_female_ratio varchar, modified varchar, name varchar, national_id integer, sp_atk integer, sp_def integer, species varchar, speed integer, sprite integer,type1 integer, type2 integer, weight varchar)')
 
 for i in range(1, 719):
@@ -22,11 +22,6 @@ for i in range(1, 719):
         abilities3 = d['abilities'][2]['resource_uri'].split('/')[4]
     else:
         abilities3 = -1
-
-    if len(d['egg_groups']) > 1:
-        eggGroup1 = d['egg_groups'][1]['resource_uri'].split('/')[4]
-    else:
-        eggGroup1 = -1
 
     if len(d['types']) > 1:
         type1 = d['types'][1]['resource_uri'].split('/')[4]
@@ -50,6 +45,21 @@ for i in range(1, 719):
         method = ""
         evolvedMonster = 0
 
-    cursor.execute('insert into pokemon values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', (d['pkdx_id'], d['abilities'][0]['resource_uri'].split('/')[4], abilities2, abilities3, d['attack'], d['catch_rate'], d['created'], d['defense'], d['descriptions'][0]['resource_uri'].split('/')[4], d['egg_cycles'], d['egg_groups'][0]['resource_uri'].split('/')[4], eggGroup1, d['ev_yield'], level, detail, method, evolvedMonster, d['exp'], d['growth_rate'], d['happiness'], d['height'], d['hp'], d['male_female_ratio'], d['modified'], d['name'], d['national_id'], d['sp_atk'], d['sp_def'], d['species'], d['speed'], d['sprites'][0]['resource_uri'].split('/')[4], d['types'][0]['resource_uri'].split('/')[4], type1, d['weight']))
+    descriptionFile = open('description/' + str(d['descriptions'][0]['resource_uri'].split('/')[4]), "r")
+    descriptionData = simplejson.load(descriptionFile)
+    description = descriptionData['description']
+
+    eggFile = open('egg/' + str(d['egg_groups'][0]['resource_uri'].split('/')[4]), "r")
+    eggData = simplejson.load(eggFile)
+    eggGroup0 = eggData['name']
+
+    if len(d['egg_groups']) > 1:
+        eggFile = open('egg/' + str(d['egg_groups'][1]['resource_uri'].split('/')[4]), "r")
+        eggData = simplejson.load(eggFile)
+        eggGroup1 = eggData['name']
+    else:
+        eggGroup1 = -1
+
+    cursor.execute('insert into pokemon values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', (d['pkdx_id'], d['abilities'][0]['resource_uri'].split('/')[4], abilities2, abilities3, d['attack'], d['catch_rate'], d['created'], d['defense'], description, d['egg_cycles'],eggGroup0, eggGroup1, d['ev_yield'], level, detail, method, evolvedMonster, d['exp'], d['growth_rate'], d['happiness'], d['height'], d['hp'], d['male_female_ratio'], d['modified'], d['name'], d['national_id'], d['sp_atk'], d['sp_def'], d['species'], d['speed'], d['sprites'][0]['resource_uri'].split('/')[4], d['types'][0]['resource_uri'].split('/')[4], type1, d['weight']))
 
     conn.commit()
