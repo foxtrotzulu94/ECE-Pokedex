@@ -80,6 +80,7 @@ public class Pokemon  {
         name = C.getString(24);
         description = C.getString(8);
 
+        //TODO: To be fixed
 //        Type1 = new Type(C.getInt(31), database);
 //        Type2 = new Type(C.getInt(32), database);
 

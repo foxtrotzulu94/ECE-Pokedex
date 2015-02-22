@@ -2,15 +2,20 @@ package com.hackers.intj.mchackspokedex;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.internal.widget.AdapterViewCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -22,12 +27,18 @@ import java.util.List;
 
 public class PokedexActivity extends ActionBarActivity {
 
+    private static final String DB_NAME = "pokedex.db";
+
     //UI Elements in Activity
-    ImageButton pokemonSprite; //android:id="@+id/pokemonSprite"
-    TextView pokemonDescriber; //android:id="@+id/pokemonDescriber"
+    private ImageButton pokemonSprite; //android:id="@+id/pokemonSprite"
+    private TextView pokemonDescriber; //android:id="@+id/pokemonDescriber"
+    private ListView pokemonList; //android:id="@+id/listView"
 
+    //Database Handle
+    private SQLiteDatabase database;
 
-    List<String> DisplayText;
+    private List<String> DisplayText;
+    private ArrayAdapter<String> arrayAdapter;
 
 
 
@@ -35,21 +46,30 @@ public class PokedexActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pokedex);
+
+        //Initialize
+        pokemonList = (ListView) findViewById(R.id.listView);
+        pokemonDescriber = (TextView) findViewById(R.id.pokemonDescriber);
+        pokemonSprite = (ImageButton) findViewById(R.id.pokemonSprite);
+
+        //Receive an Intent in case
         Intent intent = getIntent();
         DisplayText = intent.getStringArrayListExtra("BoxText");
-//        List<String> value = new ArrayList<String>();
-//
-//        for(int i=0; i<720; i++)
-//            value.add(DisplayText);
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+        //The intent data is received and is used to create an ArrayAdapter, passed on to the list.
+        arrayAdapter = new ArrayAdapter<String>(
                 this,
                 android.R.layout.simple_list_item_1,
                 DisplayText);
-        ListView pokeList = (ListView) findViewById(R.id.listView);
-        pokeList.setAdapter(arrayAdapter);
 
-        pokeList.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+        //Initialize the Database Handler
+        ExternalDbOpenHelper dbOpenHelper = new ExternalDbOpenHelper(this, DB_NAME);
+        database = dbOpenHelper.openDataBase();
+
+        //Manipulate the ListView
+        pokemonList.setAdapter(arrayAdapter);
+        //And register the listener to it
+        pokemonList.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //TODO: Just update our column
@@ -61,7 +81,8 @@ public class PokedexActivity extends ActionBarActivity {
             }
 
         });
-        Toast.makeText(getBaseContext(), "Some Stuff", Toast.LENGTH_LONG).show();
+        //Debug Text
+        //Toast.makeText(getBaseContext(), "Some Stuff", Toast.LENGTH_LONG).show();
 
     }
 
@@ -70,6 +91,25 @@ public class PokedexActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_pokedex, menu);
+        EditText a = (EditText) findViewById(R.id.inputSearch);
+
+        a.addTextChangedListener( new TextWatcher() {
+                            @Override
+                            public void onTextChanged(CharSequence a, int b, int c, int d){
+                                Toast.makeText(getBaseContext(), "Some Stuff", Toast.LENGTH_LONG).show();
+                                PokedexActivity.this.arrayAdapter.getFilter().filter(a);
+                            }
+                            @Override
+                            public void beforeTextChanged(CharSequence a, int b, int c, int d){
+
+                            }
+
+                            @Override
+                            public void afterTextChanged(Editable e){
+
+                            }
+        });
+
         return true;
     }
 
@@ -91,6 +131,17 @@ public class PokedexActivity extends ActionBarActivity {
     private void UpdateColumn(int pkdx_id){
         //TODO: Place all necessary stuff to update our side column
         //Do Raw DB Get and look at Name, Description and (TBD) Type
+        Cursor current = database.rawQuery(String.format("SELECT %s FROM pokemon WHERE pkdx_id=%s", "name,description",String.valueOf(pkdx_id)), null);
+        current.moveToFirst();
+        String temp = new String();
+        temp+=String.format("%i. %s \n",
+                pkdx_id,
+                current.getString(current.getColumnIndexOrThrow("name")));
+        temp+=String.format("\n Description: %s",
+                current.getString(current.getColumnIndexOrThrow("description")));
+
+        //pokemonDescriber.setText(current.getString(current.getColumnIndexOrThrow("description")));
+        pokemonDescriber.setText(temp);
 
         //Call the Column Object and tell it to update all of this stuff, NOW
     }
