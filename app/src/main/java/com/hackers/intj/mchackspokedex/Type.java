@@ -1,15 +1,17 @@
 package com.hackers.intj.mchackspokedex;
 
-import com.orm.SugarRecord;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
-/**
- * Created by Thinesh on 2015-02-21.
- */
 public class Type {
 
-    public Type (int id){
+    public Type (int id, SQLiteDatabase database){
 
+        Cursor C = database.rawQuery("Select name from type where id="+id,null);
+        C.moveToFirst();
 
+        name = C.getString(6);
+        this.id = id;
     }
 
     String name;
@@ -20,4 +22,12 @@ public class Type {
     Type [] super_effective;
     Type [] weakness;
 
+
+    public String getName() {
+        return name;
+    }
+
+    public int getId() {
+        return id;
+    }
 }

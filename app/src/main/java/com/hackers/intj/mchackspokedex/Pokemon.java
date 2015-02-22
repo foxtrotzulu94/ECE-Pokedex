@@ -49,7 +49,7 @@ public class Pokemon  {
     String weight;
     String height;
 
-    Ability[] abilities;
+    Ability[] abilities = new Ability[3];
     Type Type1;
     Type Type2;
 
@@ -79,8 +79,8 @@ public class Pokemon  {
         name = C.getString(24);
         description = C.getString(8);
 
-        Type1 = new Type(C.getInt(31));
-        Type2 = new Type(C.getInt(32));
+        Type1 = new Type(C.getInt(31), database);
+        Type2 = new Type(C.getInt(32), database);
 
 //        for(int i = 0; i<3; i++){
 //

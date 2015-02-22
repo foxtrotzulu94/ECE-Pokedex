@@ -8,8 +8,16 @@ public class Ability {
     String Name;
     String Description;
 
-   public Ability (int id) {
+   public Ability () {
 
 
    }
+
+    public void setName(String name) {
+        Name = name;
+    }
+
+    public void setDescription(String description) {
+        Description = description;
+    }
 }
