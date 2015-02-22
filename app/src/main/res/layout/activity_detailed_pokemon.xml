@@ -63,22 +63,25 @@
         android:layout_alignParentStart="true" />
 
     <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:id="@+id/testybox" android:paddingTop="200dp"
+        android:layout_height="wrap_content" android:id="@+id/testybox" android:paddingTop="60dp"
         android:layout_centerVertical="true"
-        android:layout_alignParentStart="true" />
+        android:background="#ffeeeeb0"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/types"/>
 
     <TextView
         android:text="@string/hello_world"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/stats"
-        android:paddingTop="200dp"
+        android:background="#ff30e4ee"
         android:layout_below="@+id/linearLayout"
         android:layout_alignEnd="@+id/linearLayout"
         android:layout_marginEnd="36dp"
         android:layout_alignParentEnd="false"
-        android:gravity="top"
-        android:layout_alignParentStart="false" />
+        android:gravity="center_horizontal|top"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentBottom="@+id/types"/>
 
 
 </RelativeLayout>
