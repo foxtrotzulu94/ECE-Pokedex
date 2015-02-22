@@ -16,6 +16,30 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Pokedex"
+            android:label="@string/title_activity_pokedex"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.hackers.intj.mchackspokedex.MainActivity" />
+        </activity>
+        <activity
+            android:name=".DetailedPokemon"
+            android:label="@string/title_activity_detailed_pokemon"
+            android:parentActivityName=".Pokedex" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.hackers.intj.mchackspokedex.Pokedex" />
+        </activity>
+        <activity
+            android:name=".WIP"
+            android:label="@string/title_activity_wip"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.hackers.intj.mchackspokedex.MainActivity" />
+        </activity>
     </application>
 
 
