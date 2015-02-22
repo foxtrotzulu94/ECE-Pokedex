@@ -1,17 +1,15 @@
 package com.hackers.intj.mchackspokedex;
 
-import com.orm.SugarRecord;
+
 
 /**
  * Created by Thinesh on 2015-02-21.
  */
-public class Pokemon extends SugarRecord<Pokemon> {
+public class Pokemon  {
 
     public Pokemon(){
 
     }
-
-
 
     public Pokemon(int pkdx_id, String name){
         //String a =this.description;

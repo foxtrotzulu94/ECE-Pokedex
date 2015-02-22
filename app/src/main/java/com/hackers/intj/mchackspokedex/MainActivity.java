@@ -1,20 +1,33 @@
 package com.hackers.intj.mchackspokedex;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.database.Cursor;
 
+import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity {
+
+    private static final String DB_NAME = "pokemon.db";
+    private SQLiteDatabase database;
+    private ArrayList pokemons;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ExternalDbOpenHelper dbOpenHelper = new ExternalDbOpenHelper(this, DB_NAME);
+        database = dbOpenHelper.openDataBase();
+
+        fillPokemonName();
     }
 
 
@@ -25,7 +38,7 @@ public class MainActivity extends ActionBarActivity {
         TextView t;
 
 
-        t=(TextView)findViewById(R.id.name);
+        t = (TextView) findViewById(R.id.name);
         t.setText("TESTY");
         return true;
     }
@@ -45,9 +58,30 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+    private void fillPokemonName() {
+
+        pokemons = new ArrayList<String>();
+        Cursor nameCursor = database.query("pokemon", new String[] {"pkdx_id",
+                "name"}, null, null, null, null, "name");
+
+        nameCursor.moveToFirst();
+        if(!nameCursor.isAfterLast()) {
+            do {
+                String name = nameCursor.getString(1);
+                String num = nameCursor.getString(0);
+                String formatted = String.format("%s. %s",num,name);
+                pokemons.add(formatted);
+            } while (nameCursor.moveToNext());
+        }
+        nameCursor.close();
+    }
+
+
+
     public void switchToPokedex(View view){
         Intent intent = new Intent(this,PokedexActivity.class);
-        intent.putExtra("BoxText","This should be a Pokedex");
+        intent.putExtra("BoxText",pokemons);
         startActivity(intent);
     }
 

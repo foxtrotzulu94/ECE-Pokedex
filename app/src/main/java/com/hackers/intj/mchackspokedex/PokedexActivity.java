@@ -15,20 +15,20 @@ import java.util.List;
 
 public class PokedexActivity extends ActionBarActivity {
 
-    String DisplayText;
+    List<String> DisplayText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pokedex);
         Intent intent = getIntent();
-        DisplayText = intent.getStringExtra("BoxText");
-        List<String> value = new ArrayList<String>();
-        value.add(DisplayText);
+        DisplayText = intent.getStringArrayListExtra("BoxText");
+        //List<String> value = new ArrayList<String>();
+        //value = DisplayText;
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                 this,
                 android.R.layout.simple_list_item_1,
-                value);
+                DisplayText);
         ListView pokeList = (ListView) findViewById(R.id.listView);
         pokeList.setAdapter(arrayAdapter);
     }

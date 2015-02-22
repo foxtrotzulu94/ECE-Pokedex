@@ -5,7 +5,7 @@ import com.orm.SugarRecord;
 /**
  * Created by Thinesh on 2015-02-21.
  */
-public class Type extends SugarRecord<Type> {
+public class Type {
 
     String name;
     int id;
