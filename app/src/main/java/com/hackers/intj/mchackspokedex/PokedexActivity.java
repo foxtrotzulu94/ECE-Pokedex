@@ -1,13 +1,19 @@
 package com.hackers.intj.mchackspokedex;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.internal.widget.AdapterViewCompat;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +40,22 @@ public class PokedexActivity extends ActionBarActivity {
                 DisplayText);
         ListView pokeList = (ListView) findViewById(R.id.listView);
         pokeList.setAdapter(arrayAdapter);
+
+        pokeList.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getBaseContext(), "Some Stuff="+id+" Pos="+position, Toast.LENGTH_LONG).show();
+//                Intent intent = new Intent(PokedexActivity.this, DetailedPokemonActivity.class);
+//                startActivity(intent);
+            }
+
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//            }
+        });
+        Toast.makeText(getBaseContext(), "Some Stuff", Toast.LENGTH_LONG).show();
+
     }
 
 
@@ -58,4 +80,6 @@ public class PokedexActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }
