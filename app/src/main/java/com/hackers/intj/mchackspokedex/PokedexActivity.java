@@ -45,14 +45,12 @@ public class PokedexActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getBaseContext(), "Some Stuff="+id+" Pos="+position, Toast.LENGTH_LONG).show();
-//                Intent intent = new Intent(PokedexActivity.this, DetailedPokemonActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(PokedexActivity.this, DetailedPokemonActivity.class);
+                //HACK: Hardcoded the "id+1" to be able to use directly as a Primary Key when querying DB
+                intent.putExtra("pkdxid",(int)id+1);
+                startActivity(intent);
             }
 
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//            }
         });
         Toast.makeText(getBaseContext(), "Some Stuff", Toast.LENGTH_LONG).show();
 

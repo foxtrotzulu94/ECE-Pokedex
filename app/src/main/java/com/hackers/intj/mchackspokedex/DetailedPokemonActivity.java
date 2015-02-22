@@ -1,17 +1,26 @@
 package com.hackers.intj.mchackspokedex;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 
 public class DetailedPokemonActivity extends ActionBarActivity {
+
+    int describePokemon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed_pokemon);
+        //We expect to have an intent here
+        Intent intent = getIntent();
+        describePokemon= intent.getIntExtra("pkdxid",-1);
+        TextView placeholder = (TextView) findViewById(R.id.testybox);
+        placeholder.setText("Selected Pokemon: "+describePokemon);
     }
 
 
