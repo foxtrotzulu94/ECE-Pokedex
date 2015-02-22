@@ -25,7 +25,7 @@
             <ImageButton
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:id="@+id/imageButton"
+                android:id="@+id/pokemonSprite"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="0.3"
                 android:src="@mipmap/bulbatest"
@@ -43,14 +43,14 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:text="[Description TBD]"
-                    android:id="@+id/textView3" />
+                    android:id="@+id/pokemonDescriber" />
             </LinearLayout>
 
             <Button
                 android:layout_width="fill_parent"
                 android:layout_height="92dp"
                 android:text="Detail View"
-                android:id="@+id/button2"
+                android:id="@+id/detailButton"
                 android:gravity="center_horizontal|top" />
         </LinearLayout>
 

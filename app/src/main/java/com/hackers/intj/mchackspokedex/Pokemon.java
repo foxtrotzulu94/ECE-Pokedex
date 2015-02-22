@@ -68,12 +68,13 @@ public class Pokemon  {
 
     public Pokemon(int pkdx_id, SQLiteDatabase database){
 
+        //Unique Key ID in the DB
         this.pkdx_id = pkdx_id;
 
-        //HACK the pos numbers
-//        Cursor C = database.rawQuery("Select * from pokemon where pkdx_id=?", new String[] {String.valueOf(pkdx_id)});
-        //Cursor C = database.query("pokemon",null, "pkdx_id", (new String[]{ String.valueOf(pkdx_id) }), null, null, null, "pkdx_id");
-        Cursor C = database.rawQuery("SELECT * FROM pokemon WHERE pkdx_id=3",null);
+        //Ignore function parameters on rawQuery, We're injecting our own string
+        Cursor C = database.rawQuery(String.format("SELECT * FROM pokemon WHERE pkdx_id=%s",String.valueOf(pkdx_id)),null);
+
+        //HACK: the position numbers are hard-coded. We really don't expect to change the DB columns at all
         C.getColumnCount();
         C.moveToFirst();
         name = C.getString(24);
@@ -82,6 +83,7 @@ public class Pokemon  {
         Type1 = new Type(C.getInt(31), database);
         Type2 = new Type(C.getInt(32), database);
 
+        //TODO: Populate Abilities in Memory (Requires class model)
 //        for(int i = 0; i<3; i++){
 //
 //            if(C.getInt(i+1)==-1){
@@ -91,6 +93,7 @@ public class Pokemon  {
 //
 //        }
 
+        //The Attack Group Variables
         attack = C.getInt(4);
         defense = C.getInt(7);
         hp = C.getInt(21);
@@ -109,9 +112,10 @@ public class Pokemon  {
         return description;
     }
 
-    public Ability[] getAbilities() {
-        return abilities;
-    }
+
+//    public Ability[] getAbilities() {
+//        return abilities;
+//    }
 
     public int getHp(){
         return hp;
@@ -131,7 +135,7 @@ public class Pokemon  {
     public int getSpeed(){
         return speed;
     }
-    public int getPkdx_id(){
+    public int getUniqueId(){
         return pkdx_id;
     }
 }

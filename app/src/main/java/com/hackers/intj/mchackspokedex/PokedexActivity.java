@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,7 +22,14 @@ import java.util.List;
 
 public class PokedexActivity extends ActionBarActivity {
 
+    //UI Elements in Activity
+    ImageButton pokemonSprite; //android:id="@+id/pokemonSprite"
+    TextView pokemonDescriber; //android:id="@+id/pokemonDescriber"
+
+
     List<String> DisplayText;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,14 +49,14 @@ public class PokedexActivity extends ActionBarActivity {
         ListView pokeList = (ListView) findViewById(R.id.listView);
         pokeList.setAdapter(arrayAdapter);
 
-        pokeList.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener(){
+        pokeList.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //TODO: Just update our column
-                Toast.makeText(getBaseContext(), "Some Stuff="+id+" Pos="+position, Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(), "Some Stuff=" + id + " Pos=" + position, Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(PokedexActivity.this, DetailedPokemonActivity.class);
                 //HACK: Hardcoded the "id+1" to be able to use directly as a Primary Key when querying DB
-                intent.putExtra("pkdxid",(int)id+1);
+                intent.putExtra("pkdxid", (int) id + 1);
                 startActivity(intent);
             }
 
@@ -81,8 +89,16 @@ public class PokedexActivity extends ActionBarActivity {
     }
 
     private void UpdateColumn(int pkdx_id){
+        //TODO: Place all necessary stuff to update our side column
+        //Do Raw DB Get and look at Name, Description and (TBD) Type
 
+        //Call the Column Object and tell it to update all of this stuff, NOW
     }
 
+    public void switchToDetailedView(View view){
+        Intent intent = new Intent(this,DetailedPokemonActivity.class);
+        //intent.putExtra("BoxText",pokemons);
+        startActivity(intent);
+    }
 
 }
