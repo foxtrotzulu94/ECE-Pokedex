@@ -71,21 +71,25 @@ public class Pokemon  {
         this.pkdx_id = pkdx_id;
 
         //HACK the pos numbers
-        Cursor C = database.rawQuery("Select * from pokemon where pkdx_id="+pkdx_id, new String[] {});
+//        Cursor C = database.rawQuery("Select * from pokemon where pkdx_id=?", new String[] {String.valueOf(pkdx_id)});
+        //Cursor C = database.query("pokemon",null, "pkdx_id", (new String[]{ String.valueOf(pkdx_id) }), null, null, null, "pkdx_id");
+        Cursor C = database.rawQuery("SELECT * FROM pokemon WHERE pkdx_id=3",null);
+        C.getColumnCount();
+        C.moveToFirst();
         name = C.getString(24);
         description = C.getString(8);
 
         Type1 = new Type(C.getInt(31));
         Type2 = new Type(C.getInt(32));
 
-        for(int i = 0; i<3; i++){
-
-            if(C.getInt(i+1)==-1){
-                break;
-            }
-            abilities[i] = new Ability(C.getInt(i));
-
-        }
+//        for(int i = 0; i<3; i++){
+//
+//            if(C.getInt(i+1)==-1){
+//                break;
+//            }
+//            abilities[i] = new Ability(C.getInt(i));
+//
+//        }
 
         attack = C.getInt(4);
         defense = C.getInt(7);

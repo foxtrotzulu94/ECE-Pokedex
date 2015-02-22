@@ -44,6 +44,7 @@ public class PokedexActivity extends ActionBarActivity {
         pokeList.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //TODO: Just update our column
                 Toast.makeText(getBaseContext(), "Some Stuff="+id+" Pos="+position, Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(PokedexActivity.this, DetailedPokemonActivity.class);
                 //HACK: Hardcoded the "id+1" to be able to use directly as a Primary Key when querying DB
@@ -77,6 +78,10 @@ public class PokedexActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void UpdateColumn(int pkdx_id){
+
     }
 
 

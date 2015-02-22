@@ -1,26 +1,48 @@
 package com.hackers.intj.mchackspokedex;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+/*
+ * TODO: Fix the back button for this view. It crashes when using the ActionBar one :/
+ */
+public class DetailedPokemonActivity extends Activity {
 
-public class DetailedPokemonActivity extends ActionBarActivity {
-
-    int describePokemon;
+    private static final String DB_NAME = "pokedex.db";
+    private int describePokemon;
+    private SQLiteDatabase database;
+    private Pokemon fullPokemon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed_pokemon);
-        //We expect to have an intent here
+
+        //We expect to have an intent here with and ID number
         Intent intent = getIntent();
         describePokemon= intent.getIntExtra("pkdxid",-1);
+
+        //Open the DB
+        ExternalDbOpenHelper dbOpenHelper = new ExternalDbOpenHelper(this, DB_NAME);
+        database = dbOpenHelper.openDataBase();
+
+        //Query the DB
+        fullPokemon = new Pokemon(describePokemon,database);
+
+        //Test with TextView
         TextView placeholder = (TextView) findViewById(R.id.testybox);
-        placeholder.setText("Selected Pokemon: "+describePokemon);
+        String temp = new String();
+        temp+=("Selected Pokemon: "+fullPokemon.getName()+"\n");
+        temp+=("Description: "+fullPokemon.getDescription()+"\n");
+        placeholder.setText(temp);
+
     }
 
 
@@ -40,6 +62,11 @@ public class DetailedPokemonActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+
+        else if(id==R.id.home || id==R.id.homeAsUp){
+            NavUtils.navigateUpFromSameTask(this);
             return true;
         }
 
