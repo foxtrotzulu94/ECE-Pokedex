@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -154,6 +155,9 @@ public class PokedexActivity extends ActionBarActivity {
         pokemonDescriber.setText(temp);
 
         //Change the Picture
+        pokemonSprite = (ImageButton) findViewById(R.id.pokemonSprite);
+        int id = this.getResources().getIdentifier("p"+String.valueOf(pkdx_id), "mipmap", "com.hackers.intj.mchackspokedex");
+        pokemonSprite.setImageResource(id);
 
         //Call the Column Object and tell it to update all of this stuff, NOW
     }
