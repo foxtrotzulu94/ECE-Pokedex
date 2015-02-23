@@ -14,9 +14,8 @@
         That is all</string>
     <string name="pokedex_entry">Hello and Welcome\n\n
         This is the National Pokedex. Here you can review all of the known Pokemon and
-        check their types, stats abilities and weaknesses. Clicking on any one of them now
-        will display their initial description on this column. In you ever want to know more
-        about a Pokemon, you can always use the "Detail" button below for a closer look.
+        check their types, stats abilities and weaknesses. Selecting the Pokemon displays their description
+        and you can use the "Detail" button below for a closer look.
         \n\nHave Fun!</string>
 
     <string name="action_settings">Settings</string>

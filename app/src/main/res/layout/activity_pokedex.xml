@@ -43,6 +43,7 @@
                 <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
+                    android:layout_margin="10dp"
                     android:text="@string/pokedex_entry"
                     android:id="@+id/pokemonDescriber" />
             </LinearLayout>
