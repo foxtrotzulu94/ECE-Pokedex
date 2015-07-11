@@ -1,19 +1,37 @@
+Team Name: QuadPhase
+
 Features
 	-Browse all Pokemon
 	-Advanced Search Features
-		-Search by location (?)
+		-Search by location
+			(This map: http://www.serebii.net/pokearth/)
 	-Evolution Chain
 	-Generational Info
 	-Party Favorites
 	-3D Model view
 	-Cries
-	
-Data Architecture
-	-Pokemon
-		-Type
-	-Natures
-	-Moves
-	-
 
 Separation of Tasks (Large scale)
-	-
+	-Info Collection (Scraping, Parsing): Amit, Thinesh
+	-Architecture: Nicole, Amit
+	-Database: Nicole
+	-UI/UX and Graphics: Javier
+	-Testing: Thinesh, Javier
+	
+Sources for info:
+	-Serebii.net
+		http://www.serebii.net/pokedex-xy/
+	-Smogon Strategy Dex
+		http://www.smogon.com/dex/
+	-PokeAPI (Already scraped in the past)
+		http://pokeapi.co/
+
+Workflow:
+	Github Issues are created to implement a certain feature, review functionality or fix a bug
+	The person assigned to the issue starts a new branch to solve ONLY that issue (Branch name should be the number of the issue for further reference)
+	After making the necessary changes, the assignee can issue a Pull Request to merge the changes back into "master"
+	The Pull Request is reviewed and further changes to the branch may be recommended
+	After all changes have been made, the pull request is approved and the asignee may merge the branch back into "master" and safely delete the branch
+		
+Other:
+	Code Documentation will rely on JavaDocs
