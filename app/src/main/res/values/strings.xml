@@ -1,5 +1,17 @@
 <resources>
     <string name="app_name">qpdex</string>
+    <string name="app_name_stylized">QPDex</string>
+    <string name="legal_note">All assets property of Nintendo of America, The Pokemon Company and Game Freak 1996-2015</string>
+
+    <!-- IntroActivity String Start-->
+    <string name="enter_pokedex">Browse Now</string>
+    <string name="enter_trainer">My Trainer</string>
+    <string name="enter_gameview">Generations</string>
+    <string name="adv_search">Advance Search</string>
+    <string name="resource_button">Pokémon Resources</string>
+
+
+    <!-- IntroActivity String Start-->
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
