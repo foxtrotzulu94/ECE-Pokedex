@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:gravity="center_horizontal"
-    android:background="@drawable/menubackPort">
+    android:background="@drawable/menubackportsmall">
 
     <LinearLayout
         android:orientation="vertical"
