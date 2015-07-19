@@ -1,24 +1,24 @@
 package me.quadphase.qpdex;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
-public class IntroActivity extends AppCompatActivity {
+
+public class PokedexActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_intro);
+        setContentView(R.layout.activity_pokedex);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_intro, menu);
+        getMenuInflater().inflate(R.menu.menu_pokedex, menu);
         return true;
     }
 
@@ -35,10 +35,5 @@ public class IntroActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void switchToPokedex(View view){
-        Intent intent = new Intent(this,PokedexActivity.class);
-        startActivity(intent);
     }
 }
