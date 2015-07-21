@@ -1,10 +1,12 @@
 package me.quadphase.qpdex;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 
 public class PokedexActivity extends AppCompatActivity {
@@ -35,5 +37,11 @@ public class PokedexActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void switchToPokemonData(View view){
+        //TODO: Add info on the specific pokemon being viewed
+        Intent intent = new Intent(this,DetailedPokemonActivity.class);
+        startActivity(intent);
     }
 }
