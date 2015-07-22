@@ -1,12 +1,14 @@
 package me.quadphase.qpdex;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 
 public class PokedexActivity extends AppCompatActivity {
@@ -15,6 +17,13 @@ public class PokedexActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pokedex);
+        Button cryButton = (Button)findViewById(R.id.playCry);
+        cryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                playPokemonCry();
+            }
+        });
     }
 
     @Override
@@ -43,5 +52,11 @@ public class PokedexActivity extends AppCompatActivity {
         //TODO: Add info on the specific pokemon being viewed
         Intent intent = new Intent(this,DetailedPokemonActivity.class);
         startActivity(intent);
+    }
+
+    public void playPokemonCry(){
+        MediaPlayer mediaPlayer = MediaPlayer.create(this,R.raw.c249);
+        mediaPlayer.start();
+//        mediaPlayer.release();
     }
 }
