@@ -5,6 +5,7 @@ import android.media.MediaPlayer;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,13 +18,15 @@ public class PokedexActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pokedex);
-        Button cryButton = (Button)findViewById(R.id.playCry);
+        Button cryButton = (Button)findViewById(R.id.button_pkmncry);
+        if(!cryButton.hasOnClickListeners()) {
         cryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 playPokemonCry();
             }
         });
+        }
     }
 
     @Override
@@ -55,6 +58,7 @@ public class PokedexActivity extends AppCompatActivity {
     }
 
     public void playPokemonCry(){
+        Log.w("QPDEX","Playing Sound");
         MediaPlayer mediaPlayer = MediaPlayer.create(this,R.raw.c249);
         mediaPlayer.start();
 //        mediaPlayer.release();

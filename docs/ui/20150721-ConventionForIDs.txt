@@ -1,0 +1,19 @@
+Convention for the ID names of XML UI elements in Android
+
+Summary:
+To create a uniform way of accessing UI elements from code, frontend development should follow the following
+    "[XMLTypeName]_[ElementDescriptiveName]"
+Where:  [XMLTypeName] refers to the class type of the XML element
+        [ElementDescriptiveName] is a short but stateful name of what the element does
+
+The justification behind such convention is that
+1. The XML Type Name will provide a straightforward indicator of what the element should be casted to from Java code without needing to flip back and forth between .java and .xml files
+2. The descriptive name can be used to infer what the button does in the actual layout without a need to guess
+
+Example:
+"button_browsenow" (Could also be named "button_browse_now" but not "button_browse.now")
+"linearlayout_evolution-chain" (An abbreviation such as "linlayout_evolutions" might be preferable)
+
+Notes:
+-Layouts should not have ID unless they are to be manipulated from code (To add children into them, for example)
+-Certain static elements of UI (e.g. Headers, Titles, Subtitles) may not always exhibit this convention, but should still be found by a unique ID

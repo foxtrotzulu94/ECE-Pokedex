@@ -9,9 +9,16 @@
     <string name="enter_gameview">Generations</string>
     <string name="adv_search">Advance Search</string>
     <string name="resource_button">Pokémon Resources</string>
+    <!-- IntroActivity String End-->
 
-
-    <!-- IntroActivity String Start-->
+    <!-- DetailedPokemonActivity Strings Start-->
+    <string name="attack">Attack</string>
+    <string name="defense">Defence</string>
+    <string name="hp">HP</string>
+    <string name="spattack">Sp. Atk.</string>
+    <string name="spdefense">Sp. Def.</string>
+    <string name="speed">Speed</string>
+    <!-- DetailedPokemonActivity Strings End-->
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
