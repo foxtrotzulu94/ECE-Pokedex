@@ -9,7 +9,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 
 
 public class PokedexActivity extends AppCompatActivity {
@@ -18,15 +20,29 @@ public class PokedexActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pokedex);
+        //Set up Buttons
         Button cryButton = (Button)findViewById(R.id.button_pkmncry);
         if(!cryButton.hasOnClickListeners()) {
-        cryButton.setOnClickListener(new View.OnClickListener() {
+            cryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 playPokemonCry();
             }
         });
         }
+
+        //Fill the list
+        ListView pokedexList = (ListView) findViewById(R.id.listv_pkdexentries);
+        ArrayAdapter<String> pokedexEntries = new ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_list_item_activated_1,
+                android.R.id.text1,
+                new String[]{
+                        getString(R.string.title_section1),
+                        getString(R.string.title_section2),
+                        getString(R.string.title_section3),
+                });
+        pokedexList.setAdapter(pokedexEntries);
     }
 
     @Override

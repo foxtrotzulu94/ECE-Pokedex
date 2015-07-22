@@ -66,7 +66,8 @@
                     android:layout_weight="0.4"
                     android:layout_margin="5dp"
                     android:src="@drawable/spritetest"
-                    android:scaleType="fitCenter" />
+                    android:scaleType="fitCenter"
+                    android:onClick="switchToPokemonData" />
 
                 <LinearLayout
                     android:orientation="vertical"

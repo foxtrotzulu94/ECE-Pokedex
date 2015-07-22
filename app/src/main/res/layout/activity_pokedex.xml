@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:background="@drawable/dexback2"
-    android:onClick="playPokemonCry">
+    android:onClick="">
 
     <LinearLayout
         android:orientation="vertical"
@@ -119,7 +119,8 @@
                     android:src="@drawable/spritetest"
                     android:scaleType="fitCenter"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp" />
+                    android:layout_marginRight="5dp"
+                    android:onClick="switchToPokemonData" />
 
                 <Button
                     android:layout_width="wrap_content"
@@ -153,7 +154,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/listv_pkdexentries"
-            android:layout_weight="0.05" />
+            android:layout_weight="0.05"
+            android:background="#80666666"
+            android:choiceMode="singleChoice"
+            android:divider="#ff000000"
+            android:footerDividersEnabled="false" />
     </LinearLayout>
 
 </LinearLayout>
