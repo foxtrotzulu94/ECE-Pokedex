@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/app_name_stylized"
-                android:id="@+id/textView2"
+                android:id="@+id/app_title"
                 android:textSize="48sp" />
         </LinearLayout>
 
@@ -49,7 +49,7 @@
             android:layout_weight="0.40" >
 
             <Button
-                android:id="@+id/button6"
+                android:id="@+id/button_browsenow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/enter_pokedex"
@@ -57,28 +57,28 @@
                 android:onClick="switchToPokedex" />
 
             <Button
-                android:id="@+id/button7"
+                android:id="@+id/button_mytrainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/enter_trainer"
                 android:background="@color/dex_green_transparent" />
 
             <Button
-                android:id="@+id/button8"
+                android:id="@+id/button_allgens"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/enter_gameview"
                 android:background="@color/dex_yellow_transparent" />
 
             <Button
-                android:id="@+id/button9"
+                android:id="@+id/button_advsearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/adv_search"
                 android:background="@color/dex_blue_transparent" />
 
             <Button
-                android:id="@+id/button10"
+                android:id="@+id/button_resources"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/resource_button"
@@ -97,7 +97,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/legal_note"
-                android:id="@+id/textView3"
+                android:id="@+id/legal_note"
                 android:gravity="center"
                 android:textSize="12sp" />
         </LinearLayout>

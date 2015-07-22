@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:background="@drawable/dexback2"
-    >
+    android:onClick="">
 
     <LinearLayout
         android:orientation="vertical"
@@ -28,13 +28,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Prev"
-                android:id="@+id/button12" />
+                android:id="@+id/button_prevpkmn" />
 
             <TextView
                 android:text="[POKEMON NAME]" android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.7"
-                android:gravity="center" />
+                android:gravity="center"
+                android:id="@+id/textview_pkmnname" />
 
 
             <!-- Eventually consider replacing for image-->
@@ -43,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Next"
-                android:id="@+id/button11" />
+                android:id="@+id/button_nextpkmn" />
         </LinearLayout>
 
         <LinearLayout
@@ -63,7 +64,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="[ENTER POKEDEX ENTRY]"
-                    android:id="@+id/textView4"
+                    android:id="@+id/textview_pkmndescript"
                     android:background="#fff1f1f1"
                     android:layout_weight="0.4"
                     android:gravity="center_horizontal"
@@ -79,7 +80,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/imageView"
+                        android:id="@+id/imgview_pkmntype1"
                         android:layout_weight="0.5"
                         android:src="@drawable/typenone"
                         android:layout_margin="5dp" />
@@ -87,7 +88,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/imageView2"
+                        android:id="@+id/imgview_pkmntype2"
                         android:layout_weight="0.5"
                         android:focusableInTouchMode="false"
                         android:src="@drawable/typenone"
@@ -98,7 +99,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="See Data"
-                    android:id="@+id/button13"
+                    android:id="@+id/button_pkmndata"
                     android:layout_margin="5dp"
                     android:onClick="switchToPokemonData" />
             </LinearLayout>
@@ -113,22 +114,24 @@
                 <ImageButton
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/imageButton"
+                    android:id="@+id/imgbutton_pkmnsprite"
                     android:layout_weight="0.1"
                     android:src="@drawable/spritetest"
                     android:scaleType="fitCenter"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp" />
+                    android:layout_marginRight="5dp"
+                    android:onClick="switchToPokemonData" />
 
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="PKMN Cry"
-                    android:id="@+id/playCry"
+                    android:id="@+id/button_pkmncry"
                     android:layout_weight="0.4"
                     android:layout_gravity="top|center"
                     android:layout_marginBottom="5dp"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:nestedScrollingEnabled="false" />
             </LinearLayout>
         </LinearLayout>
 
@@ -150,8 +153,12 @@
         <ListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/listView"
-            android:layout_weight="0.05" />
+            android:id="@+id/listv_pkdexentries"
+            android:layout_weight="0.05"
+            android:background="#80666666"
+            android:choiceMode="singleChoice"
+            android:divider="#ff000000"
+            android:footerDividersEnabled="false" />
     </LinearLayout>
 
 </LinearLayout>
