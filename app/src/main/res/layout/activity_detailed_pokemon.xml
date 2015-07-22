@@ -72,7 +72,7 @@
                         android:layout_weight="0.5"
                         android:layout_margin="5dp" >
 
-                        <ImageButton
+                        <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:id="@+id/imageButton4"
@@ -80,7 +80,7 @@
                             android:src="@drawable/typenone"
                             android:scaleType="fitCenter" />
 
-                        <ImageButton
+                        <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:id="@+id/imageButton5"

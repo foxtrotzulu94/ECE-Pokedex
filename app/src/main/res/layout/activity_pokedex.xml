@@ -124,11 +124,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="PKMN Cry"
-                    android:id="@+id/button14"
+                    android:id="@+id/playCry"
                     android:layout_weight="0.4"
                     android:layout_gravity="top|center"
                     android:layout_marginBottom="5dp"
-                    android:textSize="10sp"/>
+                    android:textSize="10sp" />
             </LinearLayout>
         </LinearLayout>
 
