@@ -12,46 +12,66 @@ package me.quadphase.qpdex;
 //
 
 
-
-
 /** */
 public class Move {
 
-	/** name of the move */
-	private String name;
-	
-	/** what the move can do */
-	private String description;
-	
-	/** the power of the move */
-	private int power;
-	
-	/** the percentage accuracy of the move*/
-	private int accuracy;
-	
-	/** the pp of the move */
-	private int pp;
-	
-	/** who this move affects */
-	private String affects;
-	
-	/** the generation that this move appears in */
-	private int generation;
-	
-	/** the secondary effects of the move */
-	private String secondaryEffects;
-	
-	/** the category of the move
-	 * Possible categories:
-	 *     - Special
-	 *     - Status
-	 *     - Physical */
-	private String category;
+    /**
+     * name of the move
+     */
+    private String name;
 
-	/** the type of the move */
-	private Type type;
+    /**
+     * what the move can do
+     */
+    private String description;
 
-    /** Constructor */
+    /**
+     * the power of the move
+     */
+    private int power;
+
+    /**
+     * the percentage accuracy of the move
+     */
+    private int accuracy;
+
+    /**
+     * the pp of the move
+     */
+    private int pp;
+
+    /**
+     * who this move affects
+     */
+    private String affects;
+
+    /**
+     * the generation that this move appears in
+     */
+    private int generation;
+
+    /**
+     * the secondary effects of the move
+     */
+    private String secondaryEffects;
+
+    /**
+     * the category of the move
+     * Possible categories:
+     * - Special
+     * - Status
+     * - Physical
+     */
+    private String category;
+
+    /**
+     * the type of the move
+     */
+    private Type type;
+
+    /**
+     * Constructor
+     */
     public Move(String name, String description, int power, int accuracy, int pp, String affects, int generation, String secondaryEffects, String category, Type type) {
         this.name = name;
         this.description = description;
@@ -65,7 +85,9 @@ public class Move {
         this.type = type;
     }
 
-    /** Getters */
+    /**
+     * Getters
+     */
     public String getName() {
         return name;
     }

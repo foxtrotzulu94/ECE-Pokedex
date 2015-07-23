@@ -12,23 +12,29 @@ package me.quadphase.qpdex;
 //
 
 
-
-
 /** */
 public class Location {
-	/** name of the location */
-	private String name;
+    /**
+     * name of the location
+     */
+    private String name;
 
-	/** game that the location is found in */
-	private Game game;
+    /**
+     * game that the location is found in
+     */
+    private Game game;
 
-    /** Constructor */
+    /**
+     * Constructor
+     */
     public Location(String name, Game game) {
         this.name = name;
         this.game = game;
     }
 
-    /** Getters */
+    /**
+     * Getters
+     */
     public String getName() {
         return name;
     }

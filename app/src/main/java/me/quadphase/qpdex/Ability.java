@@ -12,27 +12,34 @@ package me.quadphase.qpdex;
 //
 
 
-
-
 /** */
 public class Ability {
-	/** Name of the ability */
-	private String name;
-	
-	/** What the ability can do */
-	private String description;
+    /**
+     * Name of the ability
+     */
+    private String name;
 
-    /** Constructor */
+    /**
+     * What the ability can do
+     */
+    private String description;
+
+    /**
+     * Constructor
+     */
     public Ability(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
+    /**
+     * Getters
+     */
     public String getName() {
-		return name;
-	}
+        return name;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 }

@@ -12,28 +12,34 @@ package me.quadphase.qpdex;
 //
 
 
-
-
 /** */
 public class Game {
-	/** name of the game */
-	private String name;
-	
-	/** Generation that the game belongs to */
-	private int generation;
+    /**
+     * name of the game
+     */
+    private String name;
 
-    /** Constructor */
+    /**
+     * Generation that the game belongs to
+     */
+    private int generation;
+
+    /**
+     * Constructor
+     */
     public Game(String name, int generation) {
         this.name = name;
         this.generation = generation;
     }
 
-    /** Getters */
+    /**
+     * Getters
+     */
     public String getName() {
-		return name;
-	}
+        return name;
+    }
 
-	public int getGeneration() {
-		return generation;
-	}
+    public int getGeneration() {
+        return generation;
+    }
 }

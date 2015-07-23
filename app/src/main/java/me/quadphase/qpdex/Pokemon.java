@@ -14,83 +14,111 @@ import java.util.List;
 //
 
 
-
-
-/** Used to describe the base characteristics of each Pokemon */
+/**
+ * Used to describe the base characteristics of each Pokemon
+ */
 public class Pokemon {
-	/** Pokemon ID in the original Pokedex */
-	private int pokemonID;
-	
-	/** Name of the Pokemon in English */
-	private String name;
-	
-	/** Description of the Pokemon from the latest generation */
-	private String description;
-	
-	/** Height of the Pokemon */
-	private double height;
-	
-	/** Weight of the Pokemon */
-	private double weight;
-	
-	/** Stats: Attack */
-	private int attack;
-	
-	/** Stats: Defence */
-	private int defence;
-	
-	/** Stats: HP */
-	private int hp;
-	
-	/** Stats: Special Attack */
-	private int spAttack;
-	
-	/** Stats: Special Defence */
-	private int spDefence;
-	
-	/** Stats: Speed */
-	private int speed;
-	
-	/** true if Pokemon is caught, false if not caught */
-	private Boolean caught;
+    /**
+     * List of the abilities that the Pokemon has
+     * MAX: 3
+     */
+    public List<Ability> abilities;
+    /**
+     * Pokemon ID in the original Pokedex
+     */
+    private int pokemonID;
+    /**
+     * Name of the Pokemon in English
+     */
+    private String name;
+    /**
+     * Description of the Pokemon from the latest generation
+     */
+    private String description;
+    /**
+     * Height of the Pokemon
+     */
+    private double height;
+    /**
+     * Weight of the Pokemon
+     */
+    private double weight;
+    /**
+     * Stats: Attack
+     */
+    private int attack;
+    /**
+     * Stats: Defence
+     */
+    private int defence;
+    /**
+     * Stats: HP
+     */
+    private int hp;
+    /**
+     * Stats: Special Attack
+     */
+    private int spAttack;
+    /**
+     * Stats: Special Defence
+     */
+    private int spDefence;
+    /**
+     * Stats: Speed
+     */
+    private int speed;
+    /**
+     * true if Pokemon is caught, false if not caught
+     */
+    private Boolean caught;
+    /**
+     * generation that the Pokemon first appeared
+     */
+    private int genFirstAppeared;
+    /**
+     * Number of steps to hatch the egg
+     */
+    private int hatchTime;
+    /**
+     * Base catch rate percentage
+     */
+    private int catchRate;
+    /**
+     * Percentage of males
+     * to find number of females, do (100 - <code>genderRatioMale</code> )
+     */
+    private int genderRatioMale;
+    /**
+     * List of the locations where the Pokemon can be found
+     */
+    private List<Location> locations;
+    /**
+     * List of the moves that the Pokemon can learn
+     */
+    private List<Move> moves;
 
-	/** generation that the Pokemon first appeared*/
-	private int genFirstAppeared;
-	
-	/** Number of steps to hatch the egg */
-	private int hatchTime;
-	
-	/** Base catch rate percentage */
-	private int catchRate;
-	
-	/** Percentage of males
-	 * to find number of females, do (100 - <code>genderRatioMale</code> )*/
-	private int genderRatioMale;
-	
-	/** List of the locations where the Pokemon can be found */
-	private List<Location> locations;
-	
-	/** List of the abilities that the Pokemon has
-     * MAX: 3 */
-	public List<Ability> abilities;
+    /**
+     * List of the types that the Pokemon has
+     * MAX: 2
+     */
+    private List<Type> types;
 
-    /** List of the moves that the Pokemon can learn */
-	private List<Move> moves;
+    /**
+     * List of the egg groups that the Pokemon belongs to
+     * MAX: 2
+     */
+    private List<EggGroup> eggGroups;
 
-    /** List of the types that the Pokemon has
-     * MAX: 2 */
-	private List<Type> types;
-
-    /** List of the egg groups that the Pokemon belongs to
-     * MAX: 2 */
-	private List<EggGroup> eggGroups;
-	
-	/** List of the evolutions that the pokemon can have */
-	private List<Evolution> evolutions;
+    /**
+     * List of the evolutions that the pokemon can have
+     */
+    private List<Evolution> evolutions;
 
 
-    /** Constructor */
-    public Pokemon(int pokemonID, String name, String description, double height, double weight, int attack, int defence, int hp, int spAttack, int spDefence, int speed, Boolean caught, int genFirstAppeared, int hatchTime, int catchRate, int genderRatioMale, List<Location> locations, List<Ability> abilities, List<Move> moves, List<Type> types, List<EggGroup> eggGroups, List<Evolution> evolutions) {
+    /**
+     * Constructor
+     */
+    public Pokemon(int pokemonID, String name, String description, double height, double weight, int attack, int defence, int hp, int spAttack, int spDefence, int speed, int genFirstAppeared, int hatchTime, int catchRate, int genderRatioMale, List<Location> locations, List<Ability> abilities, List<Move> moves, List<Type> types, List<EggGroup> eggGroups, List<Evolution> evolutions) {
         this.pokemonID = pokemonID;
         this.name = name;
         this.description = description;
@@ -102,7 +130,7 @@ public class Pokemon {
         this.spAttack = spAttack;
         this.spDefence = spDefence;
         this.speed = speed;
-        this.caught = caught;
+        this.caught = false;
         this.genFirstAppeared = genFirstAppeared;
         this.hatchTime = hatchTime;
         this.catchRate = catchRate;
@@ -115,7 +143,17 @@ public class Pokemon {
         this.evolutions = evolutions;
     }
 
-    /** Getters for the Pokemon information: */
+    /**
+     * Getters for the Pokemon information:
+     */
+    public List<Ability> getAbilities() {
+        return abilities;
+    }
+
+    public int getPokemonID() {
+        return pokemonID;
+    }
+
     public String getName() {
         return name;
     }
@@ -156,24 +194,16 @@ public class Pokemon {
         return speed;
     }
 
-    public Boolean getMaleCaught() {
-        return maleCaught;
-    }
-
-    public Boolean getFemaleCaught() {
-        return femaleCaught;
+    public Boolean getCaught() {
+        return caught;
     }
 
     public int getGenFirstAppeared() {
         return genFirstAppeared;
     }
 
-    public int getHatchTimeMin() {
-        return hatchTimeMin;
-    }
-
-    public int getHatchTimeMax() {
-        return hatchTimeMax;
+    public int getHatchTime() {
+        return hatchTime;
     }
 
     public int getCatchRate() {
@@ -184,16 +214,8 @@ public class Pokemon {
         return genderRatioMale;
     }
 
-    public int getGenderRatioFemale() {
-        return 1 - genderRatioMale;
-    }
-
     public List<Location> getLocations() {
         return locations;
-    }
-
-    public List<Ability> getAbilities() {
-        return abilities;
     }
 
     public List<Move> getMoves() {
@@ -212,13 +234,10 @@ public class Pokemon {
         return evolutions;
     }
 
-
-    /** toggles whether or not a pokemon has been caught */
+    /**
+     * toggles whether or not a pokemon has been caught
+     */
     public void toggleCaught() {
-        if (caught) {
-            caught = false;
-        } else {
-            caught = true;
-        }
+        caught = !caught;
     }
 }

@@ -12,50 +12,56 @@ package me.quadphase.qpdex;
 //
 
 
-
-
 /** */
 public class Type {
-	/** name of the type
-	 * can be either:
-	 * 		- normal
-	 * 		- fighting
-	 * 		- flying
-	 * 		- poison
-	 *		- poison
-	 *		- ground
-	 *		- rock
-	 *		- bug
-	 *		- ghost
-	 *		- steel
-	 *		- fire
-	 *		- water
-	 *		- grass
-	 *		- electric
-	 *		- psychic
-	 *		- ice
-	 *		- dragon
-	 *		- dark
-	 *		- fairy
-	 *		- ???	*/
-	private String name;
-	
-	/** description of the type */
-	private String description;
+    /**
+     * name of the type
+     * can be either:
+     * - normal
+     * - fighting
+     * - flying
+     * - poison
+     * - poison
+     * - ground
+     * - rock
+     * - bug
+     * - ghost
+     * - steel
+     * - fire
+     * - water
+     * - grass
+     * - electric
+     * - psychic
+     * - ice
+     * - dragon
+     * - dark
+     * - fairy
+     * - ???
+     */
+    private String name;
 
-    /** Constructor */
+    /**
+     * description of the type
+     */
+    private String description;
+
+    /**
+     * Constructor
+     */
     public Type(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
-    /** Getters */
-	public String getName() {
-		return name;
-	}
+    /**
+     * Getters
+     */
+    public String getName() {
+        return name;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
 }

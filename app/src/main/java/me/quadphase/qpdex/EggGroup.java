@@ -12,36 +12,42 @@ package me.quadphase.qpdex;
 //
 
 
-
-
-/** will be used to determine breeding potential of the Pokemon */
+/**
+ * will be used to determine breeding potential of the Pokemon
+ */
 public class EggGroup {
-	/** Name of the egg group
+    /**
+     * Name of the egg group
      * Can be:
-     *      - monster
-     *      - water 1
-     *      - water 2
-     *      - water 3
-     *      - human-like
-     *      - bug
-     *      - mineral
-     *      - flying
-     *      - amorphous
-     *      - field
-     *      - fairy
-     *      - ditto
-     *      - grass
-     *      - dragon
-     *      - undiscovered
-     *      - gender unknown*/
-	private String name;
+     * - monster
+     * - water 1
+     * - water 2
+     * - water 3
+     * - human-like
+     * - bug
+     * - mineral
+     * - flying
+     * - amorphous
+     * - field
+     * - fairy
+     * - ditto
+     * - grass
+     * - dragon
+     * - undiscovered
+     * - gender unknown
+     */
+    private String name;
 
-    /** Constructor */
+    /**
+     * Constructor
+     */
     public EggGroup(String name) {
         this.name = name;
     }
 
-    /** Getter */
+    /**
+     * Getter
+     */
     public String getName() {
         return name;
     }

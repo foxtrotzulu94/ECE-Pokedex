@@ -13,27 +13,39 @@ import java.util.List;
 //
 //
 
-/** This is a wrapper class for the moves that a pokemon in your party has */
+/**
+ * This is a wrapper class for the moves that a pokemon in your party has
+ */
 public class MoveSet {
-	/** Max: 4 per pokemon in the party*/
-	private List<Move> moves;
+    /**
+     * Max: 4 per pokemon in the party
+     */
+    private List<Move> moves;
 
-    /** Constructor */
+    /**
+     * Constructor
+     */
     public MoveSet(List<Move> moves) {
         this.moves = moves;
     }
 
-    /** adds a move to the moveset if it is not full */
+    /**
+     * adds a move to the moveset if it is not full
+     */
     public boolean addMove(Move move) {
         return true;
     }
 
-    /** removes a move from the moveset */
+    /**
+     * removes a move from the moveset
+     */
     public boolean removeMove(Move move) {
         return true;
     }
 
-    /** Getter */
+    /**
+     * Getter
+     */
     public List<Move> getMoves() {
         return moves;
     }
