@@ -1,0 +1,105 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center_horizontal"
+    android:background="@drawable/menubacklandscapesmall">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="0.5">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.18"
+            android:gravity="center" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/app_name_stylized"
+                android:id="@+id/app_title"
+                android:textSize="48sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"></LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_weight="0.21">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="176dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|center|center_horizontal"
+            android:layout_weight="0.40" >
+
+            <Button
+                android:id="@+id/button_browsenow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/enter_pokedex"
+                android:background="@color/dex_pink_transparent"
+                android:onClick="switchToPokedex" />
+
+            <Button
+                android:id="@+id/button_mytrainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/enter_trainer"
+                android:background="@color/dex_green_transparent" />
+
+            <Button
+                android:id="@+id/button_allgens"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/enter_gameview"
+                android:background="@color/dex_yellow_transparent" />
+
+            <Button
+                android:id="@+id/button_advsearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/adv_search"
+                android:background="@color/dex_blue_transparent" />
+
+            <Button
+                android:id="@+id/button_resources"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/resource_button"
+                android:background="@color/dex_grey_transparent" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="0.16" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/legal_note"
+                android:id="@+id/legal_note"
+                android:gravity="center"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

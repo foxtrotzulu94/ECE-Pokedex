@@ -1,9 +1,11 @@
 package me.quadphase.qpdex;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 public class IntroActivity extends AppCompatActivity {
 
@@ -33,5 +35,10 @@ public class IntroActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void switchToPokedex(View view){
+        Intent intent = new Intent(this,PokedexActivity.class);
+        startActivity(intent);
     }
 }

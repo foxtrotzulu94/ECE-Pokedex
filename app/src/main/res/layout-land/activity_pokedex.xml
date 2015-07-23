@@ -1,0 +1,165 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:background="@drawable/dexbackland"
+    >
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.5"
+        android:background="#ff8c8c8c">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:background="#bc3a3a3a"
+            android:layout_weight="0.85">
+
+            <!-- Eventually consider replacing for image-->
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Prev"
+                android:id="@+id/button_prevpkmn" />
+
+            <EditText
+                android:text="[POKEMON NAME]"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:gravity="center"
+                android:id="@+id/edittext_pkmnname"
+                android:clickable="true"
+                android:focusable="true"
+                android:enabled="true"
+                android:selectAllOnFocus="true"
+                android:focusableInTouchMode="true"
+                android:lines="1" />
+
+
+            <!-- Eventually consider replacing for image-->
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Next"
+                android:id="@+id/button_nextpkmn" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.15"
+            android:focusableInTouchMode="true">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.4">
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/imgbutton_pkmnsprite"
+                    android:layout_weight="0.4"
+                    android:layout_margin="5dp"
+                    android:src="@drawable/spritetest"
+                    android:scaleType="fitCenter"
+                    android:onClick="switchToPokemonData" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.6"
+                    android:gravity="center"
+                    android:focusableInTouchMode="true"
+                    android:focusable="true"
+                    android:clickable="true">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:id="@+id/imgview_pkmntype1"
+                        android:src="@drawable/typenone"
+                        android:layout_weight="0.8" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:id="@+id/imgview_pkmntype2"
+                        android:src="@drawable/typenone"
+                        android:layout_weight="0.8" />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="PKMN CRY"
+                        android:id="@+id/button_pkmncry" />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="See Data"
+                        android:id="@+id/button_pkmndata"
+                        android:onClick="switchToPokemonData" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="[ENTER POKEDEX ENTRY]"
+                android:id="@+id/textview_pkmndescript"
+                android:layout_weight="0.6"
+                android:layout_margin="10dp"
+                android:background="#ffffff"
+                android:focusableInTouchMode="true"
+                android:focusable="true"
+                android:clickable="true"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.5"
+        android:focusableInTouchMode="true">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.99"
+            android:background="#000000"
+            android:focusableInTouchMode="true"
+            android:focusable="true"
+            android:clickable="true"></LinearLayout>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/listv_pkdexentries"
+            android:layout_weight="0.05"
+            android:background="#80666666"
+            android:listSelector="#be2c2c2c"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
+    </LinearLayout>
+
+</LinearLayout>

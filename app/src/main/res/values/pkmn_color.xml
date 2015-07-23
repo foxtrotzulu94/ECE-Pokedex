@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="dex_pink_transparent" type="color">#c8fb7773</item>
+    <item name="dex_green_transparent" type="color">#c89fe850</item>
+    <item name="dex_yellow_transparent" type="color">#c8fef051</item>
+    <item name="dex_blue_transparent" type="color">#c853b9fb</item>
+    <item name="dex_grey_transparent" type="color">#c8f1f1f1</item>
+
+    <item name="dex_pink" type="color">#fb7773</item>
+    <item name="dex_green" type="color">#9fe850</item>
+    <item name="dex_yellow" type="color">#fef051</item>
+    <item name="dex_blue" type="color">#53b9fb</item>
+    <item name="dex_grey" type="color">#f1f1f1</item>
+</resources>
