@@ -48,7 +48,7 @@ public class Move {
     /**
      * the generation that this move appears in
      */
-    private int generation;
+    private int genFirstAppeared;
 
     /**
      * the secondary effects of the move
@@ -72,14 +72,14 @@ public class Move {
     /**
      * Constructor
      */
-    public Move(String name, String description, int power, int accuracy, int pp, String affects, int generation, String secondaryEffects, String category, Type type) {
+    public Move(String name, String description, int power, int accuracy, int pp, String affects, int genFirstAppeared, String secondaryEffects, String category, Type type) {
         this.name = name;
         this.description = description;
         this.power = power;
         this.accuracy = accuracy;
         this.pp = pp;
         this.affects = affects;
-        this.generation = generation;
+        this.genFirstAppeared = genFirstAppeared;
         this.secondaryEffects = secondaryEffects;
         this.category = category;
         this.type = type;
@@ -112,8 +112,8 @@ public class Move {
         return affects;
     }
 
-    public int getGeneration() {
-        return generation;
+    public int getGenFirstAppeared() {
+        return genFirstAppeared;
     }
 
     public String getSecondaryEffects() {
