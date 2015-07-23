@@ -51,20 +51,14 @@ public class Pokemon {
 	/** Stats: Speed */
 	private int speed;
 	
-	/** true if male or gender neutral Pokemon is caught, false if not caught */
-	private Boolean maleCaught;
-	
-	/** true if female Pokemon is caught, false if not caught */
-	private Boolean femaleCaught;
-	
+	/** true if Pokemon is caught, false if not caught */
+	private Boolean caught;
+
 	/** generation that the Pokemon first appeared*/
 	private int genFirstAppeared;
 	
-	/** Minimum number of steps to hatch the egg */
-	private int hatchTimeMin;
-	
-	/** Maximum number of steps to hatch the egg */
-	private int hatchTimeMax;
+	/** Number of steps to hatch the egg */
+	private int hatchTime;
 	
 	/** Base catch rate percentage */
 	private int catchRate;
@@ -96,7 +90,7 @@ public class Pokemon {
 
 
     /** Constructor */
-    public Pokemon(int pokemonID, String name, String description, double height, double weight, int attack, int defence, int hp, int spAttack, int spDefence, int speed, Boolean maleCaught, Boolean femaleCaught, int genFirstAppeared, int hatchTimeMin, int hatchTimeMax, int catchRate, int genderRatioMale, List<Location> locations, List<Ability> abilities, List<Move> moves, List<Type> types, List<EggGroup> eggGroups, List<Evolution> evolutions) {
+    public Pokemon(int pokemonID, String name, String description, double height, double weight, int attack, int defence, int hp, int spAttack, int spDefence, int speed, Boolean caught, int genFirstAppeared, int hatchTime, int catchRate, int genderRatioMale, List<Location> locations, List<Ability> abilities, List<Move> moves, List<Type> types, List<EggGroup> eggGroups, List<Evolution> evolutions) {
         this.pokemonID = pokemonID;
         this.name = name;
         this.description = description;
@@ -108,11 +102,9 @@ public class Pokemon {
         this.spAttack = spAttack;
         this.spDefence = spDefence;
         this.speed = speed;
-        this.maleCaught = maleCaught;
-        this.femaleCaught = femaleCaught;
+        this.caught = caught;
         this.genFirstAppeared = genFirstAppeared;
-        this.hatchTimeMin = hatchTimeMin;
-        this.hatchTimeMax = hatchTimeMax;
+        this.hatchTime = hatchTime;
         this.catchRate = catchRate;
         this.genderRatioMale = genderRatioMale;
         this.locations = locations;
@@ -221,13 +213,12 @@ public class Pokemon {
     }
 
 
-    /** to indicate whether the male or gender neutral pokemon has been caught or not */
-    public void catchMale(boolean caught) {
-        maleCaught = caught;
-    }
-
-    /** to indicate whether the female pokemon has been caught or not */
-    public void catchFemale(boolean caught) {
-        femaleCaught = caught;
+    /** toggles whether or not a pokemon has been caught */
+    public void toggleCaught() {
+        if (caught) {
+            caught = false;
+        } else {
+            caught = true;
+        }
     }
 }
