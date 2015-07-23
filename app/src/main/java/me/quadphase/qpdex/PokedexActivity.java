@@ -1,5 +1,6 @@
 package me.quadphase.qpdex;
 
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.support.v7.app.ActionBarActivity;
@@ -9,8 +10,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 
@@ -31,6 +34,32 @@ public class PokedexActivity extends AppCompatActivity {
         });
         }
 
+        //Set up Search Bar (EditText)
+        final EditText nameAndSearch = (EditText)findViewById(R.id.edittext_pkmnname);
+        if(!nameAndSearch.hasOnClickListeners()){
+            //Set the OnClick Listener
+            nameAndSearch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Clear the Pokemon Name immediately.
+                    nameAndSearch.setText("");
+                }
+            });
+
+            //Piggyback and also set the OnFocusChange Method
+            nameAndSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (!hasFocus) {
+                        //Take the keyboard away
+                        //TODO: Has a lot of refinement to be done!
+                        InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    }
+                }
+            });
+        }
+
+
         //Fill the list
         ListView pokedexList = (ListView) findViewById(R.id.listv_pkdexentries);
         ArrayAdapter<String> pokedexEntries = new ArrayAdapter<String>(
@@ -50,6 +79,12 @@ public class PokedexActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_pokedex, menu);
         return true;
+    }
+
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        finish();
     }
 
     @Override
