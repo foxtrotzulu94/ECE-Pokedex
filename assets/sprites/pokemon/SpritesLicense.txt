@@ -1,3 +1,5 @@
+Files under Directories gen{1,5} taken from PLDH.net
+
 Pokémon imagery
     All imagery on this website that is considered an official Pokémon sprite or Sugimori drawing, item sprites found in the video games, character sprites found in the video games, or areas found in the video games are owned & © by Nintendo, Creatures inc., GAME FREAK inc., as well as the original artists. PLDH.net does not claim authorship or ownership of any of the aforementioned imagery. We believe the imagery is available for use by us for several reasons;
     1) We believe the images have been properly identified as being under the © of their respective owners (copyright information is included at the bottom of every page of PLDH.net).
@@ -9,3 +11,4 @@ Pokémon imagery
     7) The images are available for download and are accessible to any party which wishes to use them in the same regard.
     If these reasons are found to be insufficient by their holders/owners please contact PLDH.net administration.
 
+	

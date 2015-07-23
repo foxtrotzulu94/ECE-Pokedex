@@ -1,0 +1,428 @@
+<!-- A DrawerLayout is intended to be used as the top-level content view using match_parent for both width and height to consume the full space available. -->
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/drawer_layout"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    tools:context="me.quadphase.qpdex.DetailedPokemonActivity">
+
+    <!-- As the main content view, the view below consumes the entire
+         space available using match_parent in both dimensions. -->
+    <FrameLayout android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/detailback">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.99"
+                android:background="#bc3a3a3a">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Pokemon Data Summary"
+                    android:id="@+id/title"
+                    android:layout_weight="0.99"
+                    android:gravity="center|center_horizontal"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7" >
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/imgbutton_pkmnsprite_detail"
+                    android:layout_weight="0.5"
+                    android:src="@drawable/spritetest"
+                    android:scaleType="fitCenter" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="[POKEMON NAME]"
+                        android:id="@+id/textview_pkmnname_detail"
+                        android:textSize="20sp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="#bc3a3a3a" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pokemon Type"
+                        android:id="@+id/title_type"
+                        android:background="#bc3a3a3a" />
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="fill_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:layout_margin="0dp"
+                        android:background="#c89b9b9b"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginRight="5dp">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/imgview_pkmntype1_detail"
+                            android:layout_weight="0.5"
+                            android:src="@drawable/typenone"
+                            android:scaleType="fitCenter" />
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/imgview_pkmntype2_detail"
+                            android:layout_weight="0.5"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/typenone" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Evolution Chain"
+                        android:id="@+id/title_evolutions"
+                        android:background="#bc3a3a3a"
+                        android:layout_marginTop="5dp" />
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:id="@+id/linlayout_evolutions_detail"
+                        android:background="#c89b9b9b" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.95" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Description"
+                    android:id="@+id/title_descript_detail"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:background="#bc3a3a3a" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="[ENTER POKEDEX ENTRY]"
+                    android:id="@+id/textview_pkdexentry_detail"
+                    android:layout_weight="0.95"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="#c89b9b9b" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6"
+                android:gravity="center" >
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:layout_margin="5dp"
+                    android:background="#c89b9b9b"
+                    android:gravity="top">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Base Stats"
+                        android:id="@+id/title_stats_base"
+                        android:layout_weight="0.1"
+                        android:layout_margin="0dp"
+                        android:background="#bc3a3a3a" />
+
+                    <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_horizontal"
+                        android:layout_weight="0.05"
+                        android:layout_marginTop="10dp">
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:measureWithLargestChild="false"
+                            android:id="@+id/tr_hp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginLeft="5dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:id="@+id/stat_hp"
+                                android:layout_weight="0.5"
+                                android:text="@string/hp" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="128"
+                                android:id="@+id/textview_hpval"
+                                android:layout_weight="0.9" />
+
+                            <ProgressBar
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:id="@+id/progbar_hpval"
+                                android:layout_weight="0.5"
+                                android:progress="128"
+                                android:max="255" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:measureWithLargestChild="false"
+                            android:id="@+id/tr_attack"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginLeft="5dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:id="@+id/stat_attack"
+                                android:layout_weight="0.5"
+                                android:text="@string/attack" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="128"
+                                android:id="@+id/textview_attackval"
+                                android:layout_weight="0.9" />
+
+                            <ProgressBar
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:id="@+id/progbar_attackval"
+                                android:layout_weight="0.5"
+                                android:progress="128"
+                                android:max="255" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:measureWithLargestChild="false"
+                            android:id="@+id/tr_defense"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginLeft="5dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:id="@+id/stat_defense"
+                                android:layout_weight="0.5"
+                                android:text="@string/defense" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="128"
+                                android:id="@+id/textView4"
+                                android:layout_weight="0.9" />
+
+                            <ProgressBar
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:id="@+id/progressBar7"
+                                android:layout_weight="0.5"
+                                android:progress="128"
+                                android:max="255" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:measureWithLargestChild="false"
+                            android:id="@+id/tr_spattack"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginLeft="5dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:id="@+id/textView5"
+                                android:layout_weight="0.5"
+                                android:text="@string/spattack" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="128"
+                                android:id="@+id/textView9"
+                                android:layout_weight="0.9" />
+
+                            <ProgressBar
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:id="@+id/progressBar8"
+                                android:layout_weight="0.5"
+                                android:progress="128"
+                                android:max="255" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:measureWithLargestChild="false"
+                            android:id="@+id/tr_spdefense"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginLeft="5dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:id="@+id/textView10"
+                                android:layout_weight="0.5"
+                                android:text="@string/spdefense" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="128"
+                                android:id="@+id/textView20"
+                                android:layout_weight="0.9" />
+
+                            <ProgressBar
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:id="@+id/progressBar9"
+                                android:layout_weight="0.5"
+                                android:progress="128"
+                                android:max="255" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:measureWithLargestChild="false"
+                            android:id="@+id/tr_speed"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginLeft="5dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:id="@+id/textView21"
+                                android:layout_weight="0.5"
+                                android:text="@string/speed" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="128"
+                                android:id="@+id/textView22"
+                                android:layout_weight="0.9" />
+
+                            <ProgressBar
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:id="@+id/progressBar10"
+                                android:layout_weight="0.5"
+                                android:progress="128"
+                                android:max="255" />
+                        </TableRow>
+
+                    </TableLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.9"
+                        android:gravity="top">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="18sp"
+                            android:text="Stats Total"
+                            android:id="@+id/title_sum"
+                            android:layout_margin="5dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="300"
+                            android:textSize="20sp"
+                            android:id="@+id/textview_statstotalsum"
+                            android:layout_margin="5dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <!-- android:layout_gravity="start" tells DrawerLayout to treat
+         this as a sliding drawer on the left side for left-to-right
+         languages and on the right side for right-to-left languages.
+         If you're not building against API 17 or higher, use
+         android:layout_gravity="left" instead. -->
+    <!-- The drawer is given a fixed width in dp and extends the full height of
+         the container. -->
+    <fragment android:id="@+id/navigation_drawer"
+        android:layout_width="@dimen/navigation_drawer_width" android:layout_height="match_parent"
+        android:layout_gravity="start" android:name="me.quadphase.qpdex.NavigationDrawerFragment"
+        tools:layout="@layout/fragment_navigation_drawer" />
+
+</android.support.v4.widget.DrawerLayout>
