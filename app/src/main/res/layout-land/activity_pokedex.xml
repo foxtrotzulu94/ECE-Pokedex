@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:gravity="center"
-    android:background="@drawable/dexbackland"
+    android:background="@drawable/dexbacktile"
     >
 
     <LinearLayout

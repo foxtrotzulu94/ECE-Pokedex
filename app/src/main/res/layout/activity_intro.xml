@@ -3,8 +3,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    android:background="@drawable/menubackground"
-    android:focusableInTouchMode="false">
+    android:focusableInTouchMode="false"
+    android:background="@drawable/menubackground">
 
     <LinearLayout
         android:orientation="vertical"
