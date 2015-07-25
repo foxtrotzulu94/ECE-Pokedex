@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:gravity="center_horizontal"
     android:focusableInTouchMode="false"
-    android:background="@drawable/menubackground">
+    android:id="@+id/lin_back">
 
     <LinearLayout
         android:orientation="vertical"
