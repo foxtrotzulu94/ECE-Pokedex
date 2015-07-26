@@ -19,6 +19,8 @@ import android.content.res.Configuration;
 import android.widget.TextView;
 
 import java.util.Date;
+import java.util.Formatter;
+import java.util.Locale;
 
 public class IntroActivity extends AppCompatActivity {
 
@@ -38,10 +40,18 @@ public class IntroActivity extends AppCompatActivity {
         LinearLayout lin = (LinearLayout)findViewById(R.id.lin_back);
         lin.setBackground(new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(), R.drawable.menubackground, op)));
 
-        //Show build date (DEVELOPMENT ONLY! REMOVE WHEN RELEASE)
-        TextView buildField = (TextView) findViewById(R.id.app_build);
-        Date buildDate = new Date(BuildConfig.TIMESTAMP);
-        buildField.setText("Built: "+buildDate.toString()+" ["+BuildConfig.BUILD_TYPE+"]");
+        //Show build information for debugging.
+        if (BuildConfig.DEBUG) {
+            TextView buildField = (TextView) findViewById(R.id.app_build);
+            Date buildDate = new Date(BuildConfig.TIMESTAMP);
+            Formatter formatter = new Formatter(new StringBuilder(), Locale.US);
+            formatter.format("[ %1$s build ] \nBuild: %2$s\nCommitt: %3$s \n[from %4$s]",
+                    BuildConfig.BUILD_TYPE,
+                    buildDate.toString(),
+                    BuildConfig.GIT_COMMIT_INFO,
+                    BuildConfig.GIT_BRANCH);
+            buildField.setText(formatter.toString());
+        }
 
         //Signal for collection if needed
         Runtime.getRuntime().gc();
