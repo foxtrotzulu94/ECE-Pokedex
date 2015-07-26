@@ -1,0 +1,69 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="me.quadphase.qpdex.WIPActivity"
+    android:background="@drawable/wipbacktile"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:fillViewport="true"
+    android:foregroundGravity="center">
+
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView" >
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:weightSum="1"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:background="#96f1f1f1">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView"
+                android:src="@drawable/underconstruction"
+                android:background="#96f1f1f1" />
+
+            <TextView android:text="@string/wip_banner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#96f1f1f1"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:id="@+id/wip_banner"
+                android:layout_marginBottom="20dp" />
+
+            <TextView android:text="@string/wip_text"
+                android:autoLink="web"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/wip_text"
+                android:background="#96f1f1f1"
+                android:gravity="center"
+                android:padding="5dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/wip_link"
+                android:id="@+id/textView_wiplink"
+                android:background="#96f1f1f1"
+                android:gravity="center"
+                android:textIsSelectable="true"
+                android:textStyle="bold"
+                android:textColorLink="#ff0e00f1"
+                android:linksClickable="true"
+                android:autoLink="web" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

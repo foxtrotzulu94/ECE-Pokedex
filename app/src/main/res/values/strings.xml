@@ -7,7 +7,7 @@
     <string name="enter_pokedex">Browse Now</string>
     <string name="enter_trainer">My Trainer</string>
     <string name="enter_gameview">Generations</string>
-    <string name="adv_search">Advance Search</string>
+    <string name="adv_search">Advanced Search</string>
     <string name="resource_button">Pokémon Resources</string>
     <!-- IntroActivity String End-->
 
@@ -19,6 +19,14 @@
     <string name="spdefense">Sp. Def.</string>
     <string name="speed">Speed</string>
     <!-- DetailedPokemonActivity Strings End-->
+
+    <string name="wip_banner">Pikachu and the Developers are hard at work here!</string>
+    <string name="wip_text">Sorry but this isn\'t complete yet!\n We\'re doing our best working day
+        and night to bring you the best Pokédex you can take with you on your journey to catch them all\n
+        But, fear not! We\'re Open-Source!\n
+        You can track our progress, ask a question or send a word of encouragement at our project page below:\n
+    </string>
+    <string name="wip_link">https://github.com/foxtrot94/ECE-Pokedex \n\n</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -33,4 +41,5 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_example">Example action</string>
+    <string name="title_activity_wip">WIPActivity</string>
 </resources>
