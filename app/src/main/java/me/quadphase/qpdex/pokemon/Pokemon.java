@@ -1,4 +1,4 @@
-package me.quadphase.qpdex;
+package me.quadphase.qpdex.pokemon;
 
 import java.util.List;
 
@@ -130,7 +130,7 @@ public class Pokemon {
         this.spAttack = spAttack;
         this.spDefence = spDefence;
         this.speed = speed;
-        this.caught = false;
+        this.caught = false; //TODO: CHANGE or else all pokemon will be registered as uncaught.
         this.genFirstAppeared = genFirstAppeared;
         this.hatchTime = hatchTime;
         this.catchRate = catchRate;

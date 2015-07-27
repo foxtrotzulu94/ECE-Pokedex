@@ -1,4 +1,4 @@
-package me.quadphase.qpdex;
+package me.quadphase.qpdex.pokemon;
 
 //
 //

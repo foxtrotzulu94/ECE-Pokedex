@@ -1,4 +1,4 @@
-package me.quadphase.qpdex;
+package me.quadphase.qpdex.pokemon;
 
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -21,6 +21,11 @@ import android.widget.TextView;
 import java.util.Date;
 import java.util.Formatter;
 import java.util.Locale;
+
+import me.quadphase.qpdex.BuildConfig;
+import me.quadphase.qpdex.PokedexActivity;
+import me.quadphase.qpdex.R;
+import me.quadphase.qpdex.WIPActivity;
 
 public class IntroActivity extends AppCompatActivity {
 
