@@ -78,6 +78,7 @@ public class PokedexActivity extends AppCompatActivity {
                         getString(R.string.title_section3),
                 });
         pokedexList.setAdapter(pokedexEntries);
+
     }
 
     @Override

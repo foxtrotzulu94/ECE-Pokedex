@@ -49,6 +49,14 @@ public class DetailedPokemonActivity extends FragmentActivity
             Log.e("QPDEX","EXCEPTION OCCURRED");
         }
 
+        //TODO: REMOVE LATER - TESTING ONLY!
+        sprite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                throw new RuntimeException("Clicked on an Invalid Pokemon!");
+            }
+        });
+
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
@@ -57,6 +65,7 @@ public class DetailedPokemonActivity extends FragmentActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
     }
 
     @Override
@@ -162,6 +171,11 @@ public class DetailedPokemonActivity extends FragmentActivity
             ((DetailedPokemonActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
+    }
+
+    //Just cause an exception, no questions asked.
+    public void causeException(View view){
+        throw new RuntimeException();
     }
 
 }

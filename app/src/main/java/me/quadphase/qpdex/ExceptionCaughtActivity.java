@@ -1,10 +1,17 @@
 package me.quadphase.qpdex;
 
+import android.app.Application;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /*
@@ -12,19 +19,37 @@ import android.widget.TextView;
  * Original Respository is here: https://github.com/hardik-trivedi/ForceClose
  */
 
-public class ExceptionCaughtActivity extends ActionBarActivity {
+public class ExceptionCaughtActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exception_caught);
+
+        //Cleanup any garbage
+        Runtime.getRuntime().gc();
+        System.gc();
+
         //Get the textView
         TextView stackView = (TextView) findViewById(R.id.textview_errorstack);
         stackView.setMovementMethod(new ScrollingMovementMethod());
+
         //Show the error trace
         if(getIntent().hasExtra("error_trace"))
         {
             stackView.setText(getIntent().getStringExtra("error_trace"));
+        }
+
+        //If we didn't run out of memory, load a background image
+        if(!getIntent().getStringExtra("error_trace").contains("OutOfMemory")) {
+            BitmapFactory.Options op = new BitmapFactory.Options();
+            op.inPreferredConfig = Bitmap.Config.RGB_565;
+            op.inSampleSize = 3;
+            op.inDither = false;
+            op.inPremultiplied = false;
+            op.inScaled = true;
+            LinearLayout lin = (LinearLayout) findViewById(R.id.lin_exceptionframe);
+            lin.setBackground(new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(), R.drawable.errorback2, op)));
         }
     }
 
@@ -48,5 +73,10 @@ public class ExceptionCaughtActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onExitException(View view){
+        //We could also implement methods to relaunch the qpdex on exception or submit a bug report to us.
+        this.finish();
     }
 }
