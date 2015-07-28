@@ -1,24 +1,21 @@
 package me.quadphase.qpdex;
 
 import android.app.Activity;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
+import android.widget.ImageButton;
+
+import java.io.InputStream;
 
 
 public class DetailedPokemonActivity extends FragmentActivity
@@ -38,6 +35,27 @@ public class DetailedPokemonActivity extends FragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed_pokemon);
+        Runtime.getRuntime().gc();
+        System.gc();
+
+        //Load the Detailed View Image Button.
+        //TODO: Extract and place in asset handling "Pokedex" class.
+        ImageButton sprite = (ImageButton)findViewById(R.id.imgbutton_pkmnsprite_detail);
+        try{
+            InputStream rawBits = getAssets().open("1/-1.png");
+            sprite.setImageBitmap(BitmapFactory.decodeStream(rawBits));
+        }
+        catch (Exception e){
+            Log.e("QPDEX","EXCEPTION OCCURRED");
+        }
+
+        //TODO: REMOVE LATER - TESTING ONLY!
+        sprite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                throw new RuntimeException("Clicked on an Invalid Pokemon!");
+            }
+        });
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -47,6 +65,7 @@ public class DetailedPokemonActivity extends FragmentActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
     }
 
     @Override
@@ -152,6 +171,11 @@ public class DetailedPokemonActivity extends FragmentActivity
             ((DetailedPokemonActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
+    }
+
+    //Just cause an exception, no questions asked.
+    public void causeException(View view){
+        throw new RuntimeException();
     }
 
 }

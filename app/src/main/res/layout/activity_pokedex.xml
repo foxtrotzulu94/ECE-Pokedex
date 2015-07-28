@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@drawable/dexback2">
+    android:background="@drawable/dexbacktile">
 
     <LinearLayout
         android:orientation="vertical"

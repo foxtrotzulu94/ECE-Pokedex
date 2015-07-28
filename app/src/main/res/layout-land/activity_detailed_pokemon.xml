@@ -15,7 +15,7 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/detailbackland">
+            android:background="@drawable/detailbacktile">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -35,28 +35,14 @@
                     android:background="#bc3a3a3a">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="[POKEMON NAME]"
-                        android:id="@+id/textview_pkmnname_detail"
-                        android:textSize="20sp"
-                        android:layout_margin="0dp" />
-
-                    <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/imgview_pkmntype1_detail"
-                        android:layout_weight="0.5"
-                        android:src="@drawable/typenone"
-                        android:scaleType="fitCenter" />
+                        android:text="Pokemon Data Summary"
+                        android:id="@+id/title"
+                        android:layout_weight="0.99"
+                        android:gravity="center|center_horizontal"
+                        android:textSize="20sp" />
 
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/imgview_pkmntype2_detail"
-                        android:layout_weight="0.5"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/typenone" />
 
                 </LinearLayout>
 
@@ -98,20 +84,46 @@
                 android:layout_marginLeft="5dp">
 
                 <LinearLayout
-                    android:orientation="vertical"
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.99"
                     android:background="#bc3a3a3a">
 
+
                     <TextView
                         android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="[POKEMON NAME]"
+                        android:id="@+id/textview_pkmnname_detail"
+                        android:textSize="20sp"
+                        android:layout_margin="0dp"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.3" />
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="Pokemon Data Summary"
-                        android:id="@+id/title"
-                        android:layout_weight="0.99"
-                        android:gravity="center|center_horizontal"
-                        android:textSize="20sp" />
+                        android:layout_weight="0.7">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/imgview_pkmntype1_detail"
+                            android:layout_weight="0.5"
+                            android:src="@drawable/typenone"
+                            android:scaleType="fitCenter" />
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/imgview_pkmntype2_detail"
+                            android:layout_weight="0.5"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/typenone" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
                 <!-- TODO: Evaluate if we wrap this up in a scroll view for better viewing in other devices-->
