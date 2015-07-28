@@ -9,15 +9,21 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
 public class ExceptionHandler implements java.lang.Thread.UncaughtExceptionHandler {
-    private final Activity myContext;
+//    private final Activity myContext;
+    private final Context appContext;
     private final String LINE_SEPARATOR = "\n";
 
-    public ExceptionHandler(Activity context) {
-        myContext = context;
+//    public ExceptionHandler(Activity context) {
+//        myContext = context;
+//    }
+
+    public ExceptionHandler(Context context){
+        appContext = context;
     }
 
     public void uncaughtException(Thread thread, Throwable exception) {
@@ -54,9 +60,9 @@ public class ExceptionHandler implements java.lang.Thread.UncaughtExceptionHandl
         errorReport.append(Build.VERSION.INCREMENTAL);
         errorReport.append(LINE_SEPARATOR);
 
-        Intent intent = new Intent(myContext, ExceptionCaughtActivity.class);
-        intent.putExtra("error", errorReport.toString());
-        myContext.startActivity(intent);
+        Intent intent = new Intent(appContext, ExceptionCaughtActivity.class);
+        intent.putExtra("error_trace", errorReport.toString());
+        appContext.startActivity(intent);
 
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(10);

@@ -2,9 +2,15 @@ package me.quadphase.qpdex;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
+/*
+ * This code is based on the "ForceClose Example made by Hardik Trivedi
+ * Original Respository is here: https://github.com/hardik-trivedi/ForceClose
+ */
 
 public class ExceptionCaughtActivity extends ActionBarActivity {
 
@@ -12,6 +18,14 @@ public class ExceptionCaughtActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exception_caught);
+        //Get the textView
+        TextView stackView = (TextView) findViewById(R.id.textview_errorstack);
+        stackView.setMovementMethod(new ScrollingMovementMethod());
+        //Show the error trace
+        if(getIntent().hasExtra("error_trace"))
+        {
+            stackView.setText(getIntent().getStringExtra("error_trace"));
+        }
     }
 
     @Override

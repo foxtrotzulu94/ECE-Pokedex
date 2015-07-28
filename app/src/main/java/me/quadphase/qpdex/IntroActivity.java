@@ -1,5 +1,6 @@
-package me.quadphase.qpdex.pokemon;
+package me.quadphase.qpdex;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.graphics.Bitmap;
@@ -57,6 +58,9 @@ public class IntroActivity extends AppCompatActivity {
                     BuildConfig.GIT_BRANCH);
             buildField.setText(formatter.toString());
         }
+
+        //Register with the ExceptionHandler
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
 
         //Signal for collection if needed
         Runtime.getRuntime().gc();
