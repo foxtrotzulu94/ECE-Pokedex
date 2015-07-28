@@ -1,6 +1,7 @@
 package me.quadphase.qpdex;
 
 import android.app.Application;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -11,6 +12,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -50,6 +52,8 @@ public class ExceptionCaughtActivity extends AppCompatActivity {
             op.inScaled = true;
             LinearLayout lin = (LinearLayout) findViewById(R.id.lin_exceptionframe);
             lin.setBackground(new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(), R.drawable.errorback2, op)));
+            ImageView exceptMan = (ImageView) findViewById(R.id.exception_icon);
+            exceptMan.setImageResource(R.drawable.missingnomin);
         }
     }
 
@@ -77,6 +81,13 @@ public class ExceptionCaughtActivity extends AppCompatActivity {
 
     public void onExitException(View view){
         //We could also implement methods to relaunch the qpdex on exception or submit a bug report to us.
+        Intent resetApp = new Intent(getBaseContext(), IntroActivity.class);
+        startActivity(resetApp);
         this.finish();
+    }
+
+    public void onBackPressed(){
+        super.onBackPressed();
+        onExitException(null);
     }
 }

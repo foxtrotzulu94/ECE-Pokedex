@@ -31,7 +31,7 @@
     <!-- -->
 
     <!-- Exception String -->
-    <string name="exception_title">Wild MISSINGNO. appeared!</string>
+    <string name="exception_title">Wild Exception appeared!</string>
     <string name="exception_text">It seems qpdex stopped working because of strange behaviour.\n
         We\'ve included some information about it below, but it be best you let the developers know so they can fix it
 

@@ -12,7 +12,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.55"
+        android:layout_weight="0.4"
         android:gravity="bottom|center">
 
         <LinearLayout
@@ -43,8 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/exception_icon"
-            android:src="@drawable/missingnomin"
-            android:layout_weight="0.6"
+            android:layout_weight="0.4"
             android:scaleType="fitCenter"
             android:background="#96f1f1f1" />
     </LinearLayout>
@@ -55,7 +54,7 @@
         android:maxLines="100"
         android:scrollbars="vertical"
         android:id="@+id/textview_errorstack"
-        android:layout_weight="0.35"
+        android:layout_weight="0.4"
         android:textSize="10sp"
         android:background="#c89b9b9b" />
 
