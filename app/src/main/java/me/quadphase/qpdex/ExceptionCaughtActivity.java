@@ -82,6 +82,7 @@ public class ExceptionCaughtActivity extends AppCompatActivity {
     public void onExitException(View view){
         //We could also implement methods to relaunch the qpdex on exception or submit a bug report to us.
         Intent resetApp = new Intent(getBaseContext(), IntroActivity.class);
+        resetApp.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(resetApp);
         this.finish();
     }

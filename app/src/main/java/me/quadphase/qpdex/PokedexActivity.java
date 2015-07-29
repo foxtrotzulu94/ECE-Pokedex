@@ -2,7 +2,10 @@ package me.quadphase.qpdex;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,10 +19,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import java.net.URI;
+
+import me.quadphase.qpdex.pokedex.CentralAudioPlayer;
 import me.quadphase.qpdex.pokemon.Pokemon;
 
 
 public class PokedexActivity extends AppCompatActivity {
+
+    AssetFileDescriptor afd;
+    CentralAudioPlayer testy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +37,17 @@ public class PokedexActivity extends AppCompatActivity {
 
         Runtime.getRuntime().gc();
         System.gc();
+
+        testy = CentralAudioPlayer.getInstance();
+        try{
+            afd = getAssets().openFd("1.ogg");
+            testy.updateInstace(1,afd);
+        }
+        catch(Exception e){
+            Log.e("QPDEX","Exception Occured!"+e.getMessage());
+        }
+
+
 
         //Set up Buttons
         Button cryButton = (Button)findViewById(R.id.button_pkmncry);
@@ -117,8 +137,17 @@ public class PokedexActivity extends AppCompatActivity {
 
     public void playPokemonCry(){
         Log.w("QPDEX","Playing Sound");
-        MediaPlayer mediaPlayer = MediaPlayer.create(this,R.raw.c249);
-        mediaPlayer.start();
-//        mediaPlayer.release();
+
+        testy.playCry();
+//
+//        mediaPlayer.start();
+//        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
+//        {
+//            @Override
+//            public void onCompletion(MediaPlayer mp)
+//            {
+//                mp.release();
+//            }
+//        });
     }
 }
