@@ -17,6 +17,8 @@ import json;
 
 # json.load('pokemon.json')
 
+
+# TODO Change the counter so that autoincrement works properly using the none keyword, look at pokemon scrapper file
 with open("pokemon.json") as data_file:
     data = json.load(data_file)
 
@@ -28,9 +30,9 @@ conn.commit()
 counter = 1
 
 for ability in data["abilities"]:
-    pokemonName = ability["name"]
-    pokemonDescription = ability["description"]
-    c.execute("INSERT INTO abilities VALUES (?,?,?)",(counter,pokemonName,pokemonDescription))
+    abilityName = ability["name"]
+    abilityDescription = ability["description"]
+    c.execute("INSERT INTO abilities VALUES (?,?,?)",(counter, abilityName, abilityDescription))
     conn.commit()
     counter+=1
 
