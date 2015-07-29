@@ -25,7 +25,10 @@ c = conn.cursor();
 
 c.execute("delete from " + "pokemon")
 # c.execute("ALTER TABLE pokemon AUTOINCREMENT = 1")
-c.execute("delete from" + " sqlite_sequence where name = 'pokemon'")
+c.execute("delete from " + " sqlite_sequence where name = 'pokemon'")
+
+c.execute("delete from " + "pokemon_suffix")
+c.execute("delete from" + " sqlite_sequence where name = 'pokemon_suffix'")
 conn.commit()
 counter = 1
 
@@ -106,7 +109,8 @@ for pokemons in data["pokemon"]:
         suffix = pokemons["alts"][i]["suffix"]
 
         if suffix is not "":
-            c.execute("INSERT INTO pokemon_suffix VALUES(?,?)", (pokemonID, suffix))
+            print(suffix)
+            c.execute("INSERT INTO pokemon_suffix VALUES (?,?)", (pokemonID, suffix))
             conn.commit()
 
     # c.execute("INSERT INTO pokemon ( name, description, height, weight, attack, defence, hp, spattack, spdefence, speed, genFirstAppeared, hatchTime, catchRate, genderRatioMale) VALUES ( name, description, height, weight, attack, defence, healthPoints, spAttack, spDefence, speed, generation, hatchTime, catchRate, genderRatioMale)")

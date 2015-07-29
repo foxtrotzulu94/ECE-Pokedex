@@ -26,15 +26,16 @@ conn = sqlite3.connect('..//database/pokedex.sqlite3')
 c = conn.cursor();
 
 c.execute("delete from " + "abilities")
+c.execute("delete from" + " sqlite_sequence where name = 'abilities'")
 conn.commit()
-counter = 1
+#counter = 1
 
 for ability in data["abilities"]:
     abilityName = ability["name"]
     abilityDescription = ability["description"]
-    c.execute("INSERT INTO abilities VALUES (?,?,?)",(counter, abilityName, abilityDescription))
+    c.execute("INSERT INTO abilities VALUES (?,?,?)",(None, abilityName, abilityDescription))
     conn.commit()
-    counter+=1
+   # counter+=1
 
 
 conn.commit()
