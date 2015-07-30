@@ -5,7 +5,7 @@ import android.media.MediaPlayer;
 import android.widget.ArrayAdapter;
 
 import java.io.InputStream;
-import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.List;
 
 import me.quadphase.qpdex.pokemon.Pokemon;
@@ -15,6 +15,10 @@ import me.quadphase.qpdex.pokemon.Pokemon;
  * This class is a singleton that should be use when interaction is needed with activities.
  */
 public class PokedexManager {
+    //TODO: Set through Database retrieval for MAX generation.
+    public static int latestGeneration = 6;
+    public static int countAllPokemon = 721;
+
     private static PokedexManager instance = null;
 
     //Factory and Object Access Variables
@@ -23,10 +27,11 @@ public class PokedexManager {
      */
     private PokemonFactory generator;
 
-    /**
-     * Object in charge of creating Pokemon through calls to Database Accessor.
-     */
-    private PokedexAssetFactory assetStore;
+//      TODO: scrap. PokedexAssetFactory is now static.
+//    /**
+//     * Object in charge of creating Pokemon through calls to Database Accessor.
+//     */
+//    private PokedexAssetFactory assetStore;
 
     /**
      * Wrapper for Android's Media Class
@@ -52,7 +57,8 @@ public class PokedexManager {
      * Current generation being viewed. In case we want the Pokedex to go back in time
      * As a safety measure, it always defaults to the latest generation.
      */
-    private int generationDisplayed = 6;  //TODO: Avoid the hardcoding
+    private int generationCurrentlyDisplayed = latestGeneration;
+
     /**
      * Reference to the current pokemon being viewed or focused
      */
@@ -64,10 +70,10 @@ public class PokedexManager {
     private AssetFileDescriptor pokemonCry; //TODO: probably moved to CentralAudioPlayer
 
     /**
-     * Dictionary to access the sprite of the pokemon for a given generation
+     * HashMap to access the sprite of the pokemon for a given generation
      * Will be a single mapped value if there is only one.
      */
-    private Dictionary<String,InputStream> pokemonSpriteList;
+    private HashMap<String,InputStream> pokemonSpriteList;
 
     //Constructor and Instance Access for Singleton
     protected PokedexManager(){
@@ -158,9 +164,9 @@ public class PokedexManager {
 
 
     /**
-     * Retrieve the Dictionary containing all Pokemon Sprites
+     * Retrieve the HashMap containing all Pokemon Sprites
      */
-    public Dictionary<String, InputStream> getPokemonSpriteList() {
+    public HashMap<String, InputStream> getPokemonSpriteList() {
         return pokemonSpriteList;
     }
 

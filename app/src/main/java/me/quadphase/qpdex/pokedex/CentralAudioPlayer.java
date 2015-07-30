@@ -9,14 +9,11 @@ import android.util.Log;
  * This class is a Singleton that gets instantiated by the {@link PokedexManager}
  */
 //TODO: Document with JavaDocs!
-public class CentralAudioPlayer {
+public class CentralAudioPlayer implements IMediaPlayerWrapper {
     //Internal Class
     protected class CompletedPlayback implements MediaPlayer.OnCompletionListener{
         @Override
         public void onCompletion(MediaPlayer mediaPlayer){
-//            mediaPlayer.release(); //Used in PokedexActivity, but wrongly
-//            mediaPlayer.reset(); //For now, we can reset the media player and recycle the instance.
-
             //Go back to the begginning of the track if nothing has changed.
             isPlaying = false;
             if(isDirty){
@@ -68,6 +65,7 @@ public class CentralAudioPlayer {
 
 
     //Methods for behaviour
+    @Override
     public void updateInstace(int pokemonID, AssetFileDescriptor pokemonCry){
         cachedPokemonID = pokemonID;
         cachedAudioFile = pokemonCry;
@@ -80,12 +78,14 @@ public class CentralAudioPlayer {
         }
     }
 
+    @Override
     public boolean isReady(){
         //TODO: Safeguard by opening a default cry and remove the cache params
         return (cachedAudioFile!=null && cachedPokemonID!=0 && !isDirty && !isPlaying);
     }
 
-    public void playCry(){
+    @Override
+    public void playSound(){
         if (!isPlaying) {
             isPlaying = true;
             try {
@@ -105,7 +105,7 @@ public class CentralAudioPlayer {
             androidMP.reset();
             setNewPokemonCry();
             isPlaying = false;
-            playCry();
+            playSound();
         }
     }
 

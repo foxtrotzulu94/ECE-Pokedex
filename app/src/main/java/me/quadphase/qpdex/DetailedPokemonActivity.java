@@ -41,8 +41,9 @@ public class DetailedPokemonActivity extends FragmentActivity
         //Load the Detailed View Image Button.
         //TODO: Extract and place in asset handling "Pokedex" class.
         ImageButton sprite = (ImageButton)findViewById(R.id.imgbutton_pkmnsprite_detail);
+        InputStream rawBits;
         try{
-            InputStream rawBits = getAssets().open("1/-1.png");
+            rawBits = getAssets().open("1/-1.png");
             sprite.setImageBitmap(BitmapFactory.decodeStream(rawBits));
         }
         catch (Exception e){
