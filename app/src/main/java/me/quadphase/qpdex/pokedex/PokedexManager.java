@@ -16,8 +16,8 @@ import me.quadphase.qpdex.pokemon.Pokemon;
  */
 public class PokedexManager {
     //TODO: Set through Database retrieval for MAX generation.
-    public static int latestGeneration = 6;
-    public static int countAllPokemon = 721;
+    public static final int latestGeneration = 6;
+    private static int countMaxNationalID = 721;
 
     private static PokedexManager instance = null;
 
@@ -171,9 +171,11 @@ public class PokedexManager {
     }
 
     /**
-     * Indicate what Pokemon is being viewed
+     * Retrieve a general sprite for the Pokemon within a Generation.
+     * Returns null if the generation is not valid.
      */
     public InputStream getPokemonSpriteForGeneration(int genID){
-        return pokemonSpriteList.get(genID);
+        //Note that the query on the Dictionary is restricted to Generation.
+        return pokemonSpriteList.get(Integer.toString(genID));
     }
 }

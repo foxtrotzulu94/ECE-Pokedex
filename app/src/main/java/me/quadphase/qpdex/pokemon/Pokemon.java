@@ -18,15 +18,29 @@ import java.util.List;
  * Used to describe the base characteristics of each Pokemon
  */
 public class Pokemon {
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //NOTE:
+    // PokemonUniqueID: one-to-one mapping to a specific pokemon, including Mega Evolution and gendered
+    // PokemonNationalID: one-to-many mapping used to identify pokemon by a common name, but without
+    //                  relation to specific stats. This the number shown in the Pokedex.
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
     /**
      * List of the abilities that the Pokemon has
      * MAX: 3
      */
     public List<Ability> abilities;
     /**
-     * Pokemon ID in the original Pokedex
+     * Pokemon ID as the guaranteed Unique Key in our application
      */
-    private int pokemonID;
+    private int pokemonUniqueID;
+
+    /**
+     * Pokemon National ID as registered in the Pokedex
+     */
+    private int pokemonNationalID;
+
     /**
      * Name of the Pokemon in English
      */
@@ -118,8 +132,8 @@ public class Pokemon {
     /**
      * Constructor
      */
-    public Pokemon(int pokemonID, String name, String description, double height, double weight, int attack, int defence, int hp, int spAttack, int spDefence, int speed, int genFirstAppeared, int hatchTime, int catchRate, int genderRatioMale, List<Location> locations, List<Ability> abilities, List<Move> moves, List<Type> types, List<EggGroup> eggGroups, List<Evolution> evolutions) {
-        this.pokemonID = pokemonID;
+    public Pokemon(int pokemonUniqueID, String name, String description, double height, double weight, int attack, int defence, int hp, int spAttack, int spDefence, int speed, int genFirstAppeared, int hatchTime, int catchRate, int genderRatioMale, List<Location> locations, List<Ability> abilities, List<Move> moves, List<Type> types, List<EggGroup> eggGroups, List<Evolution> evolutions) {
+        this.pokemonUniqueID = pokemonUniqueID;
         this.name = name;
         this.description = description;
         this.height = height;
@@ -150,8 +164,12 @@ public class Pokemon {
         return abilities;
     }
 
-    public int getPokemonID() {
-        return pokemonID;
+    public int getPokemonUniqueID() {
+        return pokemonUniqueID;
+    }
+
+    public int getPokemonNationalID() {
+        return pokemonNationalID;
     }
 
     public String getName() {

@@ -35,8 +35,14 @@ public class DetailedPokemonActivity extends FragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed_pokemon);
+
+        //Pickup any garbage.
         Runtime.getRuntime().gc();
         System.gc();
+
+        //TODO: Show tabs on this view if displaying multi-variant (suffixed) pokemon
+        //      This could be Mega-Evolution, male and female forms, etc.
+
 
         //Load the Detailed View Image Button.
         //TODO: Extract and place in asset handling "Pokedex" class.

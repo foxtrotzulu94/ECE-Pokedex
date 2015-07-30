@@ -32,7 +32,7 @@ public class CentralAudioPlayer implements IMediaPlayerWrapper {
 
     private MediaPlayer androidMP;
     private AssetFileDescriptor cachedAudioFile=null;
-    private int cachedPokemonID=0;
+    private int cachedNationalID =0;
     private boolean isDirty=true;
     private boolean isPlaying=false;
 
@@ -66,8 +66,8 @@ public class CentralAudioPlayer implements IMediaPlayerWrapper {
 
     //Methods for behaviour
     @Override
-    public void updateInstace(int pokemonID, AssetFileDescriptor pokemonCry){
-        cachedPokemonID = pokemonID;
+    public void updateInstace(int pokemonNationalID, AssetFileDescriptor pokemonCry){
+        cachedNationalID = pokemonNationalID;
         cachedAudioFile = pokemonCry;
         if (!isPlaying) {
             setNewPokemonCry();
@@ -81,7 +81,7 @@ public class CentralAudioPlayer implements IMediaPlayerWrapper {
     @Override
     public boolean isReady(){
         //TODO: Safeguard by opening a default cry and remove the cache params
-        return (cachedAudioFile!=null && cachedPokemonID!=0 && !isDirty && !isPlaying);
+        return (cachedAudioFile!=null && cachedNationalID !=0 && !isDirty && !isPlaying);
     }
 
     @Override
