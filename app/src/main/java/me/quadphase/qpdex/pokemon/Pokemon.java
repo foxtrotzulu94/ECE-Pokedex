@@ -149,16 +149,16 @@ public class Pokemon {
     }
 
     /**
-     * Constructor with {@link MinimalPokemon}, which has basic pokemon information nationalID,
+     * Constructor with {@link minimalPokemon}, which has basic pokemon information nationalID,
      * name, description, and type(s)
      *
      */
-    public Pokemon(MinimalPokemon minimalPokemon, double height, double weight, int attack,
+    public Pokemon(minimalPokemon minimalPokemon, double height, double weight, int attack,
                    int defence, int hp, int spAttack, int spDefence, int speed, boolean caught,
                    int genFirstAppeared, int hatchTime, int catchRate, int genderRatioMale,
                    List<Location> locations, List<Ability> abilities, List<Move> moves,
                    List<EggGroup> eggGroups, List<Evolution> evolutions) {
-        this.pokemonID = minimalPokemon.getPokemonID();
+        this.pokemonID = minimalPokemon.getNationalID();
         this.name = minimalPokemon.getName();
         this.description = minimalPokemon.getDescription();
         this.height = height;
