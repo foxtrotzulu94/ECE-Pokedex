@@ -15,7 +15,11 @@ import android.util.Log;
 //TODO: Document with JavaDocs!
 public class PokedexAssetFactory {
     public static final String SPRITE_PATH="sprites";
+    public static final String PKMN_SPRITE_PATH="sprites/pokemon";
+    public static final String MINI_SPRITE_PATH="sprites/pokemon/mini";
+    public static final String TYPE_SPRITE_PATH="sprites/types";
     public static final String SFX_PATH="sound";
+    public static final String CRY_PATH="sound/cries";
     public static final String GEN_PREFIX="gen";
 
     public static final String IMG_FORMAT=".png";
@@ -31,7 +35,7 @@ public class PokedexAssetFactory {
         if (validGeneration) {
             Formatter assetPath = new Formatter(new StringBuilder(), Locale.US);
             assetPath.format("%1$s/%2$s%3$s/%4$s%5$s",
-                    SPRITE_PATH,
+                    PKMN_SPRITE_PATH,
                     GEN_PREFIX,
                     Integer.toString(Generation),
                     Integer.toString(PokemonID),
@@ -74,7 +78,7 @@ public class PokedexAssetFactory {
         AssetFileDescriptor crySoundFile = null;
         Formatter assetPath = new Formatter(new StringBuilder(), Locale.US);
         assetPath.format("%1$s/%2$s%3$s",
-                SFX_PATH,
+                CRY_PATH,
                 Integer.toString(PokemonID),
                 SOUND_FORMAT);
         try{
@@ -88,12 +92,39 @@ public class PokedexAssetFactory {
 
     //TODO: Implement
     public static InputStream getPokemonMinimalSprite(int PokemonID){
-        return null;
+        Formatter assetPath = new Formatter(new StringBuilder(), Locale.US);
+        assetPath.format("%1$s/%2$s%3$s",
+                MINI_SPRITE_PATH,
+                Integer.toString(PokemonID),
+                IMG_FORMAT);
+        InputStream pkmnSprite=null;
+        try{
+            pkmnSprite = Resources.getSystem().getAssets().open(assetPath.toString());
+        }
+        catch(java.io.IOException exception){
+            Log.e("QPDEX","Problem while loading sprite with path "+assetPath.toString()+"\n"+exception.getMessage());
+        }
+        return pkmnSprite;
     }
 
-    //TODO: Implement
+
     public static InputStream getTypeBadge(String typeName){
-        return null;
+        //TODO: Check if valid type string
+        Formatter assetPath = new Formatter(new StringBuilder(), Locale.US);
+
+        assetPath.format("%1$s/%2$s%3$s",
+                TYPE_SPRITE_PATH,
+                typeName.toLowerCase(),
+                IMG_FORMAT);
+
+        InputStream typeSprite=null;
+        try{
+            typeSprite = Resources.getSystem().getAssets().open(assetPath.toString());
+        }
+        catch(java.io.IOException exception){
+            Log.e("QPDEX","Problem while loading type sprite with path "+assetPath.toString()+"\n"+exception.getMessage());
+        }
+        return typeSprite;
     }
 
 }
