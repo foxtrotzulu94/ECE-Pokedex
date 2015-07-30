@@ -118,7 +118,12 @@ public class Pokemon {
     /**
      * Constructor
      */
-    public Pokemon(int pokemonID, String name, String description, double height, double weight, int attack, int defence, int hp, int spAttack, int spDefence, int speed, int genFirstAppeared, int hatchTime, int catchRate, int genderRatioMale, List<Location> locations, List<Ability> abilities, List<Move> moves, List<Type> types, List<EggGroup> eggGroups, List<Evolution> evolutions) {
+    public Pokemon(int pokemonID, String name, String description, double height, double weight,
+                   int attack, int defence, int hp, int spAttack, int spDefence, int speed,
+                   boolean caught, int genFirstAppeared, int hatchTime, int catchRate,
+                   int genderRatioMale, List<Location> locations, List<Ability> abilities,
+                   List<Move> moves, List<Type> types, List<EggGroup> eggGroups,
+                   List<Evolution> evolutions) {
         this.pokemonID = pokemonID;
         this.name = name;
         this.description = description;
@@ -130,7 +135,7 @@ public class Pokemon {
         this.spAttack = spAttack;
         this.spDefence = spDefence;
         this.speed = speed;
-        this.caught = false; //TODO: CHANGE or else all pokemon will be registered as uncaught.
+        this.caught = caught;
         this.genFirstAppeared = genFirstAppeared;
         this.hatchTime = hatchTime;
         this.catchRate = catchRate;
@@ -139,6 +144,40 @@ public class Pokemon {
         this.abilities = abilities;
         this.moves = moves;
         this.types = types;
+        this.eggGroups = eggGroups;
+        this.evolutions = evolutions;
+    }
+
+    /**
+     * Constructor with {@link MinimalPokemon}, which has basic pokemon information nationalID,
+     * name, description, and type(s)
+     *
+     */
+    public Pokemon(MinimalPokemon minimalPokemon, double height, double weight, int attack,
+                   int defence, int hp, int spAttack, int spDefence, int speed, boolean caught,
+                   int genFirstAppeared, int hatchTime, int catchRate, int genderRatioMale,
+                   List<Location> locations, List<Ability> abilities, List<Move> moves,
+                   List<EggGroup> eggGroups, List<Evolution> evolutions) {
+        this.pokemonID = minimalPokemon.getPokemonID();
+        this.name = minimalPokemon.getName();
+        this.description = minimalPokemon.getDescription();
+        this.height = height;
+        this.weight = weight;
+        this.attack = attack;
+        this.defence = defence;
+        this.hp = hp;
+        this.spAttack = spAttack;
+        this.spDefence = spDefence;
+        this.speed = speed;
+        this.caught = caught;
+        this.genFirstAppeared = genFirstAppeared;
+        this.hatchTime = hatchTime;
+        this.catchRate = catchRate;
+        this.genderRatioMale = genderRatioMale;
+        this.locations = locations;
+        this.abilities = abilities;
+        this.moves = moves;
+        this.types = minimalPokemon.getTypes();
         this.eggGroups = eggGroups;
         this.evolutions = evolutions;
     }
