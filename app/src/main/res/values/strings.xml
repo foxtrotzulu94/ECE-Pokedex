@@ -20,7 +20,7 @@
     <string name="speed">Speed</string>
     <!-- DetailedPokemonActivity Strings End-->
 
-    <!-- -->
+    <!-- Work in Progress strings-->
     <string name="wip_banner">Pikachu and the Developers are hard at work here!</string>
     <string name="wip_text">Sorry but this isn\'t complete yet!\n We\'re doing our best working day
         and night to bring you an awesome Pokédex you can take with you on your journey to catch them all\n
@@ -36,6 +36,13 @@
         We\'ve included some information about it below, but it be best you let the developers know so they can fix it
 
     </string>
+
+    <!-- Easter Egg -->
+    <!--<string name="ketsuban">けつばん</string>-->
+
+    <!-- Placeholder -->
+    <string name="dex_list_placeholder">[NUM]. [POKEMON]</string>
+
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
