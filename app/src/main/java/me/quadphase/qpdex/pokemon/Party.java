@@ -12,8 +12,7 @@ package me.quadphase.qpdex.pokemon;
 //
 
 
-import java.util.LinkedList;
-import java.util.List;
+import me.quadphase.qpdex.databaseAccess.PokemonFactory;
 
 /**
  * These <code>Pokemon</code> are in your party. They each have a particular set of moves.
@@ -23,19 +22,19 @@ public class Party {
     /**
      * Max: 6
      */
-    private List<Pokemon> pokemon;
+    private Pokemon[] pokemon;
 
     /**
      * 1 move set per Pokemon in the <code>pokemon</code> list
      */
-    private List<MoveSet> moveSets;
+    private MoveSet[] moveSets;
 
     /**
-     * Constructor to make an empty party
+     * Constructor to make an empty party for up to 6 pokemon
      */
     public Party() {
-        this.pokemon = new LinkedList<Pokemon>();
-        this.moveSets = new LinkedList<MoveSet>();
+        this.pokemon = new Pokemon[6];
+        this.moveSets = new MoveSet[6];
     }
 
     /**
@@ -47,12 +46,43 @@ public class Party {
      * <code>false</code> if the party already had 6 pokemon, so the pokemon is not added
      */
     public boolean addPokemonToParty(Pokemon p, MoveSet m) {
-        if (pokemon.size() < 6) {
+        int partyID = firstAvailableSpotInParty();
+        if (partyID != 0) {
             // TODO: Add the pokemon to the party with its moveset
+            PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(/*context*/null);
+            try {
+                pokemonFactory.addPokemonToParty(partyID, p.getPokemonUniqueID(), m);
+            } catch (Exception e) {
+                // do something
+            }
             return true;
         } else {
             return false;
         }
+    }
+
+    /**
+     * Counts the number of pokemon that are currently in the party.
+     *
+     * @return the number of occupied spots in the party
+     */
+    private int countPokemonInParty() {
+        int totalPokemon = 0;
+        for (int i = 0; i < 6; i++) {
+            if (pokemon[i] != null) {
+                totalPokemon++;
+            }
+        }
+        return totalPokemon;
+    }
+
+    private int firstAvailableSpotInParty() {
+        for (int i = 0; i < 6; i++) {
+            if (pokemon[i] == null) {
+                return i+1;
+            }
+        }
+        return 0;
     }
 
     /**
@@ -61,7 +91,7 @@ public class Party {
      * @param p - pokemon to be removed from the party
      */
     public void removePokemonFromParty(Pokemon p) {
-        // TODO: remove a pokemon
+        // TODO: remove a pokemon and its corresponding moveset
     }
 
     /**

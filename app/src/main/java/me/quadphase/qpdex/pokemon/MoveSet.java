@@ -49,4 +49,8 @@ public class MoveSet {
     public List<Move> getMoves() {
         return moves;
     }
+
+    public int getNumberOfMoves() {
+        return moves.size();
+    }
 }

@@ -51,11 +51,6 @@ public class Move {
     private int genFirstAppeared;
 
     /**
-     * the secondary effects of the move
-     */
-    private String secondaryEffects;
-
-    /**
      * the category of the move
      * Possible categories:
      * - Special
@@ -72,7 +67,7 @@ public class Move {
     /**
      * Constructor
      */
-    public Move(String name, String description, int power, int accuracy, int pp, String affects, int genFirstAppeared, String secondaryEffects, String category, Type type) {
+    public Move(String name, String description, int power, int accuracy, int pp, String affects, int genFirstAppeared, String category, Type type) {
         this.name = name;
         this.description = description;
         this.power = power;
@@ -80,7 +75,6 @@ public class Move {
         this.pp = pp;
         this.affects = affects;
         this.genFirstAppeared = genFirstAppeared;
-        this.secondaryEffects = secondaryEffects;
         this.category = category;
         this.type = type;
     }
@@ -114,10 +108,6 @@ public class Move {
 
     public int getGenFirstAppeared() {
         return genFirstAppeared;
-    }
-
-    public String getSecondaryEffects() {
-        return secondaryEffects;
     }
 
     public String getCategory() {

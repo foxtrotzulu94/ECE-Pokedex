@@ -26,11 +26,14 @@ public class MinimalPokemon {
      */
     private List<Type> types;
 
-    public MinimalPokemon(int nationalID, String name, String description, List<Type> types) {
+    private boolean caught;
+
+    public MinimalPokemon(int nationalID, String name, String description, List<Type> types, boolean caught) {
         this.nationalID = nationalID;
         this.name = name;
         this.description = description;
         this.types = types;
+        this.caught = caught;
     }
 
     public int getNationalID() {
@@ -47,5 +50,9 @@ public class MinimalPokemon {
 
     public List<Type> getTypes() {
         return types;
+    }
+
+    public boolean isCaught() {
+        return caught;
     }
 }
