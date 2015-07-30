@@ -4,16 +4,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import java.util.Locale;
 
 import me.quadphase.qpdex.pokedex.CentralAudioPlayer;
 
@@ -22,6 +27,7 @@ public class PokedexActivity extends AppCompatActivity {
 
     AssetFileDescriptor afd;
     CentralAudioPlayer testy;
+    TextToSpeech tts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,15 +89,23 @@ public class PokedexActivity extends AppCompatActivity {
         ListView pokedexList = (ListView) findViewById(R.id.listv_pkdexentries);
         ArrayAdapter<String> pokedexEntries = new ArrayAdapter<String>(
                 this,
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
+                R.layout.pokedexrow,
+                R.id.textview_pkmn_list_entry,
                 new String[]{
                         getString(R.string.title_section1),
                         getString(R.string.title_section2),
                         getString(R.string.title_section3),
                 });
         pokedexList.setAdapter(pokedexEntries);
-
+        pokedexList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("QPDex","List view touched");
+                Toast.makeText(getApplicationContext(),
+                        "Click ListItem Number " + position, Toast.LENGTH_LONG)
+                        .show();
+            }
+        });
     }
 
     @Override
@@ -142,5 +156,30 @@ public class PokedexActivity extends AppCompatActivity {
 //                mp.release();
 //            }
 //        });
+    }
+
+    public void saySomething(View view){
+        //TODO: Move elsewhere similar to CentralMediaPlayer so that resources don't leak!
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+
+            @Override
+            public void onInit(int status) {
+                // TODO Auto-generated method stub
+                if(status == TextToSpeech.SUCCESS){
+                    int result=tts.setLanguage(Locale.US);
+                    if(result==TextToSpeech.LANG_MISSING_DATA ||
+                            result==TextToSpeech.LANG_NOT_SUPPORTED){
+                        Log.e("error", "This Language is not supported");
+                    }
+                    else{
+                        String text = "Lugia's wings pack devastating power. A light fluttering of its wings can blow apart regular houses. As a result, this Pokémon chooses to live out of sight deep under the sea.";
+                        tts.speak(text, TextToSpeech.QUEUE_ADD, null);
+                    }
+                }
+                else
+                    Log.e("error", "Initilization Failed!");
+            }
+        });
+
     }
 }

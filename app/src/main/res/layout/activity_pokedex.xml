@@ -88,7 +88,8 @@
                     android:layout_margin="5dp"
                     android:focusableInTouchMode="true"
                     android:focusable="true"
-                    android:clickable="true"/>
+                    android:clickable="true"
+                    android:onClick="saySomething" />
 
                 <LinearLayout
                     android:orientation="horizontal"
@@ -185,7 +186,8 @@
             android:focusable="true"
             android:clickable="true"
             android:headerDividersEnabled="false"
-            android:listSelector="#be2c2c2c" />
+            android:listSelector="@drawable/pokedexrow_selector"
+            android:choiceMode="singleChoice" />
     </LinearLayout>
 
 </LinearLayout>
