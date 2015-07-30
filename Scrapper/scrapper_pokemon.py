@@ -104,7 +104,7 @@ for pokemons in data["pokemon"]:
 
         conn.commit()
 
-        #
+        #++
         pokemonID = c.lastrowid
         suffix = pokemons["alts"][i]["suffix"]
 
