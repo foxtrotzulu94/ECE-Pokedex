@@ -21,18 +21,6 @@ public class PokedexManager {
 
     private static PokedexManager instance = null;
 
-    //Factory and Object Access Variables
-    /**
-     * Object in charge of creating Pokemon through calls to Database Accessor.
-     */
-    private PokemonFactory generator;
-
-//      TODO: scrap. PokedexAssetFactory is now static.
-//    /**
-//     * Object in charge of creating Pokemon through calls to Database Accessor.
-//     */
-//    private PokedexAssetFactory assetStore;
-
     /**
      * Wrapper for Android's Media Class
      */
