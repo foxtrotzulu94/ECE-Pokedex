@@ -10,7 +10,7 @@ import java.util.List;
 import me.quadphase.qpdex.pokemon.Ability;
 import me.quadphase.qpdex.pokemon.Game;
 import me.quadphase.qpdex.pokemon.Location;
-import me.quadphase.qpdex.pokemon.minimalPokemon;
+import me.quadphase.qpdex.pokemon.MinimalPokemon;
 import me.quadphase.qpdex.pokemon.Move;
 import me.quadphase.qpdex.pokemon.Pokemon;
 import me.quadphase.qpdex.pokemon.Type;
@@ -44,7 +44,7 @@ public class PokemonFactory {
      *
      * @return List of all pokemon from the database with the nationalID and the name
      */
-    public List<minimalPokemon> getAllPokemon() {
+    public List<MinimalPokemon> getAllPokemon() {
         return null;
     }
 

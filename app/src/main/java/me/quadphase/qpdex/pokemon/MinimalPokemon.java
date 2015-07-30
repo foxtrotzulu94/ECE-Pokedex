@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * This is a minimal Pokemon that only has the bare minimum necessary to be used on the main screen.
  */
-public class minimalPokemon {
+public class MinimalPokemon {
 
     /**
      * National ID in the original Pokedex
@@ -26,7 +26,7 @@ public class minimalPokemon {
      */
     private List<Type> types;
 
-    public minimalPokemon(int nationalID, String name, String description, List<Type> types) {
+    public MinimalPokemon(int nationalID, String name, String description, List<Type> types) {
         this.nationalID = nationalID;
         this.name = name;
         this.description = description;
