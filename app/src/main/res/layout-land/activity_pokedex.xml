@@ -31,7 +31,7 @@
                 android:id="@+id/button_prevpkmn" />
 
             <EditText
-                android:text="[POKEMON NAME]"
+                android:imeOptions="flagNoExtractUi"
                 android:singleLine="true"
                 android:maxLines="1"
                 android:layout_width="wrap_content"
@@ -44,7 +44,8 @@
                 android:enabled="true"
                 android:selectAllOnFocus="true"
                 android:focusableInTouchMode="true"
-                android:lines="1" />
+                android:lines="1"
+                android:hint="@string/pokedex_init_title" />
 
 
             <!-- Eventually consider replacing for image-->
@@ -75,7 +76,7 @@
                     android:id="@+id/imgbutton_pkmnsprite"
                     android:layout_weight="0.4"
                     android:layout_margin="5dp"
-                    android:src="@drawable/spritetest"
+                    android:src="@drawable/sprite_unknown"
                     android:scaleType="fitCenter"
                     android:onClick="switchToPokemonData" />
 
@@ -121,14 +122,15 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="[ENTER POKEDEX ENTRY]"
+                android:text="@string/pokedex_init_description"
                 android:id="@+id/textview_pkmndescript"
                 android:layout_weight="0.6"
                 android:layout_margin="10dp"
                 android:background="#ffffff"
                 android:focusableInTouchMode="true"
                 android:focusable="true"
-                android:clickable="true"/>
+                android:clickable="true"
+                android:padding="5dp" />
         </LinearLayout>
 
     </LinearLayout>
@@ -156,10 +158,11 @@
             android:id="@+id/listv_pkdexentries"
             android:layout_weight="0.05"
             android:background="#80666666"
-            android:listSelector="#be2c2c2c"
             android:clickable="true"
             android:focusable="true"
-            android:focusableInTouchMode="true" />
+            android:focusableInTouchMode="true"
+            android:listSelector="@drawable/pokedexrow_selector"
+            android:choiceMode="singleChoice" />
     </LinearLayout>
 
 </LinearLayout>

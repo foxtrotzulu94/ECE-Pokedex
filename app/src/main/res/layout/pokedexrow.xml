@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:id="@+id/img_pkmnmini"
-        android:src="@drawable/mini_placeholder"
+        android:src="@drawable/minisprite_placeholder"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp" />
 

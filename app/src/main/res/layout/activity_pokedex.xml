@@ -33,7 +33,6 @@
                 android:id="@+id/button_prevpkmn" />
 
             <EditText
-                android:text="[POKEMON NAME]"
                 android:singleLine="true"
                 android:maxLines="1"
                 android:layout_width="wrap_content"
@@ -46,7 +45,8 @@
                 android:enabled="true"
                 android:selectAllOnFocus="true"
                 android:focusableInTouchMode="true"
-                android:lines="1" />
+                android:lines="1"
+                android:hint="@string/pokedex_init_title" />
 
 
             <!-- Eventually consider replacing for image-->
@@ -80,16 +80,17 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="[ENTER POKEDEX ENTRY]"
+                    android:text="@string/pokedex_init_description"
                     android:id="@+id/textview_pkmndescript"
                     android:background="#fff1f1f1"
                     android:layout_weight="0.4"
-                    android:gravity="center_horizontal"
+                    android:gravity="start|center_horizontal"
                     android:layout_margin="5dp"
                     android:focusableInTouchMode="true"
                     android:focusable="true"
                     android:clickable="true"
-                    android:onClick="saySomething" />
+                    android:onClick="saySomething"
+                    android:padding="5dp" />
 
                 <LinearLayout
                     android:orientation="horizontal"
@@ -137,7 +138,7 @@
                     android:layout_height="match_parent"
                     android:id="@+id/imgbutton_pkmnsprite"
                     android:layout_weight="0.1"
-                    android:src="@drawable/spritetest"
+                    android:src="@drawable/sprite_unknown"
                     android:scaleType="fitCenter"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
@@ -182,7 +183,7 @@
             android:background="#80666666"
             android:divider="#ff000000"
             android:footerDividersEnabled="false"
-            android:focusableInTouchMode="true"
+
             android:focusable="true"
             android:clickable="true"
             android:headerDividersEnabled="false"

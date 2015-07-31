@@ -1,11 +1,9 @@
 package me.quadphase.qpdex;
 
-import android.app.Application;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
@@ -53,7 +51,7 @@ public class ExceptionCaughtActivity extends AppCompatActivity {
             op.inPremultiplied = false;
             op.inScaled = true;
             LinearLayout lin = (LinearLayout) findViewById(R.id.lin_exceptionframe);
-            lin.setBackground(new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(), R.drawable.errorback2, op)));
+            lin.setBackground(new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(), R.drawable.glitchbackground, op)));
             ImageView exceptMan = (ImageView) findViewById(R.id.exception_icon);
             exceptMan.setImageResource(R.drawable.missingnomin);
         }
