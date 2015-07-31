@@ -21,11 +21,12 @@ import android.widget.Toast;
 import java.util.Locale;
 
 import me.quadphase.qpdex.pokedex.CentralAudioPlayer;
+import me.quadphase.qpdex.pokedex.PokedexAssetFactory;
 
 
 public class PokedexActivity extends AppCompatActivity {
 
-    AssetFileDescriptor afd;
+//    AssetFileDescriptor afd;
     CentralAudioPlayer testy;
     TextToSpeech tts;
 
@@ -38,13 +39,13 @@ public class PokedexActivity extends AppCompatActivity {
         System.gc();
 
         testy = CentralAudioPlayer.getInstance();
-        try{
-            afd = getAssets().openFd("1.ogg");
-            testy.updateInstace(1,afd);
-        }
-        catch(Exception e){
-            Log.e("QPDEX","Exception Occured!"+e.getMessage());
-        }
+//        try{
+//            afd = getAssets().openFd("1.ogg");
+//            testy.updateInstace(1,afd);
+//        }
+//        catch(Exception e){
+//            Log.e("QPDEX","Exception Occured!"+e.getMessage());
+//        }
 
 
 
@@ -145,17 +146,9 @@ public class PokedexActivity extends AppCompatActivity {
     public void playPokemonCry(){
         Log.w("QPDEX","Playing Sound");
 
+        testy.updateInstace(249, PokedexAssetFactory.getPokemonCry(this,249));
         testy.playSound();
-//
-//        mediaPlayer.start();
-//        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
-//        {
-//            @Override
-//            public void onCompletion(MediaPlayer mp)
-//            {
-//                mp.release();
-//            }
-//        });
+
     }
 
     public void saySomething(View view){

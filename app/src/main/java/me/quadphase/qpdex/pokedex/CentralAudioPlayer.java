@@ -70,6 +70,7 @@ public class CentralAudioPlayer implements IMediaPlayerWrapper {
         cachedNationalID = pokemonNationalID;
         cachedAudioFile = pokemonCry;
         if (!isPlaying) {
+            androidMP.reset();
             setNewPokemonCry();
         }
         else

@@ -5,6 +5,7 @@ import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Locale;
 
+import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.util.Log;
  * Describes all the paths and values to correctly access and create media elements
  */
 //TODO: Document with JavaDocs!
+//TODO: Fix integerpadding to always have 3 decimal places with String.format
 public class PokedexAssetFactory {
     public static final String SPRITE_PATH="sprites";
     public static final String PKMN_SPRITE_PATH="sprites/pokemon";
@@ -28,7 +30,7 @@ public class PokedexAssetFactory {
     public static final String ERROR_IMG = "unknown.png";
 
 
-    public static InputStream getPokemonSpriteInGeneration(int PokemonID, int Generation){
+    public static InputStream getPokemonSpriteInGeneration(Context mainContext, int PokemonID, int Generation){
         //If the generation is within a valid range.
         //TODO: Verify Pokemon within Generation
         boolean validGeneration = Generation > 0 && Generation <= PokedexManager.latestGeneration;
@@ -42,7 +44,7 @@ public class PokedexAssetFactory {
                     IMG_FORMAT);
             InputStream pkmnSprite=null;
             try{
-                pkmnSprite = Resources.getSystem().getAssets().open(assetPath.toString());
+                pkmnSprite = mainContext.getAssets().open(assetPath.toString());
             }
             catch(java.io.IOException exception){
                 Log.e("QPDEX","Problem while loading sprite with path "+assetPath.toString()+"\n"+exception.getMessage());
@@ -55,16 +57,16 @@ public class PokedexAssetFactory {
         }
     }
 
-    public static InputStream getPokemonSprite(int PokemonID){
-        return getPokemonSpriteInGeneration(PokemonID, PokedexManager.latestGeneration);
+    public static InputStream getPokemonSprite(Context mainContext, int PokemonID){
+        return getPokemonSpriteInGeneration(mainContext, PokemonID, PokedexManager.latestGeneration);
     }
 
-    public static HashMap<String,InputStream> getPokemonSprites(int PokemonID){
+    public static HashMap<String,InputStream> getPokemonSprites(Context mainContext, int PokemonID){
         HashMap<String,InputStream> allSprites = new HashMap<String,InputStream>();
         int generationFirstAppeared = 1; //TODO: FIX so that the PokemonID can be used to detect and avoid having null values.
 
         for(int i=generationFirstAppeared; i<= PokedexManager.latestGeneration; i++){
-            allSprites.put(Integer.toString(i), getPokemonSpriteInGeneration(PokemonID, i));
+            allSprites.put(Integer.toString(i), getPokemonSpriteInGeneration(mainContext,PokemonID, i));
         }
 
         //TODO: Use suffix table to load all assets correctly and get alternate sprites too!
@@ -74,7 +76,7 @@ public class PokedexAssetFactory {
         return allSprites;
     }
 
-    public static AssetFileDescriptor getPokemonCry(int PokemonID){
+    public static AssetFileDescriptor getPokemonCry(Context mainContext,int PokemonID){
         AssetFileDescriptor crySoundFile = null;
         Formatter assetPath = new Formatter(new StringBuilder(), Locale.US);
         assetPath.format("%1$s/%2$s%3$s",
@@ -82,7 +84,7 @@ public class PokedexAssetFactory {
                 Integer.toString(PokemonID),
                 SOUND_FORMAT);
         try{
-            crySoundFile = Resources.getSystem().getAssets().openFd(assetPath.toString());
+            crySoundFile = mainContext.getAssets().openFd(assetPath.toString());
         }
         catch(java.io.IOException exception){
             Log.e("QPDEX","Problem while loading sound (cry) with path "+assetPath.toString()+"\n"+exception.getMessage());
@@ -91,7 +93,7 @@ public class PokedexAssetFactory {
     }
 
     //TODO: Implement
-    public static InputStream getPokemonMinimalSprite(int PokemonID){
+    public static InputStream getPokemonMinimalSprite(Context mainContext, int PokemonID){
         Formatter assetPath = new Formatter(new StringBuilder(), Locale.US);
         assetPath.format("%1$s/%2$s%3$s",
                 MINI_SPRITE_PATH,
@@ -99,7 +101,7 @@ public class PokedexAssetFactory {
                 IMG_FORMAT);
         InputStream pkmnSprite=null;
         try{
-            pkmnSprite = Resources.getSystem().getAssets().open(assetPath.toString());
+            pkmnSprite = mainContext.getAssets().open(assetPath.toString());
         }
         catch(java.io.IOException exception){
             Log.e("QPDEX","Problem while loading sprite with path "+assetPath.toString()+"\n"+exception.getMessage());
@@ -108,7 +110,7 @@ public class PokedexAssetFactory {
     }
 
 
-    public static InputStream getTypeBadge(String typeName){
+    public static InputStream getTypeBadge(Context mainContext, String typeName){
         //TODO: Check if valid type string
         Formatter assetPath = new Formatter(new StringBuilder(), Locale.US);
 
@@ -119,7 +121,7 @@ public class PokedexAssetFactory {
 
         InputStream typeSprite=null;
         try{
-            typeSprite = Resources.getSystem().getAssets().open(assetPath.toString());
+            typeSprite = mainContext.getAssets().open(assetPath.toString());
         }
         catch(java.io.IOException exception){
             Log.e("QPDEX","Problem while loading type sprite with path "+assetPath.toString()+"\n"+exception.getMessage());
