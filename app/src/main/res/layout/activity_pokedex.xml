@@ -71,7 +71,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.5"
+                android:layout_weight="0.4"
                 android:gravity="center_horizontal"
                 android:focusableInTouchMode="true"
                 android:focusable="true"
@@ -86,8 +86,6 @@
                     android:layout_weight="0.4"
                     android:gravity="start|center_horizontal"
                     android:layout_margin="5dp"
-                    android:focusableInTouchMode="true"
-                    android:focusable="true"
                     android:clickable="true"
                     android:onClick="saySomething"
                     android:padding="5dp" />
@@ -96,7 +94,7 @@
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.6"
+                    android:layout_weight="0.8"
                     android:gravity="center">
 
                     <ImageView
@@ -104,8 +102,7 @@
                         android:layout_height="match_parent"
                         android:id="@+id/imgview_pkmntype1"
                         android:layout_weight="0.5"
-                        android:src="@drawable/typenone"
-                        android:layout_margin="5dp" />
+                        android:src="@drawable/typenone" />
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -113,8 +110,7 @@
                         android:id="@+id/imgview_pkmntype2"
                         android:layout_weight="0.5"
                         android:focusableInTouchMode="false"
-                        android:src="@drawable/typenone"
-                        android:layout_margin="5dp" />
+                        android:src="@drawable/typenone" />
                 </LinearLayout>
 
                 <Button

@@ -127,8 +127,6 @@
                 android:layout_weight="0.6"
                 android:layout_margin="10dp"
                 android:background="#ffffff"
-                android:focusableInTouchMode="true"
-                android:focusable="true"
                 android:clickable="true"
                 android:padding="5dp" />
         </LinearLayout>

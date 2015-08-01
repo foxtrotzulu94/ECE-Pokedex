@@ -225,11 +225,12 @@ public class PokedexActivity extends AppCompatActivity {
 
     public void playPokemonCry(){
         Log.w("QPDEX","Playing Sound");
-        audioPlayer.updateInstace(249, PokedexAssetFactory.getPokemonCry(this, 249));
+        audioPlayer.updateInstace(0, PokedexAssetFactory.getPokemonCry(this, 32));
         audioPlayer.playSound();
     }
 
     public void saySomething(View view){
+        inputSearch.clearFocus();
         //TODO: Move elsewhere similar to CentralMediaPlayer so that resources don't leak!
         TextView description = (TextView) findViewById(R.id.textview_pkmndescript);
         tts.speak(description.getText().toString(), TextToSpeech.QUEUE_ADD, null);
