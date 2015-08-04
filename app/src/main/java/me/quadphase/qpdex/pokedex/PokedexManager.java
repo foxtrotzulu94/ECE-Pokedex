@@ -1,25 +1,28 @@
 package me.quadphase.qpdex.pokedex;
 
 import android.content.res.AssetFileDescriptor;
-import android.media.MediaPlayer;
 import android.widget.ArrayAdapter;
 
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 
+import me.quadphase.qpdex.pokemon.MinimalPokemon;
 import me.quadphase.qpdex.pokemon.Pokemon;
 
 /**
  * High level manager of all Pokemon related information
  * This class is a singleton that should be use when interaction is needed with activities.
  */
+//TODO: Massive restructuring. Need to provide a more uniform set of methods.
 public class PokedexManager {
     //TODO: Set through Database retrieval for MAX generation.
     public static final int latestGeneration = 6;
-    private static int countMaxNationalID = 721;
+    private int countMaxNationalID = 721;
 
     private static PokedexManager instance = null;
+
+    private boolean instanceIsReady = false;
 
     /**
      * Wrapper for Android's Media Class
@@ -32,7 +35,7 @@ public class PokedexManager {
      * List of the retrieved database objects in minimal form for quick reference
      * @see this.pokemonList for the list sent to the ListView
      */
-    private List<String> minimalPokemonObjects;
+    private List<MinimalPokemon> minimalPokemonObjects;
 
     /**
      * List for display purposes with ListAdapter
@@ -48,14 +51,19 @@ public class PokedexManager {
     private int generationCurrentlyDisplayed = latestGeneration;
 
     /**
-     * Reference to the current pokemon being viewed or focused
+     * Reference to the pokemon displayed on the Pokedex view.
      */
-    private Pokemon selectedPokemon;
+    private MinimalPokemon selectionInPokedex;
+
+    /**
+     * Reference to the current pokemon loaded for viewing in DetailedPokemonActivity class
+     */
+    private Pokemon detailedPokemon;
 
     /**
      * Cached reference for the Pokemon Cry file
      */
-    private AssetFileDescriptor pokemonCry; //TODO: probably moved to CentralAudioPlayer
+    private AssetFileDescriptor pokemonCry;
 
     /**
      * HashMap to access the sprite of the pokemon for a given generation
@@ -72,7 +80,7 @@ public class PokedexManager {
 //        this.minimalPokemonObjects = minimalPokemonObjects;
 //        this.viewablePokemonList = viewablePokemonList;
 //        this.generationDisplayed = generationDisplayed;
-//        this.selectedPokemon = selectedPokemon;
+//        this.detailedPokemon = detailedPokemon;
 //        this.pokemonCry = pokemonCry;
 //        this.pokemonSpriteList = pokemonSpriteList;
     }
@@ -84,6 +92,9 @@ public class PokedexManager {
         return instance;
     }
 
+    public void updateInstance(int PokemonNationalID){
+        //TODO: change the selectionInPokedex Pokemon and invalidate detailedPokemon
+    }
 
     //Private methods for interacting with other classes in the package
     /**
@@ -95,6 +106,11 @@ public class PokedexManager {
 
 
     //Setters and Getters
+
+    public boolean isInstanceIsReady() {
+        return instanceIsReady;
+    }
+
     /**
      * Return the ArrayAdapter for use in showing it through a ListView
      */
@@ -106,7 +122,7 @@ public class PokedexManager {
      * Get the Minimal Pokemon Objects. Not recommended for direct use.
      * @see this.getPokemonList()
      */
-    public List<String> getMinimalPokemonObjects() {
+    public List<MinimalPokemon> getMinimalPokemonObjects() {
         return minimalPokemonObjects;
     }
 
@@ -114,7 +130,7 @@ public class PokedexManager {
      * Place a specific list of Minimal Pokemon Objects
      * Useful for searching by generation.
      */
-    public void setMinimalPokemonObjects(List<String> minimalPokemonObjects) {
+    public void setMinimalPokemonObjects(List<MinimalPokemon> minimalPokemonObjects) {
         this.minimalPokemonObjects = minimalPokemonObjects;
     }
 
@@ -122,15 +138,15 @@ public class PokedexManager {
      * Retrieve the Built Pokemon Object being focused
      * {@link me.quadphase.qpdex.DetailedPokemonActivity} should use this for getting all info.
      */
-    public Pokemon getSelectedPokemon() {
-        return selectedPokemon;
+    public Pokemon getDetailedPokemon() {
+        return detailedPokemon;
     }
 
     /**
      * Indicate what Pokemon is being viewed
      */
-    public void setSelectedPokemon(Pokemon selectedPokemon) { //TODO: switch to MinimalPokemon
-        this.selectedPokemon = selectedPokemon;
+    public void setDetailedPokemon(Pokemon detailedPokemon) { //TODO: switch to MinimalPokemon
+        this.detailedPokemon = detailedPokemon;
     }
 
     /**
