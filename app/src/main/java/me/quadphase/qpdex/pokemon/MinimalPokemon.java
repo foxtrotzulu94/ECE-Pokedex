@@ -48,4 +48,9 @@ public class MinimalPokemon {
     public List<Type> getTypes() {
         return types;
     }
+
+    @Override
+    public String toString(){
+        return String.format("%s. %s",nationalID,name);
+    }
 }

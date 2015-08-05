@@ -2,6 +2,8 @@ package me.quadphase.qpdex;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
@@ -17,36 +19,80 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Filter;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 import me.quadphase.qpdex.pokedex.CentralAudioPlayer;
-import me.quadphase.qpdex.pokedex.PokedexAssetFactory;
+import me.quadphase.qpdex.pokedex.PokedexArrayAdapter;
+import me.quadphase.qpdex.pokedex.PokedexManager;
+import me.quadphase.qpdex.pokemon.MinimalPokemon;
+import me.quadphase.qpdex.pokemon.Type;
 
 
 public class PokedexActivity extends AppCompatActivity {
 
+    //Application global references
+    private CentralAudioPlayer audioPlayer;
+    private PokedexManager contextMaster;
+
+    //UI Elements
     EditText inputSearch;
-    ListView pokedexList;
-    ArrayAdapter<String> pokedexEntries;
-    CentralAudioPlayer audioPlayer;
+    ListView pokedexListView;
+    ImageButton overviewImage;
+    TextView overviewDescription;
+    ImageView overviewType1;
+    ImageView overviewType2;
+
+    //Assitant Containers
+    ArrayAdapter<MinimalPokemon> pokedexEntries;
+
     TextToSpeech tts;
+    MinimalPokemon testy;
+
+    private void refreshPokedexOverviewPanel(){
+        overviewDescription.setText(contextMaster.getCurrentMinimalPokemon().getDescription());
+        overviewType1.setImageDrawable(new BitmapDrawable(getResources(), contextMaster.getCurrentType1()));
+        overviewType2.setImageDrawable(new BitmapDrawable(getResources(), contextMaster.getCurrentType2()));
+        overviewImage.setImageBitmap(BitmapFactory.decodeStream(contextMaster.getSelectionOverviewSprite()));
+    }
+
+    private void retrieveInterfaceElements(){
+        //Retrieve all UI Variables for setup
+        overviewImage = (ImageButton) findViewById(R.id.imgbutton_pkmnsprite);
+        overviewDescription = (TextView) findViewById(R.id.textview_pkmndescript);
+        overviewType1 = (ImageView) findViewById(R.id.imgview_pkmntype1);
+        overviewType2 = (ImageView) findViewById(R.id.imgview_pkmntype2);
+        inputSearch = (EditText) findViewById(R.id.edittext_pkmnname);
+        pokedexListView = (ListView) findViewById(R.id.listv_pkdexentries);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pokedex);
 
+        //Signal Cleanup
         Runtime.getRuntime().gc();
         System.gc();
 
-        //Retrieve all Variables for setup
+        retrieveInterfaceElements();
+
+        //Talk to the Pokedex Manager for setting up app context.
+        contextMaster = PokedexManager.getInstance();
         audioPlayer = CentralAudioPlayer.getInstance();
-        inputSearch = (EditText) findViewById(R.id.edittext_pkmnname);
-        pokedexList = (ListView) findViewById(R.id.listv_pkdexentries);
+        testy = contextMaster.missingNo.minimal();
+        if (contextMaster.isReady()) {
+            refreshPokedexOverviewPanel();
+        }
+        else{
+            contextMaster.updatePokedexSelection(testy, this);
+        }
 
         //Set up Buttons
         Button cryButton = (Button)findViewById(R.id.button_pkmncry);
@@ -59,25 +105,20 @@ public class PokedexActivity extends AppCompatActivity {
         });
         }
 
-        //Fill the list
-        pokedexEntries = new ArrayAdapter<String>(
-                this,
-                R.layout.pokedexrow,
-                R.id.textview_pkmn_list_entry,
-                new String[]{
-                        getString(R.string.title_section1),
-                        getString(R.string.title_section2),
-                        getString(R.string.title_section3),
-                        "Section 3",
-                        "Section 4",
-                        "Section 5",
-                        "Section 6",
-                        "Section 7",
-                        "Section 8",
-                        "Section 9",
-                        "Section 10"
 
-                });
+        //This is a test, remove before pushing to master
+        Log.d("QPDEX", testy.toString());
+        MinimalPokemon[] listy = new MinimalPokemon[11];
+        Arrays.fill(listy,0,11,testy);
+        listy[10] = new MinimalPokemon(3,"Bulbasaur",
+                "Bulbasaur can be seen napping in bright sunlight. There is a seed on its back. By soaking up the sun’s rays, the seed grows progressively larger. ",
+                Arrays.asList(new Type("Grass",""), new Type("Poison","")));
+
+        pokedexEntries = new PokedexArrayAdapter(
+                this,
+//                R.layout.pokedexrow,
+//                R.id.textview_pkmn_list_entry,
+                listy);
 
         //Set up Search Bar (EditText)
 
@@ -105,44 +146,36 @@ public class PokedexActivity extends AppCompatActivity {
             });
         }
 
-        pokedexList.setAdapter(pokedexEntries);
-        pokedexList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        pokedexListView.setAdapter(pokedexEntries);
+        pokedexListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("QPDex", "List view touched");
-                PokedexActivity.this.inputSearch.setHint((String) parent.getItemAtPosition(position));
+                Log.d("QPDEX", String.format("%s %s", pokedexListView.getSelectedItemPosition(), pokedexListView.getCheckedItemPosition()));
+                PokedexActivity.this.inputSearch.setHint(parent.getItemAtPosition(position).toString());
                 PokedexActivity.this.inputSearch.clearFocus();
-                //NOTE: This current behaviour is interesting because it resets the Search bar
-                //      in a way that might be frustrating for the end user. Careful with this....
-//                pokedexEntries.getFilter().filter("");
 
-//                inputSearch.setText("");
-//                Toast.makeText(getApplicationContext(),
-//                        "Click ListItem Number " + position, Toast.LENGTH_LONG)
-//                        .show();
+                //We can now get the minimal Object and do things from here
+                MinimalPokemon retrieved = (MinimalPokemon) parent.getItemAtPosition(position);
+                contextMaster.updatePokedexSelection(retrieved, getApplicationContext());
+                refreshPokedexOverviewPanel();
             }
         });
 
 
         //Setup the filter
         this.inputSearch.addTextChangedListener(new TextWatcher() {
-
             @Override
             public void onTextChanged(CharSequence a, int b, int c, int d) {
-//                pokedexEntries.getFilter().filter(a);
-//                pokedexEntries.notifyDataSetChanged();
-                //TODO: fix the pokedex list an offset if the CharSequence is empty
-                //This seems to be acting on the old list rather than the new, empty filter list.
                 if(a.toString().isEmpty()){
                     //TODO: extract these methods to avoid ugly, anonymous methods
                     pokedexEntries.getFilter().filter(a, new Filter.FilterListener() {
                         @Override
                         public void onFilterComplete(int count) {
-                            Log.d("QPDEX", "Resetting" + Integer.toString(pokedexList.getSelectedItemPosition()));
-                            pokedexList.setSelection(pokedexList.getCount()-1); //TODO: Set the offset here
+                            Log.d("QPDEX", "Resetting" + Integer.toString(pokedexListView.getSelectedItemPosition()));
+                            pokedexListView.setSelection(pokedexListView.getCount()-1); //TODO: Set the offset here
                         }
                     });
-
                 }
                 else{
                     pokedexEntries.getFilter().filter(a);
@@ -161,13 +194,11 @@ public class PokedexActivity extends AppCompatActivity {
             }
         });
 
-
-        TextView description = (TextView) findViewById(R.id.textview_pkmndescript);
+        //TODO: Move to TTSController class
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
 
             @Override
             public void onInit(int status) {
-                // TODO Auto-generated method stub
                 if(status == TextToSpeech.SUCCESS){
                     int result=tts.setLanguage(Locale.US);
                     if(result==TextToSpeech.LANG_MISSING_DATA ||
@@ -216,23 +247,43 @@ public class PokedexActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void onClickNextPokemon(View view){
+        int shownItemCount = pokedexListView.getCount();
+        int currentPosition =pokedexListView.getCheckedItemPosition();
+        int newPos = (currentPosition+1) % shownItemCount;
+        //Update the listview
+        pokedexListView.setSelection(newPos);
+        pokedexListView.performItemClick(view, newPos,newPos);
+        Log.d("QPDEX", String.format("count: %s, pos: %s",shownItemCount,newPos));
+    }
+
+    public void onClickPreviousPokemon(View view){
+        int shownItemCount = pokedexListView.getCount();
+        int currentPosition = pokedexListView.getCheckedItemPosition();
+        currentPosition = (currentPosition-1) % shownItemCount;
+        if(currentPosition<0){
+            currentPosition = shownItemCount-1;
+        }
+        //Update the listview
+        pokedexListView.setSelection(currentPosition);
+        pokedexListView.performItemClick(view, currentPosition, currentPosition);
+        Log.d("QPDEX", String.format("count: %s, pos: %s", shownItemCount, currentPosition));
+    }
+
     public void switchToPokemonData(View view){
-        //TODO: Add info on the specific pokemon being viewed
-        //TODO: Also, notify that a full pokemon has to be constructed!
+        //We might need to signal the PokedexManager to see if the activity can load.
         Intent intent = new Intent(this,DetailedPokemonActivity.class);
         startActivity(intent);
     }
 
     public void playPokemonCry(){
         Log.w("QPDEX","Playing Sound");
-        audioPlayer.updateInstace(0, PokedexAssetFactory.getPokemonCry(this, 32));
         audioPlayer.playSound();
     }
 
     public void saySomething(View view){
         inputSearch.clearFocus();
         //TODO: Move elsewhere similar to CentralMediaPlayer so that resources don't leak!
-        TextView description = (TextView) findViewById(R.id.textview_pkmndescript);
-        tts.speak(description.getText().toString(), TextToSpeech.QUEUE_ADD, null);
+        tts.speak(overviewDescription.getText().toString(), TextToSpeech.QUEUE_ADD, null);
     }
 }

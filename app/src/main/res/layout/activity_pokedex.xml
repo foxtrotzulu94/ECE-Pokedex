@@ -30,7 +30,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Prev"
-                android:id="@+id/button_prevpkmn" />
+                android:id="@+id/button_prevpkmn"
+                android:onClick="onClickPreviousPokemon" />
 
             <EditText
                 android:singleLine="true"
@@ -55,7 +56,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Next"
-                android:id="@+id/button_nextpkmn" />
+                android:id="@+id/button_nextpkmn"
+                android:onClick="onClickNextPokemon" />
         </LinearLayout>
 
         <LinearLayout
@@ -102,7 +104,8 @@
                         android:layout_height="match_parent"
                         android:id="@+id/imgview_pkmntype1"
                         android:layout_weight="0.5"
-                        android:src="@drawable/typenone" />
+                        android:src="@drawable/typenone"
+                        android:scaleType="fitXY" />
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -110,7 +113,8 @@
                         android:id="@+id/imgview_pkmntype2"
                         android:layout_weight="0.5"
                         android:focusableInTouchMode="false"
-                        android:src="@drawable/typenone" />
+                        android:src="@drawable/typenone"
+                        android:scaleType="fitXY" />
                 </LinearLayout>
 
                 <Button
@@ -138,7 +142,8 @@
                     android:scaleType="fitCenter"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:onClick="switchToPokemonData" />
+                    android:onClick="switchToPokemonData"
+                    android:background="#D6D7D7" />
 
                 <Button
                     android:layout_width="wrap_content"

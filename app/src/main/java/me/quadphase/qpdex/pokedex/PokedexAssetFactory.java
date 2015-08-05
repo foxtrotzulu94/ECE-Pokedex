@@ -125,6 +125,8 @@ public class PokedexAssetFactory {
         }
         catch(java.io.IOException exception){
             Log.e("QPDEX","Problem while loading type sprite with path "+assetPath.toString()+"\n"+exception.getMessage());
+            Log.e("QPDEX","PokedexAssetFactory defaulting to none type");
+            typeSprite = getTypeBadge(mainContext,"none");
         }
         return typeSprite;
     }
