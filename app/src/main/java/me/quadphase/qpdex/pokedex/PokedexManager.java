@@ -20,6 +20,7 @@ import me.quadphase.qpdex.pokemon.Type;
  * High level manager of all Pokemon related information
  * This class is a singleton that should be use when interaction is needed with activities.
  */
+//TODO: Document with JavaDocs
 public class PokedexManager {
 
     public class MissingNo extends Pokemon{
@@ -123,6 +124,8 @@ public class PokedexManager {
         currentPokemonNationalID = pokedexSelection.getNationalID();
 
         jukebox.updateInstace(currentPokemonNationalID, PokedexAssetFactory.getPokemonCry(currentContext, currentPokemonNationalID));
+
+        //TODO: Investigate why these are getting Garbage Collected. Might need to change the variable to a Drawable asset.
         currentOverviewSprite = PokedexAssetFactory.getPokemonSpriteInGeneration(currentContext,currentPokemonNationalID,restrictUpToGeneration);
         currentType1 = PokedexAssetFactory.getTypeBadge(currentContext, pokedexSelection.getTypes().get(0).getName());
         currentType2 = PokedexAssetFactory.getTypeBadge(currentContext, pokedexSelection.getTypes().get(1).getName());

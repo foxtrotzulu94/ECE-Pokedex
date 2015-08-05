@@ -14,7 +14,6 @@ import android.util.Log;
  * Describes all the paths and values to correctly access and create media elements
  */
 //TODO: Document with JavaDocs!
-//TODO: Fix integerpadding to always have 3 decimal places with String.format
 public class PokedexAssetFactory {
     public static final String SPRITE_PATH="sprites";
     public static final String PKMN_SPRITE_PATH="sprites/pokemon";

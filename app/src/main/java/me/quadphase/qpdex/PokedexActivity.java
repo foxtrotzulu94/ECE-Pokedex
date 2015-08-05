@@ -30,6 +30,7 @@ import java.util.Locale;
 import me.quadphase.qpdex.pokedex.CentralAudioPlayer;
 import me.quadphase.qpdex.pokedex.PokedexArrayAdapter;
 import me.quadphase.qpdex.pokedex.PokedexManager;
+import me.quadphase.qpdex.pokedex.TTSController;
 import me.quadphase.qpdex.pokemon.MinimalPokemon;
 import me.quadphase.qpdex.pokemon.Type;
 
@@ -39,6 +40,7 @@ public class PokedexActivity extends AppCompatActivity {
     //Application global references
     private CentralAudioPlayer audioPlayer;
     private PokedexManager contextMaster;
+    private TTSController dexVoice;
 
     //UI Elements
     EditText inputSearch;
@@ -83,16 +85,18 @@ public class PokedexActivity extends AppCompatActivity {
 
         retrieveInterfaceElements();
 
-        //Talk to the Pokedex Manager for setting up app context.
+        //Set up app context.
         contextMaster = PokedexManager.getInstance();
+        dexVoice = TTSController.getOrSetInstance(this);
         audioPlayer = CentralAudioPlayer.getInstance();
         testy = contextMaster.missingNo.minimal();
-        if (contextMaster.isReady()) {
-            refreshPokedexOverviewPanel();
-        }
-        else{
-            contextMaster.updatePokedexSelection(testy, this);
-        }
+//        if (contextMaster.isReady()) {
+//            refreshPokedexOverviewPanel();
+//        }
+//        else{
+//            contextMaster.updatePokedexSelection(testy, this);
+//        }
+        dexVoice.setText(overviewDescription.getText().toString());
 
         //Set up Buttons
         Button cryButton = (Button)findViewById(R.id.button_pkmncry);
@@ -121,7 +125,6 @@ public class PokedexActivity extends AppCompatActivity {
                 listy);
 
         //Set up Search Bar (EditText)
-
         if(!inputSearch.hasOnClickListeners()){
             //Set the OnClick Listener
             inputSearch.setOnClickListener(new View.OnClickListener() {
@@ -158,6 +161,7 @@ public class PokedexActivity extends AppCompatActivity {
                 //We can now get the minimal Object and do things from here
                 MinimalPokemon retrieved = (MinimalPokemon) parent.getItemAtPosition(position);
                 contextMaster.updatePokedexSelection(retrieved, getApplicationContext());
+                dexVoice.setText(retrieved.getDescription());
                 refreshPokedexOverviewPanel();
             }
         });
@@ -193,28 +197,13 @@ public class PokedexActivity extends AppCompatActivity {
 
             }
         });
+    }
 
-        //TODO: Move to TTSController class
-        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
-
-            @Override
-            public void onInit(int status) {
-                if(status == TextToSpeech.SUCCESS){
-                    int result=tts.setLanguage(Locale.US);
-                    if(result==TextToSpeech.LANG_MISSING_DATA ||
-                            result==TextToSpeech.LANG_NOT_SUPPORTED){
-                        Log.e("error", "This Language is not supported");
-                    }
-                    else{
-                        //TODO: Do more setup if success!
-                    }
-                }
-                else
-                    Log.e("error", "Initilization Failed!");
-            }
-        });
-
-
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if(contextMaster.isReady())
+            refreshPokedexOverviewPanel();
     }
 
     @Override
@@ -226,10 +215,11 @@ public class PokedexActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed(){
+        Log.d("QPDex","Back to intro menu");
         super.onBackPressed();
-        tts.stop();
-        tts.shutdown();
-        finish();
+        dexVoice.releaseEngine();
+        this.finish(); //There's unfortunately no guarantee that this is done immediately.
+        System.gc();
     }
 
     @Override
@@ -283,7 +273,6 @@ public class PokedexActivity extends AppCompatActivity {
 
     public void saySomething(View view){
         inputSearch.clearFocus();
-        //TODO: Move elsewhere similar to CentralMediaPlayer so that resources don't leak!
-        tts.speak(overviewDescription.getText().toString(), TextToSpeech.QUEUE_ADD, null);
+        dexVoice.speak();
     }
 }

@@ -20,6 +20,7 @@ import me.quadphase.qpdex.pokemon.MinimalPokemon;
 /**
  * Created by Javier Fajardo on 8/5/2015.
  */
+//TODO: Document with JavaDocs
 public class PokedexArrayAdapter extends ArrayAdapter<MinimalPokemon> {
 
     private final MinimalPokemon[] entryObjects;
