@@ -28,7 +28,12 @@ public class PokedexAssetFactory {
 
     public static final String ERROR_IMG = "unknown.png";
 
-
+    /**
+     * Get the ByteStream of the Pokemon Sprite Asset in a particular generation for later loading
+     * @param mainContext The context in which this is called
+     * @param Generation The specific generation sprite (DOES NOT CHECK IF GENERATION IS VALID)
+     * @param PokemonID The National ID of the Pokemon
+     */
     public static InputStream getPokemonSpriteInGeneration(Context mainContext, int PokemonID, int Generation){
         //If the generation is within a valid range.
         //TODO: Verify Pokemon within Generation
@@ -56,10 +61,21 @@ public class PokedexAssetFactory {
         }
     }
 
+    /**
+     * Get the ByteStream of the Pokemon Sprite Asset  for the latest generation
+     * @param mainContext The context in which this is called
+     * @param PokemonID The National ID of the Pokemon
+     */
     public static InputStream getPokemonSprite(Context mainContext, int PokemonID){
         return getPokemonSpriteInGeneration(mainContext, PokemonID, PokedexManager.latestGeneration);
     }
 
+    //TODO: Change or refactor
+    /**
+     * Get a HashMap for consulting all of the sprites of a particular Pokemon.
+     * @param mainContext The context in which this is called
+     * @param PokemonID The National ID of the Pokemon
+     */
     public static HashMap<String,InputStream> getPokemonSprites(Context mainContext, int PokemonID){
         HashMap<String,InputStream> allSprites = new HashMap<String,InputStream>();
         int generationFirstAppeared = 1; //TODO: FIX so that the PokemonID can be used to detect and avoid having null values.
@@ -75,6 +91,11 @@ public class PokedexAssetFactory {
         return allSprites;
     }
 
+    /**
+     * Retrieve the pointer to a Pokemon's Cry for immediate playback
+     * @param mainContext The context in which this is called
+     * @param PokemonID The National ID of the Pokemon
+     */
     public static AssetFileDescriptor getPokemonCry(Context mainContext,int PokemonID){
         AssetFileDescriptor crySoundFile = null;
         Formatter assetPath = new Formatter(new StringBuilder(), Locale.US);
@@ -91,7 +112,11 @@ public class PokedexAssetFactory {
         return crySoundFile;
     }
 
-    //TODO: Implement
+    /**
+     * Obtain the ByteStream for the Mini Sprite of a given Pokemon
+     * @param mainContext The context in which this is called
+     * @param PokemonID The National ID of the Pokemon
+     */
     public static InputStream getPokemonMinimalSprite(Context mainContext, int PokemonID){
         Formatter assetPath = new Formatter(new StringBuilder(), Locale.US);
         assetPath.format("%1$s/%2$s%3$s",
@@ -108,9 +133,13 @@ public class PokedexAssetFactory {
         return pkmnSprite;
     }
 
-
+    /**
+     * Get the ByteStream for the Type image asset. This method is failsafe and returns a "None" type
+     * if it finds the provided typeName is invalid.
+     * @param mainContext The context in which this is called
+     * @param typeName A Valid type name
+     */
     public static InputStream getTypeBadge(Context mainContext, String typeName){
-        //TODO: Check if valid type string
         Formatter assetPath = new Formatter(new StringBuilder(), Locale.US);
 
         assetPath.format("%1$s/%2$s%3$s",

@@ -25,7 +25,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.Arrays;
-import java.util.Locale;
 
 import me.quadphase.qpdex.pokedex.CentralAudioPlayer;
 import me.quadphase.qpdex.pokedex.PokedexArrayAdapter;
@@ -54,7 +53,7 @@ public class PokedexActivity extends AppCompatActivity {
     //Assitant Containers
     ArrayAdapter<MinimalPokemon> pokedexEntries;
 
-    TextToSpeech tts;
+    //Remove in future iterations when ListView is completely populated by PokedexManager
     MinimalPokemon testy;
 
     private void refreshPokedexOverviewPanel(){
@@ -97,7 +96,7 @@ public class PokedexActivity extends AppCompatActivity {
 //        else{
 //            contextMaster.updatePokedexSelection(testy, this);
 //        }
-        audioPlayer.updateInstace(0, PokedexAssetFactory.getPokemonCry(this,0));
+        audioPlayer.updateInstance(0, PokedexAssetFactory.getPokemonCry(this, 0));
         dexVoice.setText(overviewDescription.getText().toString());
 
         //Set up Buttons
@@ -112,7 +111,7 @@ public class PokedexActivity extends AppCompatActivity {
         }
 
 
-        //This is a test, remove before pushing to master
+        //This is a test, remove after real list can populate the ListView
         Log.d("QPDEX", testy.toString());
         MinimalPokemon[] listy = new MinimalPokemon[11];
         Arrays.fill(listy,0,11,testy);

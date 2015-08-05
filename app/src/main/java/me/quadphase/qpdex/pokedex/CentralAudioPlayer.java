@@ -8,9 +8,10 @@ import android.util.Log;
  * Handles all interaction related to Android's MediaPlayer Class to server Pokemon Cries correctly
  * This class is a Singleton that gets instantiated by the {@link PokedexManager}
  */
-//TODO: Document with JavaDocs!
 public class CentralAudioPlayer implements IMediaPlayerWrapper {
-    //Internal Class
+    /**
+     * Internal Class to implement behaviour after completing playback
+     */
     protected class CompletedPlayback implements MediaPlayer.OnCompletionListener{
         @Override
         public void onCompletion(MediaPlayer mediaPlayer){
@@ -43,6 +44,9 @@ public class CentralAudioPlayer implements IMediaPlayerWrapper {
         androidMP.setOnCompletionListener(new CompletedPlayback());
     }
 
+    /**
+     * Retrieve the Singleton Instance
+     */
     public static CentralAudioPlayer getInstance(){
         if(instance==null){
             instance = new CentralAudioPlayer();
@@ -65,8 +69,13 @@ public class CentralAudioPlayer implements IMediaPlayerWrapper {
 
 
     //Methods for behaviour
+    /**
+     * Refresh the instance to playback a new file
+     * @param pokemonNationalID The National ID of the Pokemon
+     * @param pokemonCry The AssetFileDescriptor of the media given by {@link PokedexAssetFactory}
+     */
     @Override
-    public void updateInstace(int pokemonNationalID, AssetFileDescriptor pokemonCry){
+    public void updateInstance(int pokemonNationalID, AssetFileDescriptor pokemonCry){
         cachedNationalID = pokemonNationalID;
         cachedAudioFile = pokemonCry;
         if (!isPlaying) {
@@ -79,12 +88,19 @@ public class CentralAudioPlayer implements IMediaPlayerWrapper {
         }
     }
 
+    /**
+     * Check if the instance can be safely used or not
+     */
     @Override
     public boolean isReady(){
         //TODO: Safeguard by opening a default cry and remove the cache params
         return (cachedAudioFile!=null && cachedNationalID !=0 && !isDirty && !isPlaying);
     }
 
+    /**
+     * Play the currently cached sound, may trigger a MediaPlayer state error if not used
+     * with the {@link this.isReady()} check
+     */
     @Override
     public void playSound(){
         if (!isPlaying) {

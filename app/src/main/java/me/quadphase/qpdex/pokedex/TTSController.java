@@ -8,9 +8,10 @@ import android.util.Log;
 import java.util.Locale;
 
 /**
- * Created by Javier Fajardo on 8/2/2015.
+ * Handles all interaction with the Text-To-Speech resources given by Android. This ensures that the
+ * resource is not leaked and can be correctly used within different contexts.
+ * This class is a Singleton.
  */
-//TODO: Document with JavaDocs
 public class TTSController implements ITTSEngineWrapper {
 
     private static TTSController instance=null;
@@ -51,11 +52,17 @@ public class TTSController implements ITTSEngineWrapper {
         });
     }
 
+    /**
+     * Retrieve the Singleton instance of this class for immediate use. It will initialize to a context
+     * and be "anchored" to it to prevent resource leak. If called within a different context, it will
+     * request the release of the previous ttsEngine and initialize to the new context
+     * @param givenContext The context from within which the method is called.
+     */
     public static TTSController getOrSetInstance(Context givenContext){
         if(instance==null){
             instance = new TTSController(givenContext);
         }
-        else{
+        else if (givenContext!=useContext){
             instance.releaseEngine();
             instance.requestResource(givenContext);
         }
@@ -63,18 +70,29 @@ public class TTSController implements ITTSEngineWrapper {
         return instance;
     }
 
+    /**
+     * Updates the instance to read the text provided
+     * @param textToSpeak String to be read
+     */
     @Override
     public void setText(String textToSpeak) {
         isDirty = ttsEngine.isSpeaking();
         cachedText = textToSpeak;
     }
 
+    /**
+     * Checks if the ttsEngine is initialized and updated
+     */
     @Override
     public boolean isAvalaible() {
 //        boolean canBeUsed = !isDirty && isInitialized;
         return !isDirty && isInitialized ;
     }
 
+    /**
+     * One shot call to read text. This uses no queues and will only interrupt itself if the cachedText
+     * has chaged and thus the entry being read is no longer valid.
+     */
     @Override
     public void speak() {
         if(isInitialized){
@@ -85,6 +103,9 @@ public class TTSController implements ITTSEngineWrapper {
         }
     }
 
+    /**
+     * Forces the controller to release the ttsEngine resources and give them back to the OS
+     */
     @Override
     public void releaseEngine() {
         if (ttsEngine!=null) {

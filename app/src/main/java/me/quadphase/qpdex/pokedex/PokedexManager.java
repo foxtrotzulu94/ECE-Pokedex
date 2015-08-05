@@ -1,17 +1,10 @@
 package me.quadphase.qpdex.pokedex;
 
-import android.app.Application;
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
-import android.widget.ArrayAdapter;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 
-import me.quadphase.qpdex.IntroActivity;
-import me.quadphase.qpdex.pokedex.CentralAudioPlayer;
 import me.quadphase.qpdex.pokemon.MinimalPokemon;
 import me.quadphase.qpdex.pokemon.Pokemon;
 import me.quadphase.qpdex.pokemon.Type;
@@ -23,6 +16,11 @@ import me.quadphase.qpdex.pokemon.Type;
 //TODO: Document with JavaDocs
 public class PokedexManager {
 
+    /**
+     * Internal class to generate a fail-safe Pokemon.
+     * Can be used to check for other errors in logic or in application UI.
+     * If this is ever displayed, then there's a problem that needs to be fixed
+     */
     public class MissingNo extends Pokemon{
         public MissingNo(){
             super(
@@ -68,8 +66,13 @@ public class PokedexManager {
 
 
     //Variables for context to handle global application state
+    /**
+     * The Generation when this Pokedex was updated/compiled
+     */
     public static final int latestGeneration = 6;
-
+    /**
+     * Instance of the fail-safe class
+     */
     public final MissingNo missingNo;
 
     private int maxPokemonNationalID = 721;
@@ -88,7 +91,9 @@ public class PokedexManager {
 
     private InputStream currentType2;
 
+
     //Collections to assist the Pokedex display
+
     private Type[] allValidTypes;
 
     private MinimalPokemon[] allMinimalPokemon;
@@ -111,6 +116,9 @@ public class PokedexManager {
         missingNo = new MissingNo();
     }
 
+    /**
+     * Retrieve the Singleton Instance
+     */
     public static PokedexManager getInstance(){
         if(instance==null){
             instance = new PokedexManager();
@@ -118,17 +126,28 @@ public class PokedexManager {
         return instance;
     }
 
+    /**
+     * Change the currently selected Pokemon in the Pokedex and send a message to update all classes
+     * This will also store a reference to the assets the Pokemon with the National ID is associated with.
+     * @param pokedexSelection The minimal pokemon, preferrably from the {@link PokedexArrayAdapter}
+     * @param currentContext The context in which the update occurs (usually, "this" within an Activity)
+     */
     public void updatePokedexSelection(MinimalPokemon pokedexSelection, Context currentContext){
         isReady = false;
         currentMinimalPokemon = pokedexSelection;
         currentPokemonNationalID = pokedexSelection.getNationalID();
 
-        jukebox.updateInstace(currentPokemonNationalID, PokedexAssetFactory.getPokemonCry(currentContext, currentPokemonNationalID));
+        jukebox.updateInstance(currentPokemonNationalID, PokedexAssetFactory.getPokemonCry(currentContext, currentPokemonNationalID));
 
         //TODO: Investigate why these are getting Garbage Collected. Might need to change the variable to a Drawable asset.
         currentOverviewSprite = PokedexAssetFactory.getPokemonSpriteInGeneration(currentContext,currentPokemonNationalID,restrictUpToGeneration);
         currentType1 = PokedexAssetFactory.getTypeBadge(currentContext, pokedexSelection.getTypes().get(0).getName());
-        currentType2 = PokedexAssetFactory.getTypeBadge(currentContext, pokedexSelection.getTypes().get(1).getName());
+        if(pokedexSelection.getTypes().size()>1) {
+            currentType2 = PokedexAssetFactory.getTypeBadge(currentContext, pokedexSelection.getTypes().get(1).getName());
+        }
+        else{
+            currentType2 = PokedexAssetFactory.getTypeBadge(currentContext,"empty");
+        }
         //roboVoice.setText(pokedexSelection.getDescription());
 
         //Can also prepare for Full Pokemon Object Construction here (i.e. spawn a worker thread)
@@ -137,27 +156,35 @@ public class PokedexManager {
     }
 
     //Getters and Setters
+    /**
+     * Check if the object is ready and can be called
+     */
     public boolean isReady() {
         return isReady;
     }
 
+    /**
+     * Retrieve a reference to the MinimalPokemon currently loaded
+     */
     public MinimalPokemon getCurrentMinimalPokemon() {
         return currentMinimalPokemon;
     }
-
+    /**
+     * Get the currentMinimalPokemon's Sprite
+     */
     public InputStream getSelectionOverviewSprite(){
         return currentOverviewSprite;
     }
-
+    /**
+     * Get the currentMinimalPokemon's 1st Type image badge
+     */
     public InputStream getCurrentType1() {
         return currentType1;
     }
-
+    /**
+     * Get the currentMinimalPokemon's 2nd Type image badge. May return a transparent image if no 2nd type
+     */
     public InputStream getCurrentType2() {
         return currentType2;
-    }
-
-    public InputStream getCurrentOverviewSprite() {
-        return currentOverviewSprite;
     }
 }
