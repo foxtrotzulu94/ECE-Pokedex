@@ -29,6 +29,7 @@ import java.util.Locale;
 
 import me.quadphase.qpdex.pokedex.CentralAudioPlayer;
 import me.quadphase.qpdex.pokedex.PokedexArrayAdapter;
+import me.quadphase.qpdex.pokedex.PokedexAssetFactory;
 import me.quadphase.qpdex.pokedex.PokedexManager;
 import me.quadphase.qpdex.pokedex.TTSController;
 import me.quadphase.qpdex.pokemon.MinimalPokemon;
@@ -96,6 +97,7 @@ public class PokedexActivity extends AppCompatActivity {
 //        else{
 //            contextMaster.updatePokedexSelection(testy, this);
 //        }
+        audioPlayer.updateInstace(0, PokedexAssetFactory.getPokemonCry(this,0));
         dexVoice.setText(overviewDescription.getText().toString());
 
         //Set up Buttons
