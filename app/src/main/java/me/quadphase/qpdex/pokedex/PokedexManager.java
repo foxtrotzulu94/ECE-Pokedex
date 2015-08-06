@@ -1,6 +1,7 @@
 package me.quadphase.qpdex.pokedex;
 
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 
 import java.io.InputStream;
 import java.util.Arrays;
@@ -85,11 +86,11 @@ public class PokedexManager {
 
     private MinimalPokemon currentMinimalPokemon;
 
-    private InputStream currentOverviewSprite;
+    private BitmapDrawable currentOverviewSprite;
 
-    private InputStream currentType1;
+    private BitmapDrawable currentType1;
 
-    private InputStream currentType2;
+    private BitmapDrawable currentType2;
 
 
     //Collections to assist the Pokedex display
@@ -140,13 +141,18 @@ public class PokedexManager {
         jukebox.updateInstance(currentPokemonNationalID, PokedexAssetFactory.getPokemonCry(currentContext, currentPokemonNationalID));
 
         //TODO: Investigate why these are getting Garbage Collected. Might need to change the variable to a Drawable asset.
-        currentOverviewSprite = PokedexAssetFactory.getPokemonSpriteInGeneration(currentContext,currentPokemonNationalID,restrictUpToGeneration);
-        currentType1 = PokedexAssetFactory.getTypeBadge(currentContext, pokedexSelection.getTypes().get(0).getName());
+        currentOverviewSprite = new BitmapDrawable(currentContext.getResources(),
+                PokedexAssetFactory.getPokemonSpriteInGeneration(currentContext,currentPokemonNationalID,restrictUpToGeneration));
+
+        currentType1 = new BitmapDrawable(currentContext.getResources(),
+                PokedexAssetFactory.getTypeBadge(currentContext, pokedexSelection.getTypes().get(0).getName()));
         if(pokedexSelection.getTypes().size()>1) {
-            currentType2 = PokedexAssetFactory.getTypeBadge(currentContext, pokedexSelection.getTypes().get(1).getName());
+            currentType2 = new BitmapDrawable(currentContext.getResources(),
+                    PokedexAssetFactory.getTypeBadge(currentContext, pokedexSelection.getTypes().get(1).getName()));
         }
         else{
-            currentType2 = PokedexAssetFactory.getTypeBadge(currentContext,"empty");
+            currentType2 = new BitmapDrawable(currentContext.getResources(),
+                    PokedexAssetFactory.getTypeBadge(currentContext,"empty"));
         }
         //roboVoice.setText(pokedexSelection.getDescription());
 
@@ -172,19 +178,19 @@ public class PokedexManager {
     /**
      * Get the currentMinimalPokemon's Sprite
      */
-    public InputStream getSelectionOverviewSprite(){
+    public BitmapDrawable getSelectionOverviewSprite(){
         return currentOverviewSprite;
     }
     /**
      * Get the currentMinimalPokemon's 1st Type image badge
      */
-    public InputStream getCurrentType1() {
+    public BitmapDrawable getCurrentType1() {
         return currentType1;
     }
     /**
      * Get the currentMinimalPokemon's 2nd Type image badge. May return a transparent image if no 2nd type
      */
-    public InputStream getCurrentType2() {
+    public BitmapDrawable getCurrentType2() {
         return currentType2;
     }
 }

@@ -58,9 +58,9 @@ public class PokedexActivity extends AppCompatActivity {
 
     private void refreshPokedexOverviewPanel(){
         overviewDescription.setText(contextMaster.getCurrentMinimalPokemon().getDescription());
-        overviewType1.setImageDrawable(new BitmapDrawable(getResources(), contextMaster.getCurrentType1()));
-        overviewType2.setImageDrawable(new BitmapDrawable(getResources(), contextMaster.getCurrentType2()));
-        overviewImage.setImageBitmap(BitmapFactory.decodeStream(contextMaster.getSelectionOverviewSprite()));
+        overviewType1.setImageDrawable(contextMaster.getCurrentType1());
+        overviewType2.setImageDrawable(contextMaster.getCurrentType2());
+        overviewImage.setImageDrawable(contextMaster.getSelectionOverviewSprite());
     }
 
     private void retrieveInterfaceElements(){
