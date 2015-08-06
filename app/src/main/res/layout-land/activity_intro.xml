@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:gravity="center_horizontal"
-    android:background="@drawable/menubacklandscapesmall">
+    android:id="@+id/lin_back">
 
     <LinearLayout
         android:orientation="vertical"
@@ -25,6 +25,15 @@
                 android:text="@string/app_name_stylized"
                 android:id="@+id/app_title"
                 android:textSize="48sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="[DEBUG]"
+                android:id="@+id/app_build"
+                android:textSize="12sp"
+                android:layout_gravity="center"
+                android:gravity="center" />
         </LinearLayout>
 
         <LinearLayout
@@ -61,28 +70,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/enter_trainer"
-                android:background="@color/dex_green_transparent" />
+                android:background="@color/dex_green_transparent"
+                android:onClick="showConstructionActivity" />
 
             <Button
                 android:id="@+id/button_allgens"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/enter_gameview"
-                android:background="@color/dex_yellow_transparent" />
+                android:background="@color/dex_yellow_transparent"
+                android:onClick="showConstructionActivity" />
 
             <Button
                 android:id="@+id/button_advsearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/adv_search"
-                android:background="@color/dex_blue_transparent" />
+                android:background="@color/dex_blue_transparent"
+                android:onClick="showConstructionActivity" />
 
             <Button
                 android:id="@+id/button_resources"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/resource_button"
-                android:background="@color/dex_grey_transparent" />
+                android:background="@color/dex_grey_transparent"
+                android:onClick="showConstructionActivity" />
         </LinearLayout>
 
         <LinearLayout

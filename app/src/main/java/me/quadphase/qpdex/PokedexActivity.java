@@ -16,6 +16,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import me.quadphase.qpdex.pokemon.Pokemon;
+
 
 public class PokedexActivity extends AppCompatActivity {
 
@@ -23,6 +25,10 @@ public class PokedexActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pokedex);
+
+        Runtime.getRuntime().gc();
+        System.gc();
+
         //Set up Buttons
         Button cryButton = (Button)findViewById(R.id.button_pkmncry);
         if(!cryButton.hasOnClickListeners()) {
@@ -72,6 +78,7 @@ public class PokedexActivity extends AppCompatActivity {
                         getString(R.string.title_section3),
                 });
         pokedexList.setAdapter(pokedexEntries);
+
     }
 
     @Override
