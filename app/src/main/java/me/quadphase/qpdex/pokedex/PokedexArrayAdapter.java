@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,9 +23,23 @@ import me.quadphase.qpdex.pokemon.MinimalPokemon;
  * Created by Javier Fajardo on 8/5/2015.
  */
 //TODO: Document with JavaDocs
-public class PokedexArrayAdapter extends ArrayAdapter<MinimalPokemon> {
+public class PokedexArrayAdapter extends ArrayAdapter<MinimalPokemon> implements Filterable {
 
     private final MinimalPokemon[] entryObjects;
+
+    private Filter customFilter = new Filter() {
+        //see http://www.survivingwithandroid.com/2012/10/android-listview-custom-filter-and.html
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            return null;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+        }
+    };
 
     public PokedexArrayAdapter(Context context, MinimalPokemon[] values){
         super(context, R.layout.pokedexrow,R.id.textview_pkmn_list_entry,values);
@@ -44,5 +60,10 @@ public class PokedexArrayAdapter extends ArrayAdapter<MinimalPokemon> {
                 PokedexAssetFactory.getPokemonMinimalSprite(super.getContext(),entryObjects[position].getNationalID())));
 
         return rowEntry;
+    }
+
+//    @Override
+    public Filter getFiler(){
+        return super.getFilter();
     }
 }
