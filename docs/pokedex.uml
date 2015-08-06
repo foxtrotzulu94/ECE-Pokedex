@@ -1644,7 +1644,7 @@
 <XPD:REF name="Associations[29]">6Ic+Rr727kS4R3BOP39L8gAA</XPD:REF>
 <XPD:ATTR name="#Attributes" type="integer">18</XPD:ATTR>
 <XPD:OBJ name="Attributes[0]" type="UMLAttribute" guid="spOkkd3hfE2yzLUsEPfj0gAA">
-<XPD:ATTR name="Name" type="string">pokemonID</XPD:ATTR>
+<XPD:ATTR name="Name" type="string">pokemonUniqueID</XPD:ATTR>
 <XPD:ATTR name="Visibility" type="UMLVisibilityKind">vkPrivate</XPD:ATTR>
 <XPD:ATTR name="TypeExpression" type="string">int</XPD:ATTR>
 <XPD:REF name="Owner">BHawEj9Eqk+yn88iR8OpvwAA</XPD:REF>

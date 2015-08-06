@@ -18,15 +18,29 @@ import java.util.List;
  * Used to describe the base characteristics of each Pokemon
  */
 public class Pokemon {
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //NOTE:
+    // PokemonUniqueID: one-to-one mapping to a specific pokemon, including Mega Evolution and gendered
+    // PokemonNationalID: one-to-many mapping used to identify pokemon by a common name, but without
+    //                  relation to specific stats. This the number shown in the Pokedex.
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
     /**
      * List of the abilities that the Pokemon has
      * MAX: 3
      */
     public List<Ability> abilities;
     /**
-     * Pokemon ID in the original Pokedex
+     * Pokemon ID as the guaranteed Unique Key in our application
      */
-    private int pokemonID;
+    private int pokemonUniqueID;
+
+    /**
+     * Pokemon National ID as registered in the Pokedex
+     */
+    private int pokemonNationalID;
+
     /**
      * Name of the Pokemon in English
      */
@@ -118,8 +132,14 @@ public class Pokemon {
     /**
      * Constructor
      */
-    public Pokemon(int pokemonID, String name, String description, double height, double weight, int attack, int defence, int hp, int spAttack, int spDefence, int speed, int genFirstAppeared, int hatchTime, int catchRate, int genderRatioMale, List<Location> locations, List<Ability> abilities, List<Move> moves, List<Type> types, List<EggGroup> eggGroups, List<Evolution> evolutions) {
-        this.pokemonID = pokemonID;
+    public Pokemon(int pokemonUniqueID, int pokemonNationalID, String name, String description, double height, double weight,
+                   int attack, int defence, int hp, int spAttack, int spDefence, int speed,
+                   boolean caught, int genFirstAppeared, int hatchTime, int catchRate,
+                   int genderRatioMale, List<Location> locations, List<Ability> abilities,
+                   List<Move> moves, List<Type> types, List<EggGroup> eggGroups,
+                   List<Evolution> evolutions) {
+        this.pokemonUniqueID = pokemonUniqueID;
+        this.pokemonNationalID = pokemonNationalID;
         this.name = name;
         this.description = description;
         this.height = height;
@@ -130,7 +150,7 @@ public class Pokemon {
         this.spAttack = spAttack;
         this.spDefence = spDefence;
         this.speed = speed;
-        this.caught = false; //TODO: CHANGE or else all pokemon will be registered as uncaught.
+        this.caught = caught;
         this.genFirstAppeared = genFirstAppeared;
         this.hatchTime = hatchTime;
         this.catchRate = catchRate;
@@ -144,14 +164,53 @@ public class Pokemon {
     }
 
     /**
+     * Constructor with {@link MinimalPokemon}, which has basic pokemon information nationalID,
+     * name, description, and type(s)
+     *
+     */
+    public Pokemon(MinimalPokemon MinimalPokemon, int pokemonUniqueID, double height, double weight, int attack,
+                   int defence, int hp, int spAttack, int spDefence, int speed, boolean caught,
+                   int genFirstAppeared, int hatchTime, int catchRate, int genderRatioMale,
+                   List<Location> locations, List<Ability> abilities, List<Move> moves,
+                   List<EggGroup> eggGroups, List<Evolution> evolutions) {
+        this.pokemonNationalID = MinimalPokemon.getNationalID();
+        this.pokemonUniqueID = pokemonUniqueID;
+        this.name = MinimalPokemon.getName();
+        this.description = MinimalPokemon.getDescription();
+        this.height = height;
+        this.weight = weight;
+        this.attack = attack;
+        this.defence = defence;
+        this.hp = hp;
+        this.spAttack = spAttack;
+        this.spDefence = spDefence;
+        this.speed = speed;
+        this.caught = caught;
+        this.genFirstAppeared = genFirstAppeared;
+        this.hatchTime = hatchTime;
+        this.catchRate = catchRate;
+        this.genderRatioMale = genderRatioMale;
+        this.locations = locations;
+        this.abilities = abilities;
+        this.moves = moves;
+        this.types = MinimalPokemon.getTypes();
+        this.eggGroups = eggGroups;
+        this.evolutions = evolutions;
+    }
+
+    /**
      * Getters for the Pokemon information:
      */
     public List<Ability> getAbilities() {
         return abilities;
     }
 
-    public int getPokemonID() {
-        return pokemonID;
+    public int getUniqueID() {
+        return pokemonUniqueID;
+    }
+
+    public int getNationalID() {
+        return pokemonNationalID;
     }
 
     public String getName() {
