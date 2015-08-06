@@ -39,8 +39,6 @@ for pokemons in data["pokemon"]:
     # Name of the pokemon
     name = pokemons["name"]
 
-    # (TODO) Description of the pokemon
-    description = "hello"
 
 
 
@@ -95,7 +93,7 @@ for pokemons in data["pokemon"]:
 
 
         #Pushes entries into database
-        c.execute("INSERT INTO pokemon VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (None, name, description,
+        c.execute("INSERT INTO pokemon VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (None, name,
                                                                                    height, weight, attack,
                                                                                    defence, healthPoints, spAttack,
                                                                                    spDefence, speed,
