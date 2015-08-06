@@ -205,11 +205,11 @@ public class Pokemon {
         return abilities;
     }
 
-    public int getPokemonUniqueID() {
+    public int getUniqueID() {
         return pokemonUniqueID;
     }
 
-    public int getPokemonNationalID() {
+    public int getNationalID() {
         return pokemonNationalID;
     }
 

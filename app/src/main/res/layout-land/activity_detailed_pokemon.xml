@@ -23,28 +23,28 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.5" >
 
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.8"
-                    android:gravity="center"
-                    android:layout_margin="0dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:background="#bc3a3a3a">
+                <!--<LinearLayout-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_weight="0.8"-->
+                    <!--android:gravity="center"-->
+                    <!--android:layout_margin="0dp"-->
+                    <!--android:layout_marginLeft="5dp"-->
+                    <!--android:layout_marginRight="5dp"-->
+                    <!--android:background="#bc3a3a3a">-->
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="Pokemon Data Summary"
-                        android:id="@+id/title"
-                        android:layout_weight="0.99"
-                        android:gravity="center|center_horizontal"
-                        android:textSize="20sp" />
+                    <!--<TextView-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:text="Pokemon Data Summary"-->
+                        <!--android:id="@+id/title"-->
+                        <!--android:layout_weight="0.99"-->
+                        <!--android:gravity="center|center_horizontal"-->
+                        <!--android:textSize="20sp" />-->
 
 
-                </LinearLayout>
+                <!--</LinearLayout>-->
 
                 <ImageButton
                     android:layout_width="match_parent"
@@ -68,7 +68,7 @@
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.7"
+                    android:layout_weight="0.65"
                     android:background="#c89b9b9b"
                     android:layout_marginLeft="5dp"
                     android:layout_marginBottom="5dp"
@@ -94,7 +94,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="[POKEMON NAME]"
+                        android:text="@string/pokedex_placeholder_title"
                         android:id="@+id/textview_pkmnname_detail"
                         android:textSize="20sp"
                         android:layout_margin="0dp"
@@ -126,7 +126,7 @@
 
                 </LinearLayout>
 
-                <!-- TODO: Evaluate if we wrap this up in a scroll view for better viewing in other devices-->
+                <!-- TODO: Wrap this up in a scroll view for better viewing in other devices-->
 
                 <LinearLayout
                     android:orientation="vertical"
@@ -147,7 +147,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="[ENTER POKEDEX ENTRY]"
+                        android:text="@string/pokedex_placeholder_description"
                         android:id="@+id/textview_pkdexentry_detail"
                         android:layout_weight="0.95"
                         android:layout_gravity="center"

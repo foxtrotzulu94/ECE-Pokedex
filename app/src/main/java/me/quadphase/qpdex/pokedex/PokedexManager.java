@@ -1,82 +1,125 @@
 package me.quadphase.qpdex.pokedex;
 
-import android.content.res.AssetFileDescriptor;
-import android.media.MediaPlayer;
-import android.widget.ArrayAdapter;
+import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Arrays;
 
+import me.quadphase.qpdex.pokemon.MinimalPokemon;
 import me.quadphase.qpdex.pokemon.Pokemon;
+import me.quadphase.qpdex.pokemon.Type;
 
 /**
  * High level manager of all Pokemon related information
  * This class is a singleton that should be use when interaction is needed with activities.
  */
+//TODO: Document with JavaDocs
 public class PokedexManager {
-    //TODO: Set through Database retrieval for MAX generation.
-    public static final int latestGeneration = 6;
-    private static int countMaxNationalID = 721;
-
-    private static PokedexManager instance = null;
 
     /**
-     * Wrapper for Android's Media Class
+     * Internal class to generate a fail-safe Pokemon.
+     * Can be used to check for other errors in logic or in application UI.
+     * If this is ever displayed, then there's a problem that needs to be fixed
      */
-    private CentralAudioPlayer jukebox;
+    public class MissingNo extends Pokemon{
+        public MissingNo(){
+            super(
+                    -1,                  // pokemonUniqueID,
+                    0,                   // pokemonNationalID,
+                    "MissingNo.",        // name,
+                    "Ketsuban",// description,
+                    3.3,                 // height in Meters,
+                    1590.8,              // weight in Kilograms,
+                    136,                 // attack,
+                    0,                   // defence,
+                    33,                  // hp,
+                    3,                   // spAttack,
+                    3,                   // spDefence,
+                    29,                  // speed,
+                    false,               // caught,
+                    1,                   // genFirstAppeared,
+                    0,                   // hatchTime,
+                    29,                  // catchRate,
+                    -1,                  // genderRatioMale,
+                    null,                // locations,
+                    null,                // abilities,
+                    null,                // moves,
+                    Arrays.asList(       //types
+                            new Type("Bird","Invalid Type"),
+                            new Type("Normal","Normal")),
+                    null,                // eggGroups,
+                    null                 // evolutions,
+            );
+        }
 
+        public MinimalPokemon minimal(){
+            return new MinimalPokemon(getNationalID(), super.getName(), super.getDescription(), super.getTypes());
+        }
 
-    //Lists and Collection variables
-    /**
-     * List of the retrieved database objects in minimal form for quick reference
-     * @see this.pokemonList for the list sent to the ListView
-     */
-    private List<String> minimalPokemonObjects;
-
-    /**
-     * List for display purposes with ListAdapter
-     */
-    private ArrayAdapter<String> viewablePokemonList;
-
-
-    //Information and Cached Pokemon Variables for quick loading
-    /**
-     * Current generation being viewed. In case we want the Pokedex to go back in time
-     * As a safety measure, it always defaults to the latest generation.
-     */
-    private int generationCurrentlyDisplayed = latestGeneration;
-
-    /**
-     * Reference to the current pokemon being viewed or focused
-     */
-    private Pokemon selectedPokemon;
-
-    /**
-     * Cached reference for the Pokemon Cry file
-     */
-    private AssetFileDescriptor pokemonCry; //TODO: probably moved to CentralAudioPlayer
-
-    /**
-     * HashMap to access the sprite of the pokemon for a given generation
-     * Will be a single mapped value if there is only one.
-     */
-    private HashMap<String,InputStream> pokemonSpriteList;
-
-    //Constructor and Instance Access for Singleton
-    protected PokedexManager(){
-        jukebox = CentralAudioPlayer.getInstance();
-        //TODO: fill with the rest of the needed fields
-//        this.generator = generator;
-//        this.assetStore = assetStore;
-//        this.minimalPokemonObjects = minimalPokemonObjects;
-//        this.viewablePokemonList = viewablePokemonList;
-//        this.generationDisplayed = generationDisplayed;
-//        this.selectedPokemon = selectedPokemon;
-//        this.pokemonCry = pokemonCry;
-//        this.pokemonSpriteList = pokemonSpriteList;
     }
 
+    //Entity variables that describe inner state and function
+    private static PokedexManager instance=null;
+    private static CentralAudioPlayer jukebox=null;
+    private static TTSController roboVoice;
+    private boolean isReady=false;
+
+
+    //Variables for context to handle global application state
+    /**
+     * The Generation when this Pokedex was updated/compiled
+     */
+    public static final int latestGeneration = 6;
+    /**
+     * Instance of the fail-safe class
+     */
+    public final MissingNo missingNo;
+
+    private int maxPokemonNationalID = 721;
+
+    private int restrictUpToGeneration = latestGeneration; //In practice, no restriction.
+
+    private int currentPokemonNationalID = 0;
+
+    private Pokemon currentDetailedPokemon;
+
+    private MinimalPokemon currentMinimalPokemon;
+
+    private BitmapDrawable currentOverviewSprite;
+
+    private BitmapDrawable currentType1;
+
+    private BitmapDrawable currentType2;
+
+
+    //Collections to assist the Pokedex display
+
+    private Type[] allValidTypes;
+
+    private MinimalPokemon[] allMinimalPokemon;
+
+    private InputStream[] allMiniSprites;
+
+    //private ArrayAdapter<MinimalPokemon> pokedexList; //Should probably stay with PokedexActivity class
+
+    //Cache variables
+    //private int cacheSize;
+    //private HashMap<String,Pokemon> cachedDetailedPokemon; //Tentative, use an LRUHashMap
+    //private List<InputStream> cachedDisplaySprites;
+
+    //Methods
+
+    //Singleton Constructor
+    protected PokedexManager(){
+        jukebox = CentralAudioPlayer.getInstance();
+        //roboVoice = TTSController.getInstance();
+        missingNo = new MissingNo();
+    }
+
+    /**
+     * Retrieve the Singleton Instance
+     */
     public static PokedexManager getInstance(){
         if(instance==null){
             instance = new PokedexManager();
@@ -84,86 +127,70 @@ public class PokedexManager {
         return instance;
     }
 
-
-    //Private methods for interacting with other classes in the package
     /**
-     * Get the Current Pokemon Cry from the Asset Directory
+     * Change the currently selected Pokemon in the Pokedex and send a message to update all classes
+     * This will also store a reference to the assets the Pokemon with the National ID is associated with.
+     * @param pokedexSelection The minimal pokemon, preferrably from the {@link PokedexArrayAdapter}
+     * @param currentContext The context in which the update occurs (usually, "this" within an Activity)
      */
-    private void retrievePokemonCryFromAssets(){
-        //TODO: load the cry from the assets
+    public void updatePokedexSelection(MinimalPokemon pokedexSelection, Context currentContext){
+        isReady = false;
+        currentMinimalPokemon = pokedexSelection;
+        currentPokemonNationalID = pokedexSelection.getNationalID();
+
+        jukebox.updateInstance(currentPokemonNationalID, PokedexAssetFactory.getPokemonCry(currentContext, currentPokemonNationalID));
+
+        //TODO: Investigate why these are getting Garbage Collected. Might need to change the variable to a Drawable asset.
+        currentOverviewSprite = new BitmapDrawable(currentContext.getResources(),
+                PokedexAssetFactory.getPokemonSpriteInGeneration(currentContext,currentPokemonNationalID,restrictUpToGeneration));
+
+        currentType1 = new BitmapDrawable(currentContext.getResources(),
+                PokedexAssetFactory.getTypeBadge(currentContext, pokedexSelection.getTypes().get(0).getName()));
+        if(pokedexSelection.getTypes().size()>1) {
+            currentType2 = new BitmapDrawable(currentContext.getResources(),
+                    PokedexAssetFactory.getTypeBadge(currentContext, pokedexSelection.getTypes().get(1).getName()));
+        }
+        else{
+            currentType2 = new BitmapDrawable(currentContext.getResources(),
+                    PokedexAssetFactory.getTypeBadge(currentContext,"empty"));
+        }
+        //roboVoice.setText(pokedexSelection.getDescription());
+
+        //Can also prepare for Full Pokemon Object Construction here (i.e. spawn a worker thread)
+
+        isReady = true;
     }
 
-
-    //Setters and Getters
+    //Getters and Setters
     /**
-     * Return the ArrayAdapter for use in showing it through a ListView
+     * Check if the object is ready and can be called
      */
-    public ArrayAdapter<String> getViewablePokemonList() {
-        return viewablePokemonList;
-    }
-
-    /**
-     * Get the Minimal Pokemon Objects. Not recommended for direct use.
-     * @see this.getPokemonList()
-     */
-    public List<String> getMinimalPokemonObjects() {
-        return minimalPokemonObjects;
-    }
-
-    /**
-     * Place a specific list of Minimal Pokemon Objects
-     * Useful for searching by generation.
-     */
-    public void setMinimalPokemonObjects(List<String> minimalPokemonObjects) {
-        this.minimalPokemonObjects = minimalPokemonObjects;
-    }
-
-    /**
-     * Retrieve the Built Pokemon Object being focused
-     * {@link me.quadphase.qpdex.DetailedPokemonActivity} should use this for getting all info.
-     */
-    public Pokemon getSelectedPokemon() {
-        return selectedPokemon;
-    }
-
-    /**
-     * Indicate what Pokemon is being viewed
-     */
-    public void setSelectedPokemon(Pokemon selectedPokemon) { //TODO: switch to MinimalPokemon
-        this.selectedPokemon = selectedPokemon;
+    public boolean isReady() {
+        return isReady;
     }
 
     /**
-     * Retrieve the selected Pokemon's Cry
-     * @see this.retrievePokemonCryFromAssets() for how the actual asset is fetched.
+     * Retrieve a reference to the MinimalPokemon currently loaded
      */
-    public AssetFileDescriptor getCurrentPokemonCry() {
-        return pokemonCry;
+    public MinimalPokemon getCurrentMinimalPokemon() {
+        return currentMinimalPokemon;
     }
-
     /**
-     * Get the Current Pokemon Cry from the Asset Directory
-     *
+     * Get the currentMinimalPokemon's Sprite
      */
-    public InputStream getPokemonLatestSprite(){
-        //TODO: load the cry from the assets
-        return pokemonSpriteList.get("6");
+    public BitmapDrawable getSelectionOverviewSprite(){
+        return currentOverviewSprite;
     }
-
-
     /**
-     * Retrieve the HashMap containing all Pokemon Sprites
+     * Get the currentMinimalPokemon's 1st Type image badge
      */
-    public HashMap<String, InputStream> getPokemonSpriteList() {
-        return pokemonSpriteList;
+    public BitmapDrawable getCurrentType1() {
+        return currentType1;
     }
-
     /**
-     * Retrieve a general sprite for the Pokemon within a Generation.
-     * Returns null if the generation is not valid.
+     * Get the currentMinimalPokemon's 2nd Type image badge. May return a transparent image if no 2nd type
      */
-    public InputStream getPokemonSpriteForGeneration(int genID){
-        //Note that the query on the Dictionary is restricted to Generation.
-        return pokemonSpriteList.get(Integer.toString(genID));
+    public BitmapDrawable getCurrentType2() {
+        return currentType2;
     }
 }

@@ -11,6 +11,15 @@
     <string name="resource_button">Pokémon Resources</string>
     <!-- IntroActivity String End-->
 
+    <!-- PokedexActivity String End-->
+    <!--<string name="pokedex_init_description">Welcome, Click on any element on the list to start seeing Pokemon!</string>-->
+    <string name="pokedex_init_description">Sometimes, on a dark night, your shadow thrown by a streetlight will suddenly and startlingly overtake you. It is actually a Gengar running past you, pretending to be your shadow. </string>
+    <string name="pokedex_init_title">Click here to search</string>
+    <string name="pokedex_placeholder_description">[ENTER POKEDEX ENTRY]</string>
+    <string name="pokedex_placeholder_title">[POKEMON NAME]</string>
+    <!-- PokedexActivity String End-->
+
+
     <!-- DetailedPokemonActivity Strings Start-->
     <string name="attack">Attack</string>
     <string name="defense">Defence</string>

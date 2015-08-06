@@ -17,7 +17,7 @@ public interface IMediaPlayerWrapper {
      * Signals the object to update itself with the provided data. It will queue the AssetFileDescriptor
      * if the instance is currently in the middle of playback.
      */
-    public void updateInstace(int pokemonNationalID, AssetFileDescriptor pokemonCry);
+    public void updateInstance(int pokemonNationalID, AssetFileDescriptor pokemonCry);
 
     /**
      * One shot playback of a sound file. If the instance was created but not updated, it will catch
