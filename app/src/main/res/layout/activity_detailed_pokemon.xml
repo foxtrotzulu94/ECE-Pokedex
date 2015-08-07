@@ -9,35 +9,72 @@
     <FrameLayout android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center">
+        android:gravity="center"
+        android:background="@drawable/detailbacktile">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/detailbacktile">
+            android:orientation="vertical">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#bc3a3a3a"
+            android:layout_gravity="top">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/pokedex_placeholder_title"
+                android:id="@+id/textview_pkmnname_detail"
+                android:textSize="20sp"
+                android:layout_margin="5dp"
+                android:layout_gravity="center"
+                android:layout_weight="0.3" />
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="0.99"
-                android:background="#bc3a3a3a">
+                android:layout_weight="0.7">
 
-                <TextView
+                <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Pokemon Data Summary"
-                    android:id="@+id/title"
-                    android:layout_weight="0.99"
-                    android:gravity="center|center_horizontal"
-                    android:textSize="20sp" />
+                    android:id="@+id/imgview_pkmntype1_detail"
+                    android:layout_weight="0.5"
+                    android:src="@drawable/typenone"
+                    android:scaleType="fitCenter" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/imgview_pkmntype2_detail"
+                    android:layout_weight="0.5"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/typenone" />
             </LinearLayout>
+
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:padding="5dp"
+            android:alpha="1"
+            android:background="#00000000">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="150dp"
                 android:layout_weight="0.7" >
 
                 <ImageButton
@@ -52,101 +89,55 @@
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.5">
+                    android:layout_weight="0.4" >
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/pokedex_placeholder_title"
-                        android:id="@+id/textview_pkmnname_detail"
-                        android:textSize="20sp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
+                        android:text="Description"
+                        android:id="@+id/title_descript_detail"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginLeft="5dp"
                         android:background="#bc3a3a3a" />
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Pokemon Type"
-                        android:id="@+id/title_type"
-                        android:background="#bc3a3a3a" />
-
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="fill_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.5"
-                        android:layout_margin="0dp"
-                        android:background="#c89b9b9b"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginRight="5dp">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:id="@+id/imgview_pkmntype1_detail"
-                            android:layout_weight="0.5"
-                            android:src="@drawable/typenone"
-                            android:scaleType="fitCenter" />
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:id="@+id/imgview_pkmntype2_detail"
-                            android:layout_weight="0.5"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/typenone" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Evolution Chain"
-                        android:id="@+id/title_evolutions"
-                        android:background="#bc3a3a3a"
-                        android:layout_marginTop="5dp" />
-
-                    <LinearLayout
-                        android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.5"
-                        android:id="@+id/linlayout_evolutions_detail"
-                        android:background="#c89b9b9b" />
+                        android:text="@string/pokedex_init_description"
+                        android:id="@+id/textview_pkdexentry_detail"
+                        android:layout_weight="0.95"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:background="#c89b9b9b"
+                        android:padding="5dp" />
                 </LinearLayout>
-            </LinearLayout>
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="0.95" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Description"
-                    android:id="@+id/title_descript_detail"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:background="#bc3a3a3a" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="@string/pokedex_placeholder_description"
-                    android:id="@+id/textview_pkdexentry_detail"
-                    android:layout_weight="0.95"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:background="#c89b9b9b" />
-            </LinearLayout>
+                android:text="Evolution Chain"
+                android:id="@+id/title_evolutions"
+                android:layout_weight="0.8"
+                android:background="#bc3a3a3a"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp" />
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="64dp"
+                android:layout_weight="0.65"
+                android:background="#c89b9b9b"
+                android:layout_marginLeft="5dp"
+                android:layout_marginBottom="5dp"
+                android:id="@+id/linlayout_evolutions_detail"></LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="0.6"
                 android:gravity="center" >
 
@@ -407,10 +398,265 @@
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.5" />
-            </LinearLayout>
-        </LinearLayout>
+                    android:layout_weight="0.5"
+                    android:layout_margin="5dp"
+                    android:background="#c89b9b9b"
+                    android:gravity="top" >
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Base Stats"
+                        android:id="@+id/textView"
+                        android:layout_weight="0.1"
+                        android:layout_margin="0dp"
+                        android:background="#bc3a3a3a" />
+
+                    <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_horizontal"
+                        android:layout_weight="0.05"
+                        android:layout_marginTop="10dp" >
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:measureWithLargestChild="false"
+                            android:id="@+id/tableRow"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginLeft="5dp" >
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:id="@+id/textView2"
+                                android:layout_weight="0.5"
+                                android:text="@string/hp" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="128"
+                                android:id="@+id/textView3"
+                                android:layout_weight="0.9" />
+
+                            <ProgressBar
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:id="@+id/progressBar"
+                                android:layout_weight="0.5"
+                                android:progress="128"
+                                android:max="255" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:measureWithLargestChild="false"
+                            android:id="@+id/tableRow2"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginLeft="5dp" >
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:id="@+id/textView6"
+                                android:layout_weight="0.5"
+                                android:text="@string/attack" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="128"
+                                android:id="@+id/textView7"
+                                android:layout_weight="0.9" />
+
+                            <ProgressBar
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:id="@+id/progressBar2"
+                                android:layout_weight="0.5"
+                                android:progress="128"
+                                android:max="255" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:measureWithLargestChild="false"
+                            android:id="@+id/tableRow3"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginLeft="5dp" >
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:id="@+id/textView8"
+                                android:layout_weight="0.5"
+                                android:text="@string/defense" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="128"
+                                android:id="@+id/textView11"
+                                android:layout_weight="0.9" />
+
+                            <ProgressBar
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:id="@+id/progressBar3"
+                                android:layout_weight="0.5"
+                                android:progress="128"
+                                android:max="255" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:measureWithLargestChild="false"
+                            android:id="@+id/tableRow4"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginLeft="5dp" >
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:id="@+id/textView12"
+                                android:layout_weight="0.5"
+                                android:text="@string/spattack" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="128"
+                                android:id="@+id/textView13"
+                                android:layout_weight="0.9" />
+
+                            <ProgressBar
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:id="@+id/progressBar4"
+                                android:layout_weight="0.5"
+                                android:progress="128"
+                                android:max="255" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:measureWithLargestChild="false"
+                            android:id="@+id/tableRow5"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginLeft="5dp" >
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:id="@+id/textView14"
+                                android:layout_weight="0.5"
+                                android:text="@string/spdefense" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="128"
+                                android:id="@+id/textView15"
+                                android:layout_weight="0.9" />
+
+                            <ProgressBar
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:id="@+id/progressBar5"
+                                android:layout_weight="0.5"
+                                android:progress="128"
+                                android:max="255" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:measureWithLargestChild="false"
+                            android:id="@+id/tableRow6"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginLeft="5dp" >
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:id="@+id/textView16"
+                                android:layout_weight="0.5"
+                                android:text="@string/speed" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="128"
+                                android:id="@+id/textView17"
+                                android:layout_weight="0.9" />
+
+                            <ProgressBar
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:id="@+id/progressBar6"
+                                android:layout_weight="0.5"
+                                android:progress="128"
+                                android:max="255" />
+                        </TableRow>
+                    </TableLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.9"
+                        android:gravity="top" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="18sp"
+                            android:text="Stats Total"
+                            android:id="@+id/textView18"
+                            android:layout_margin="5dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="300"
+                            android:textSize="20sp"
+                            android:id="@+id/textView19"
+                            android:layout_margin="5dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="700dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Large area for more text below"
+                android:id="@+id/textView23" />
+        </LinearLayout>
+        </ScrollView>
+        </LinearLayout>
     </FrameLayout>
 
     <!-- android:layout_gravity="start" tells DrawerLayout to treat

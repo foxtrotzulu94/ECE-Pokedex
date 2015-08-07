@@ -98,7 +98,7 @@
                         android:layout_height="match_parent"
                         android:id="@+id/imgview_pkmntype1"
                         android:src="@drawable/typenone"
-                        android:layout_weight="0.8"
+                        android:layout_weight="0.95"
                         android:scaleType="fitXY" />
 
                     <ImageView
@@ -106,21 +106,40 @@
                         android:layout_height="match_parent"
                         android:id="@+id/imgview_pkmntype2"
                         android:src="@drawable/typenone"
-                        android:layout_weight="0.8"
+                        android:layout_weight="0.95"
                         android:scaleType="fitXY" />
 
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="PKMN CRY"
-                        android:id="@+id/button_pkmncry" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="DATA"
+                            android:id="@+id/button_pkmndata"
+                            android:onClick="switchToPokemonData"
+                            android:textSize="10sp"
+                            android:layout_weight="0.9"
+                            style="?android:attr/buttonStyleSmall" />
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="Cry"
+                            android:id="@+id/button_pkmncry"
+                            android:textSize="10sp"
+                            android:layout_weight="0.9"
+                            style="?android:attr/buttonStyleSmall" />
+                    </LinearLayout>
 
                     <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="See Data"
-                        android:id="@+id/button_pkmndata"
-                        android:onClick="switchToPokemonData" />
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="LOCATION"
+                        android:id="@+id/button_pkmnlocation"
+                        android:textSize="10sp"
+                        android:layout_weight="0.9" />
+
                 </LinearLayout>
             </LinearLayout>
 
@@ -130,11 +149,13 @@
                 android:text="@string/pokedex_init_description"
                 android:id="@+id/textview_pkmndescript"
                 android:layout_weight="0.6"
-                android:layout_margin="10dp"
                 android:background="#ffffff"
                 android:clickable="true"
                 android:padding="5dp"
-                android:onClick="saySomething" />
+                android:onClick="saySomething"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp" />
         </LinearLayout>
 
     </LinearLayout>

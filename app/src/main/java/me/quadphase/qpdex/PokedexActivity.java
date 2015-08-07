@@ -112,12 +112,18 @@ public class PokedexActivity extends AppCompatActivity {
 
 
         //This is a test, remove after real list can populate the ListView
-        Log.d("QPDEX", testy.toString());
-        MinimalPokemon[] listy = new MinimalPokemon[11];
-        Arrays.fill(listy,0,11,testy);
-        listy[10] = new MinimalPokemon(3,"Bulbasaur",
-                "Bulbasaur can be seen napping in bright sunlight. There is a seed on its back. By soaking up the sun’s rays, the seed grows progressively larger. ",
-                Arrays.asList(new Type("Grass",""), new Type("Poison","")));
+        Log.d("QPDEX", "Artifically creating objects");
+        int testNumber = 721;
+        MinimalPokemon[] listy = new MinimalPokemon[testNumber];
+//        Arrays.fill(listy,0,11,testy);
+        for(int i =0; i<testNumber; i++){
+            listy[i] = new MinimalPokemon(i,"Pokemon",
+                "The franchise began as a pair of video games for the original Game Boy, developed by Game Freak and published by Nintendo. The franchise now spans video games, trading card games, animated television shows and movies, comic books, and toys",
+                Arrays.asList(new Type("electric",""), new Type("ice","")));
+        }
+//        listy[1] = new MinimalPokemon(3,"Bulbasaur",
+//                "Bulbasaur can be seen napping in bright sunlight. There is a seed on its back. By soaking up the sun’s rays, the seed grows progressively larger. ",
+//                Arrays.asList(new Type("Grass",""), new Type("Poison","")));
 
         pokedexEntries = new PokedexArrayAdapter(
                 this,
@@ -203,7 +209,7 @@ public class PokedexActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-        if(contextMaster.isReady())
+        if (contextMaster.isReady())
             refreshPokedexOverviewPanel();
     }
 

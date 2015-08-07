@@ -64,6 +64,9 @@ public class DetailedPokemonActivity extends FragmentActivity
             }
         });
 
+
+
+
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
@@ -179,10 +182,4 @@ public class DetailedPokemonActivity extends FragmentActivity
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
-
-    //Just cause an exception, no questions asked.
-    public void causeException(View view){
-        throw new RuntimeException();
-    }
-
 }
