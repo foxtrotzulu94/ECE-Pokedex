@@ -18,6 +18,8 @@ import me.quadphase.qpdex.pokemon.MinimalPokemon;
 import me.quadphase.qpdex.pokemon.Move;
 import me.quadphase.qpdex.pokemon.MoveSet;
 import me.quadphase.qpdex.pokemon.Party;
+import me.quadphase.qpdex.exceptions.PartyFullException;
+import me.quadphase.qpdex.pokemon.PartyPokemon;
 import me.quadphase.qpdex.pokemon.Pokemon;
 import me.quadphase.qpdex.pokemon.Type;
 
@@ -598,7 +600,7 @@ public class PokemonFactory {
 
         Cursor moveCursor = database.query("party_moveSet", null, null, null, null, null, null);
 
-        // go through the party table making the pokemon and associated movesets for each one
+        // go through the party table making the pokemon and associated moveSets for each one
         while (!(cursor.isAfterLast())) {
             int pokemonID = cursor.getInt(cursor.getColumnIndex("pokemonID"));
             int partyID = cursor.getInt(cursor.getColumnIndex("partyID"));
@@ -614,7 +616,12 @@ public class PokemonFactory {
                 moveCursor.moveToNext();
             }
 
-            myParty.addPokemonToParty(getPokemonByPokemonID(pokemonID), new MoveSet(moves));
+            try {
+                myParty.addPokemonToParty(getPokemonByPokemonID(pokemonID), new MoveSet(moves));
+            } catch (PartyFullException e) {
+                // this should not happen in this context since there should not be more than
+                // 6 pokemon in the party stored in the database.
+            }
 
             cursor.moveToNext();
         }
@@ -645,27 +652,28 @@ public class PokemonFactory {
      * Adds the information associated to the pokemon to the party table.
      *
      * Note: Assumes that the partyID that is being passed is valid (i.e. not already occupied by
-     *       another pokemon, and less than 6, which is the max number of pokemon in a party)
+     *       another pokemon, and less than 6, which is the max number of pokemon in a party,
+     *       since verification should have happened at previous step)
      *
-     * @param partyID index in the array that the pokemon is added to
-     * @param pokemonID unique pokemon ID associated to the pokemon that will be added.
-     * @param moveSet moveSet with the moves to add to the party
+     * @param partyPokemon the pokemon and moveset to be added (includes the partyID)
      */
-    public void addPokemonToParty(int partyID, int pokemonID, MoveSet moveSet) throws Exception {
-        // TODO: Should we verify here that there are not already 6 pokemon in the database?
+    public void addPokemonToParty(PartyPokemon partyPokemon) throws Exception {
+        // TODO: Should we verify here as well that there are not already 6 pokemon in the database?
+        // It would be easy enough to just go in the database and make sure that the partyID
+        // is not there
 
         // firstly, add the party
         // create new row content for party table
         ContentValues partyContent = new ContentValues();
-        partyContent.put("partyID", partyID);
-        partyContent.put("pokemonID", pokemonID);
+        partyContent.put("partyID", partyPokemon.getPartyID());
+        partyContent.put("pokemonID", partyPokemon.getPokemon().getUniqueID());
 
-        int numberOfMoves = moveSet.getNumberOfMoves();
-        List<Move> moves = moveSet.getMoves();
+        int numberOfMoves = partyPokemon.getMoveSet().getNumberOfMoves();
+        List<Move> moves = partyPokemon.getMoveSet().getMoves();
 
         ContentValues[] moveContent = new ContentValues[numberOfMoves];
         for (int i = 0; i < numberOfMoves; i++) {
-            //moveContent[i].put(moves.get(i).);
+            moveContent[i].put("moveID", getMoveID(moves.get(i)));
         }
 
 
@@ -674,10 +682,13 @@ public class PokemonFactory {
         try {
             database.beginTransaction();
             database.insertOrThrow("party", null, partyContent);
-            // insert the moves.
+            // insert the moves
+            for (int i = 0; i < numberOfMoves; i++) {
+                database.insertOrThrow("party_moveSet", null, moveContent[i]);
+            }
             database.endTransaction();
         } catch (Exception e) {
-            throw new Exception("Error: Pokemon not added to party.");
+            throw new Exception("Database Error: Pokemon not successfully added to party.");
         }
 
     }
@@ -686,22 +697,36 @@ public class PokemonFactory {
      * Adds a move to a pokemon in the party.
      *
      * @param partyID index in the array in party that the pokemon is associated to
-     * @param moveID moveID in the database table.
+     * @param move move to be added.
      */
-    private void addMoveToPartyPokemon(int partyID, int moveID) {
+    public void addMoveToPartyPokemon(int partyID, Move move) throws Exception {
+        ContentValues moveContent = new ContentValues();
+        moveContent.put("partyID", partyID);
+        // Get the cursor for the moves tables to determine the moveID associated with the move
 
-    }
+        moveContent.put("moveID", getMoveID(move));
 
-    private void replaceMoveOfPartyPokemon(int partyID, Move oldMove, Move newMove) {
-
-    }
-
-    private void removeMovefromPokemonInParty(int partyID, Move move) {
-
+        try {
+            database.beginTransaction();
+            database.insertOrThrow("party_moveSet", null, moveContent);
+            database.endTransaction();
+        } catch (Exception e) {
+            throw new Exception("Database Error: Move not added to party pokemon.");
+        }
     }
 
     /**
-     * Loads all the Types into memory. Should be done at program start.
+     * Removes a move from the party_moveSet table associated with a specific pokemon
+     * @param partyID partyID of the pokemon to remove the move from
+     * @param move move to be removed
+     */
+    public void removeMoveFromPokemonInParty(int partyID, Move move) {
+        String[] selectionArgs = {String.valueOf(partyID), String.valueOf(getMoveID(move))};
+        database.delete("party_moveSet", "partyID=? AND moveID=?", selectionArgs);
+    }
+
+    /**
+     * Loads all the Types into memory. Should be done at program start (during splash screen)
      */
     public void loadAllTypes() {
         for (int i = 1; i < getMaxTypeID() + 1; i++) {
@@ -714,6 +739,23 @@ public class PokemonFactory {
             // close the cursor
             cursor.close();
         }
+    }
+
+    /**
+     * Retrieves the moveID of the move.
+     *
+     * @param move move to get ID of
+     * @return int moveID of the move
+     */
+    private int getMoveID(Move move) {
+        String[] selectionArg = {move.getName()};
+        String[] columnArg = {"moveID"};
+        Cursor cursor = database.query("moves", columnArg, "name=?", selectionArg, null, null, null);
+        cursor.moveToFirst();
+        int moveID = cursor.getInt(cursor.getColumnIndex("moveID"));
+        cursor.close();
+
+        return moveID;
     }
 
 }

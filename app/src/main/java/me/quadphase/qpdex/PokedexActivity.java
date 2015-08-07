@@ -2,10 +2,7 @@ package me.quadphase.qpdex;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -117,7 +114,7 @@ public class PokedexActivity extends AppCompatActivity {
         Arrays.fill(listy,0,11,testy);
         listy[10] = new MinimalPokemon(3,"Bulbasaur",
                 "Bulbasaur can be seen napping in bright sunlight. There is a seed on its back. By soaking up the sun’s rays, the seed grows progressively larger. ",
-                Arrays.asList(new Type("Grass",""), new Type("Poison","")));
+                Arrays.asList(new Type("Grass",""), new Type("Poison","")), false);
 
         pokedexEntries = new PokedexArrayAdapter(
                 this,
