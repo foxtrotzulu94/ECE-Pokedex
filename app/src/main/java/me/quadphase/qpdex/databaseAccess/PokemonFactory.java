@@ -4,11 +4,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
-import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import me.quadphase.qpdex.exceptions.PartyFullException;
 import me.quadphase.qpdex.pokemon.Ability;
 import me.quadphase.qpdex.pokemon.EggGroup;
 import me.quadphase.qpdex.pokemon.Evolution;
@@ -18,7 +20,6 @@ import me.quadphase.qpdex.pokemon.MinimalPokemon;
 import me.quadphase.qpdex.pokemon.Move;
 import me.quadphase.qpdex.pokemon.MoveSet;
 import me.quadphase.qpdex.pokemon.Party;
-import me.quadphase.qpdex.exceptions.PartyFullException;
 import me.quadphase.qpdex.pokemon.PartyPokemon;
 import me.quadphase.qpdex.pokemon.Pokemon;
 import me.quadphase.qpdex.pokemon.Type;
@@ -30,11 +31,11 @@ import me.quadphase.qpdex.pokemon.Type;
  */
 public class PokemonFactory {
 
-    private static final String DB_NAME = "pokedex.sqlite3";
+    private static final String DB_NAME = "pokedex.db";
 
     private static PokemonFactory instance = null;
 
-    private Dictionary<Integer,Type> types;
+    private HashMap<Integer,Type> types;
 
     /**
      * SQLite database handle
@@ -48,6 +49,10 @@ public class PokemonFactory {
         //Initialize the Database Handler
         ExternalDbOpenHelper dbOpenHelper = new ExternalDbOpenHelper(context, DB_NAME);
         database = dbOpenHelper.openDataBase();
+
+        types = new HashMap<>();
+
+        loadAllTypes();
     }
 
     /**
@@ -69,11 +74,11 @@ public class PokemonFactory {
      *
      * @return List of all main (no suffix) minimalPokemon in the database
      */
-    public List<MinimalPokemon> getAllPokemon() {
-        List<MinimalPokemon> allPokemon = new LinkedList<>();
+    public MinimalPokemon[] getAllPokemon() {
+        MinimalPokemon[] allPokemon = new MinimalPokemon[getMaxNationalID()];
 
         for (int i = 0; i < getMaxNationalID(); i++) {
-            allPokemon.add(getMinimalPokemonByNationalID(i + 1));
+            allPokemon[i] = getMinimalPokemonByNationalID(i + 1);
         }
 
         return allPokemon;
@@ -94,7 +99,7 @@ public class PokemonFactory {
         // of mega evolutions and various types.
         cursor.moveToFirst();
         int pokemonID = cursor.getInt(cursor.getColumnIndex("pokemonID"));
-
+        Log.v("Database Access:", "From nationalID " + String.valueOf(nationalID) + " the pokemonID is: " + String.valueOf(pokemonID));
         // close the cursor
         cursor.close();
 
@@ -108,18 +113,31 @@ public class PokemonFactory {
      */
     public MinimalPokemon getMinimalPokemonByPokemonID(int pokemonID) {
         // move the cursor to the correct entry of the pokemon table
-        Cursor cursor = database.rawQuery(String.format("SELECT * FROM pokemon WHERE pokemonID=%s", String.valueOf(pokemonID)), null);
+        String[] pokemonIDString = {String.valueOf(pokemonID)};
+        Cursor cursor = database.query("pokemon", null, "pokemonID=?", pokemonIDString, null, null, null, null);
         cursor.moveToFirst();
 
         // get all of the information stored in pokemon table:
         String name = cursor.getString(cursor.getColumnIndex("name"));
-        String description = cursor.getString(cursor.getColumnIndex("description"));
+        Log.v("Database Access:", "From pokemonID " + String.valueOf(pokemonID) + " the name is: " + name);
+
+        cursor.close();
 
         // get the nationalID:
         String[] selectionArg = {String.valueOf(pokemonID)};
         cursor = database.query("pokemon_nationalID", null, "pokemonID=?", selectionArg, null, null, null);
         cursor.moveToFirst();
         int nationalID = cursor.getInt(cursor.getColumnIndex("nationalID"));
+        Log.v("Database Access:", "From pokemonID " + String.valueOf(pokemonID) + " the nationalID is: " + String.valueOf(nationalID));
+
+        cursor.close();
+
+        // get the description from the description table:
+        selectionArg[0] = String.valueOf(nationalID);
+        cursor = database.query("pokemon_description", null, "national_id=?", selectionArg, null, null, null, null);
+        cursor.moveToFirst();
+        String description = cursor.getString(cursor.getColumnIndex("description"));
+        Log.v("Database Access:", "From nationalID " + String.valueOf(nationalID) + " the description is: " + description);
 
         // close the cursor
         cursor.close();
@@ -146,7 +164,6 @@ public class PokemonFactory {
 
         // get all of the information stored in pokemon table:
         String name = cursor.getString(cursor.getColumnIndex("name"));
-        String description = cursor.getString(cursor.getColumnIndex("description"));
         double height = cursor.getFloat(cursor.getColumnIndex("height"));
         double weight = cursor.getFloat(cursor.getColumnIndex("weight"));
         int attack = cursor.getInt(cursor.getColumnIndex("attack"));
@@ -165,6 +182,12 @@ public class PokemonFactory {
         cursor = database.query("pokemon_nationalID", null, "pokemonID=?", selectionArg, null, null, null);
         cursor.moveToFirst();
         int nationalID = cursor.getInt(cursor.getColumnIndex("nationalID"));
+
+        // get the description:
+        selectionArg[0] = String.valueOf(nationalID);
+        cursor = database.query("pokemon_description", null, "national_id=?", selectionArg, null, null, null, null);
+        cursor.moveToFirst();
+        String description = cursor.getString(cursor.getColumnIndex("description"));
 
         // close the cursor
         cursor.close();
@@ -439,7 +462,8 @@ public class PokemonFactory {
      * @return  {@link Type} from the database corresponding to that typeID
      */
     private Type getType(int typeID) {
-        return types.get(typeID);
+        Type type = types.get(typeID);
+        Log.v("Database Access: ", "From typeID " + String.valueOf(typeID) + " type obtained was " + type.getName());
 
         /* This loads a new Type object each time.
         String[] selectionArg = {String.valueOf(typeID)};
@@ -450,8 +474,8 @@ public class PokemonFactory {
 
         // close the cursor
         cursor.close();
-        return type;
         */
+        return type;
     }
 
     /**
@@ -494,6 +518,7 @@ public class PokemonFactory {
 
         // close the cursor
         cursor.close();
+        Log.v("Database Access: ", "T/F: Pokemon with nationalID " + String.valueOf(nationalID) + " was caught: " + String.valueOf(caught));
 
         return caught;
     }
@@ -541,8 +566,8 @@ public class PokemonFactory {
         TODO: test this method, and the getMaxNationalID, to make sure that this selection command
                  works to get the max. If not, let @Nicole know :)
         */
-        Cursor cursor = database.query("games", new String[]{"generationID"}, "MAX(generationID)", null, null, null, null);
-        cursor.moveToFirst();
+        Cursor cursor = database.query("games", null, null, null, null, null, null);
+        cursor.moveToLast();
 
         int generationID = cursor.getInt(cursor.getColumnIndex("generationID"));
 
@@ -558,8 +583,8 @@ public class PokemonFactory {
      * @return max national ID
      */
     public int getMaxNationalID() {
-        Cursor cursor = database.query("pokemon_nationalID", new String[]{"nationalID"}, "MAX(nationalID)", null, null, null, null);
-        cursor.moveToFirst();
+        Cursor cursor = database.query("pokemon_nationalID", null, null, null, null, null, null);
+        cursor.moveToLast();
 
         int maxNationalID = cursor.getInt(cursor.getColumnIndex("nationalID"));
 
@@ -575,11 +600,11 @@ public class PokemonFactory {
      * @return max typeID
      */
     public int getMaxTypeID() {
-        Cursor cursor = database.query("types", new String[]{"typeID"}, "MAX(typeID)", null, null, null, null);
-        cursor.moveToFirst();
+        Cursor cursor = database.query("types", null, null, null, null, null, null);
+        cursor.moveToLast();
 
         int maxTypeID = cursor.getInt(cursor.getColumnIndex("typeID"));
-
+        Log.v("Database Access: ", "Max typeID is: " + String.valueOf(maxTypeID));
         // close the cursor:
         cursor.close();
 
@@ -734,7 +759,8 @@ public class PokemonFactory {
             Cursor cursor = database.query("types", null, "typeID=?", selectionArg, null, null, null);
             cursor.moveToFirst();
 
-            types.put(i, (new Type(cursor.getString(cursor.getColumnIndex("name")), cursor.getString(cursor.getColumnIndex("description")))));
+//            types.put(i, (new Type(cursor.getString(cursor.getColumnIndex("name")), cursor.getString(cursor.getColumnIndex("description")))));
+            types.put(i, (new Type(cursor.getString(cursor.getColumnIndex("name")), "E.ojpclycrb ru yd .yfl.")));
 
             // close the cursor
             cursor.close();
