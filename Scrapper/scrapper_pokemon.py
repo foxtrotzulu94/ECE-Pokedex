@@ -93,12 +93,11 @@ for pokemons in data["pokemon"]:
 
 
         #Pushes entries into database
-        c.execute("INSERT INTO pokemon VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (None, name,
+        c.execute("INSERT INTO pokemon VALUES (?,?,?,?,?,?,?,?,?,?,?)", (None, name,
                                                                                    height, weight, attack,
                                                                                    defence, healthPoints, spAttack,
                                                                                    spDefence, speed,
-                                                                                   generation, hatchTime, catchRate,
-                                                                                   genderRatioMale))
+                                                                                   generation))
 
         conn.commit()
 
