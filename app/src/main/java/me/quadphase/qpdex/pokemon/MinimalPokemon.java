@@ -36,6 +36,14 @@ public class MinimalPokemon {
         this.caught = caught;
     }
 
+    public MinimalPokemon(int nationalID, String name, String description, List<Type> types) {
+        this.nationalID = nationalID;
+        this.name = name;
+        this.description = description;
+        this.types = types;
+        this.caught = false;
+    }
+
     public int getNationalID() {
         return nationalID;
     }

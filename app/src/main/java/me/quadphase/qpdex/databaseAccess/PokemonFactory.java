@@ -52,7 +52,7 @@ public class PokemonFactory {
 
         types = new HashMap<>();
 
-        loadAllTypes();
+//        loadAllTypes(); //Method within Database seems to be broken.
     }
 
     /**
@@ -134,7 +134,7 @@ public class PokemonFactory {
 
         // get the description from the description table:
         selectionArg[0] = String.valueOf(nationalID);
-        cursor = database.query("pokemon_description", null, "national_id=?", selectionArg, null, null, null, null);
+        cursor = database.query("pokemon_description", null, "nationalID=?", selectionArg, null, null, null, null);
         cursor.moveToFirst();
         String description = cursor.getString(cursor.getColumnIndex("description"));
         Log.v("Database Access:", "From nationalID " + String.valueOf(nationalID) + " the description is: " + description);
@@ -512,9 +512,10 @@ public class PokemonFactory {
         // assume not caught
         boolean caught = false;
         // verify if it is caught
-        if (cursor.getInt(cursor.getColumnIndex("isCaught")) == 1) {
-            caught = true;
-        }
+        //TODO: Fix the code below, had to comment it out to compile the application and make it work.
+//        if (cursor.getInt(cursor.getColumnIndex("isCaught")) == 1) {
+//            caught = true;
+//        }
 
         // close the cursor
         cursor.close();
@@ -604,7 +605,7 @@ public class PokemonFactory {
         cursor.moveToLast();
 
         int maxTypeID = cursor.getInt(cursor.getColumnIndex("typeID"));
-        Log.v("Database Access: ", "Max typeID is: " + String.valueOf(maxTypeID));
+        Log.d("Database Access: ", "Max typeID is: " + String.valueOf(maxTypeID));
         // close the cursor:
         cursor.close();
 
