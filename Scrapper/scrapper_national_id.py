@@ -32,7 +32,7 @@ simplepokemonlist = []
 for row in pokemonlist:
     simplepokemonlist.append(row[0])
 
-
+print(simplepokemonlist)
 
 
 # Constant needs to be updated whenever serebii adds more
@@ -80,6 +80,7 @@ while i <= CURRENT_NUMBER_OF_POKEMON_IN_SEREBII:
     # find all instances of the name in simplepokemonlist in the pokemon table, returns indices of this pokemon that
     # shares nationalID
     # Exceptions: Klink,  Mew, Porygon, Kabuto, Paras and Pidgeot which see others as well, this was put in a list at the begining
+    # TODO: Implement non case sensitive check
     indices = [i for i, x in enumerate(simplepokemonlist) if pokemonIDCouple[1] in x]
 
     # check for mentioned exceptions
