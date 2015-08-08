@@ -54,7 +54,7 @@ public class PokedexManager {
         }
 
         public MinimalPokemon minimal(){
-            return new MinimalPokemon(getNationalID(), super.getName(), super.getDescription(), super.getTypes());
+            return new MinimalPokemon(getNationalID(), super.getName(), super.getDescription(), super.getTypes(), false);
         }
 
     }
