@@ -20,7 +20,7 @@ public class PokedexActivityTest
     protected void setUp() throws Exception{
         super.setUp();
         mPokedexActivity = getActivity();
-        mTestSprite = (ImageView) mPokedexActivity.findViewById(R.id.imageButton);
+        mTestSprite = (ImageView) mPokedexActivity.findViewById(R.id.imgbutton_pkmnsprite);
         mDescription = (TextView) mPokedexActivity.findViewById(R.id.textView4);
     }
 
