@@ -125,7 +125,7 @@
                         <Button
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:text="Cry"
+                            android:text="CRY"
                             android:id="@+id/button_pkmncry"
                             android:textSize="10sp"
                             android:layout_weight="0.9"
@@ -135,10 +135,11 @@
                     <Button
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="LOCATION"
+                        android:text="AREA"
                         android:id="@+id/button_pkmnlocation"
                         android:textSize="10sp"
-                        android:layout_weight="0.9" />
+                        android:layout_weight="0.9"
+                        android:onClick="showConstructionActivity" />
 
                 </LinearLayout>
             </LinearLayout>
