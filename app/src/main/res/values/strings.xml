@@ -7,9 +7,18 @@
     <string name="enter_pokedex">Browse Now</string>
     <string name="enter_trainer">My Trainer</string>
     <string name="enter_gameview">Generations</string>
-    <string name="adv_search">Advance Search</string>
+    <string name="adv_search">Advanced Search</string>
     <string name="resource_button">Pokémon Resources</string>
     <!-- IntroActivity String End-->
+
+    <!-- PokedexActivity String End-->
+    <!--<string name="pokedex_init_description">Welcome, Click on any element on the list to start seeing Pokemon!</string>-->
+    <string name="pokedex_init_description">Sometimes, on a dark night, your shadow thrown by a streetlight will suddenly and startlingly overtake you. It is actually a Gengar running past you, pretending to be your shadow. </string>
+    <string name="pokedex_init_title">Click here to search</string>
+    <string name="pokedex_placeholder_description">[ENTER POKEDEX ENTRY]</string>
+    <string name="pokedex_placeholder_title">[POKEMON NAME]</string>
+    <!-- PokedexActivity String End-->
+
 
     <!-- DetailedPokemonActivity Strings Start-->
     <string name="attack">Attack</string>
@@ -19,6 +28,30 @@
     <string name="spdefense">Sp. Def.</string>
     <string name="speed">Speed</string>
     <!-- DetailedPokemonActivity Strings End-->
+
+    <!-- Work in Progress strings-->
+    <string name="wip_banner">Pikachu and the Developers are hard at work here!</string>
+    <string name="wip_text">Sorry but this isn\'t complete yet!\n We\'re doing our best working day
+        and night to bring you an awesome Pokédex you can take with you on your journey to catch them all\n
+        But, fear not! We\'re Open-Source!\n
+        You can track our progress, ask a question or send a word of encouragement at our project page below:\n
+    </string>
+    <string name="wip_link">https://github.com/foxtrot94/ECE-Pokedex \n\n</string>
+    <!-- -->
+
+    <!-- Exception String -->
+    <string name="exception_title">Wild Exception appeared!</string>
+    <string name="exception_text">It seems qpdex stopped working because of strange behaviour.\n
+        We\'ve included some information about it below, but it be best you let the developers know so they can fix it
+
+    </string>
+
+    <!-- Easter Egg -->
+    <!--<string name="ketsuban">けつばん</string>-->
+
+    <!-- Placeholder -->
+    <string name="dex_list_placeholder">[NUM]. [POKEMON]</string>
+
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -33,4 +66,6 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_example">Example action</string>
+    <string name="title_activity_wip">WIPActivity</string>
+    <string name="title_activity_exception_caught">Uncaught Exception Occured</string>
 </resources>
