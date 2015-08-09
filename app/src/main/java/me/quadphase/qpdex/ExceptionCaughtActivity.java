@@ -1,14 +1,13 @@
 package me.quadphase.qpdex;
 
-import android.app.Application;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,6 +39,7 @@ public class ExceptionCaughtActivity extends AppCompatActivity {
         if(getIntent().hasExtra("error_trace"))
         {
             stackView.setText(getIntent().getStringExtra("error_trace"));
+            Log.wtf("QPDEX", getIntent().getStringExtra("error_trace"));
         }
 
         //If we didn't run out of memory, load a background image
@@ -51,7 +51,7 @@ public class ExceptionCaughtActivity extends AppCompatActivity {
             op.inPremultiplied = false;
             op.inScaled = true;
             LinearLayout lin = (LinearLayout) findViewById(R.id.lin_exceptionframe);
-            lin.setBackground(new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(), R.drawable.errorback2, op)));
+            lin.setBackground(new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(), R.drawable.glitchbackground, op)));
             ImageView exceptMan = (ImageView) findViewById(R.id.exception_icon);
             exceptMan.setImageResource(R.drawable.missingnomin);
         }
@@ -82,6 +82,7 @@ public class ExceptionCaughtActivity extends AppCompatActivity {
     public void onExitException(View view){
         //We could also implement methods to relaunch the qpdex on exception or submit a bug report to us.
         Intent resetApp = new Intent(getBaseContext(), IntroActivity.class);
+        resetApp.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(resetApp);
         this.finish();
     }

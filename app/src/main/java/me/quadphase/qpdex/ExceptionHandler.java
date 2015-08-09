@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 
 public class ExceptionHandler implements java.lang.Thread.UncaughtExceptionHandler {
 //    private final Activity myContext;
@@ -60,6 +61,7 @@ public class ExceptionHandler implements java.lang.Thread.UncaughtExceptionHandl
         errorReport.append(Build.VERSION.INCREMENTAL);
         errorReport.append(LINE_SEPARATOR);
 
+        //pass it over to the intent
         Intent intent = new Intent(appContext, ExceptionCaughtActivity.class);
         intent.putExtra("error_trace", errorReport.toString());
         appContext.startActivity(intent);

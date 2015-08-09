@@ -35,14 +35,21 @@ public class DetailedPokemonActivity extends FragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed_pokemon);
+
+        //Pickup any garbage.
         Runtime.getRuntime().gc();
         System.gc();
+
+        //TODO: Show tabs on this view if displaying multi-variant (suffixed) pokemon
+        //      This could be Mega-Evolution, male and female forms, etc.
+
 
         //Load the Detailed View Image Button.
         //TODO: Extract and place in asset handling "Pokedex" class.
         ImageButton sprite = (ImageButton)findViewById(R.id.imgbutton_pkmnsprite_detail);
+        InputStream rawBits;
         try{
-            InputStream rawBits = getAssets().open("1/-1.png");
+            rawBits = getAssets().open("1/-1.png");
             sprite.setImageBitmap(BitmapFactory.decodeStream(rawBits));
         }
         catch (Exception e){
@@ -56,6 +63,9 @@ public class DetailedPokemonActivity extends FragmentActivity
                 throw new RuntimeException("Clicked on an Invalid Pokemon!");
             }
         });
+
+
+
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -172,10 +182,4 @@ public class DetailedPokemonActivity extends FragmentActivity
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
-
-    //Just cause an exception, no questions asked.
-    public void causeException(View view){
-        throw new RuntimeException();
-    }
-
 }
