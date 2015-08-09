@@ -6,6 +6,8 @@ import json;
 import urllib.request
 import urllib.error
 import re
+# Needed to convert names with accents to normal
+from unidecode import unidecode
 
 
 # This file scrapes descriptions, as well as hatchTime catchRate and gender ratios
@@ -14,21 +16,9 @@ import re
 conn = sqlite3.connect('..//database/pokedex.sqlite3')
 c = conn.cursor();
 
-c.execute("delete from " + "pokemon_description")
+c.execute("delete from " + "pokemon_common_info")
 
-c.execute("delete from " + " sqlite_sequence where name = 'pokemon_description'")
-
-c.execute("delete from " + "pokemon_hatchTime")
-
-c.execute("delete from " + " sqlite_sequence where name = 'pokemon_hatchTime'")
-
-c.execute("delete from " + "pokemon_genderRatioMale")
-
-c.execute("delete from " + " sqlite_sequence where name = 'pokemon_genderRatioMale'")
-
-c.execute("delete from " + "pokemon_catchRate")
-
-c.execute("delete from " + " sqlite_sequence where name = 'pokemon_catchRate'")
+c.execute("delete from " + " sqlite_sequence where name = 'pokemon_common_info'")
 
 soup = BeautifulSoup()
 
@@ -124,7 +114,8 @@ testpokemonlinklist = ['/wiki/Slowpoke_(Pok%C3%A9mon)',
                        '/wiki/Jynx_(Pok%C3%A9mon)',
                        '/wiki/Nidoking_(Pok%C3%A9mon)',
                        '/wiki/Eevee_(Pok%C3%A9mon)',
-                       '/wiki/Weepinbell_(Pok%C3%A9mon)']
+                       '/wiki/Weepinbell_(Pok%C3%A9mon)',
+                       '/wiki/_(Pok%C3%A9mon)']
 
 for index, pokemonURL in enumerate(pokemonlinklist):
 
@@ -140,7 +131,7 @@ for index, pokemonURL in enumerate(pokemonlinklist):
     ##DESCRIPTION
 
     ## Original code seemed to break for gen 6 pokedex entries, so reduced the number of attrs to search for
-    pokdexentry = soup.findAll(attrs={"style" : "vertical-align: middle; border: 1px solid #9DC1B7; padding-left:3px;"})
+    pokdexentry = soup.findAll(attrs={"style": "vertical-align: middle; border: 1px solid #9DC1B7; padding-left:3px;"})
 
 
     #Regex formatted pokedexentry
@@ -148,16 +139,13 @@ for index, pokemonURL in enumerate(pokemonlinklist):
     pokdexentry = TAG_RE2.sub("", pokdexentry)
     pokdexentry = TAG_RE3.sub("", pokdexentry)
 
-    #TODO: Maybe we'll want to remove the [] and quotes? will be easy enough to do by taking pokedexentry[2:-2] if new line char needs to go as well [3:-4]
     #TODO: Currently getting the description from the first gen it appeared in, can change pokedexentry[0] to len() of it all
+
+    # Removing  [ ] and \n and quotations and spaces
     print(pokdexentry[3:-4])
 
     pokdexentry = pokdexentry[3:-4]
 
-    # The current index+1 will correspond to the national ID number
-
-    c.execute("INSERT INTO pokemon_description VALUES (?,?)", ((index+1), pokdexentry))
-    conn.commit()
 
     # Can also obtain catchRate, hatchTime and genderRatios here
 
@@ -170,12 +158,11 @@ for index, pokemonURL in enumerate(pokemonlinklist):
     catchrate = TAG_RE3.sub("", str(catchrate[0].contents))
     print(catchrate[2:-3])
     #remove % and ()
-    catchrate = catchrate[2:-3]
-    c.execute("INSERT INTO pokemon_catchRate VALUES (?,?)", ((index+1), catchrate))
-    conn.commit()
+    catchrate = float(catchrate[2:-3])
+
 
     ##GENDER RATIOS
-    genderratiotable = soup.find(attrs={"title":"List of Pokémon by gender ratio"})
+    genderratiotable = soup.find(attrs={"title": "List of Pokémon by gender ratio"})
 
     # We obtain an array of gender ratios
     # Genderless pokemon have 1 entry
@@ -212,10 +199,17 @@ for index, pokemonURL in enumerate(pokemonlinklist):
     print(malegenderratioreal)
 
 
-    c.execute("INSERT INTO pokemon_genderRatioMale VALUES (?,?)", ((index+1), malegenderratioreal))
+
+    # The current index+1 will correspond to the national ID number
+    # TODO: HatchTime, and eggroups can be done here too
+
+    hatchTime = 0
+
+    c.execute("INSERT INTO pokemon_common_info VALUES (?,?,?,?,?)", ((index+1), pokdexentry, hatchTime, catchrate, malegenderratioreal))
     conn.commit()
 
-    #TODO: HatchTime, and egggroups can be done here too
+
+
 
 
 
