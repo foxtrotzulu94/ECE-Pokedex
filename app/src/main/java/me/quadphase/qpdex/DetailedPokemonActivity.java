@@ -175,11 +175,11 @@ public class DetailedPokemonActivity extends FragmentActivity
             return rootView;
         }
 
-        @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
-            ((DetailedPokemonActivity) activity).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
-        }
+//        @Override
+//        public void onAttach(Activity activity) {
+//            super.onAttach(activity);
+//            ((DetailedPokemonActivity) activity).onSectionAttached(
+//                    getArguments().getInt(ARG_SECTION_NUMBER));
+//        }
     }
 }
