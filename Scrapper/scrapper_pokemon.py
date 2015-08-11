@@ -23,7 +23,7 @@ with open("pokemon.json") as data_file:
 conn = sqlite3.connect('..//database/pokedex.sqlite3')
 c = conn.cursor();
 
-c.execute("delete from " + "pokemon")
+c.execute("delete from " + "pokemon_unique_info")
 # c.execute("ALTER TABLE pokemon AUTOINCREMENT = 1")
 c.execute("delete from " + " sqlite_sequence where name = 'pokemon'")
 
@@ -48,16 +48,10 @@ for pokemons in data["pokemon"]:
     temp = len(pokemons["genfamily"])
     generation = 1 + currentGeneration - temp
 
+    # Generation first appeared is stored in pokemon_common_info table
+    # Need to get national ID of the pokemon currently being populated
 
-    # (TODO) Hatch time determines the amount amount of steps needed for egg to hatch
-    hatchTime = 69
-
-    # (TODO) Catch rate determines the probability of catching the pokemon, whereby catch rate is (something) out of 255
-    catchRate = 123
-
-    # (TODO) Gender to ratio for males determines the probability of a pokemon to be male with respect to population
-    genderRatioMale = 0.69
-
+    # c.execute("UPDATE pokemon_common_info set genFirstAppeared=? WHERE ")
 
     #length = len(pokemons["alts"])
 
@@ -93,11 +87,10 @@ for pokemons in data["pokemon"]:
 
 
         #Pushes entries into database
-        c.execute("INSERT INTO pokemon VALUES (?,?,?,?,?,?,?,?,?,?,?)", (None, name,
+        c.execute("INSERT INTO pokemon VALUES (?,?,?,?,?,?,?,?,?,?)", (None, name,
                                                                                    height, weight, attack,
                                                                                    defence, healthPoints, spAttack,
-                                                                                   spDefence, speed,
-                                                                                   generation))
+                                                                                   spDefence, speed))
 
         conn.commit()
 

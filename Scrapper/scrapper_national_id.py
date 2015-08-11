@@ -25,7 +25,7 @@ conn.commit()
 # the index plus 1 corresponds to the nationalID
 
 # this is a tuple, we want a simple list
-pokemonlist = c.execute("select name from pokemon ORDER BY pokemonID")
+pokemonlist = c.execute("select name from pokemon ORDER BY pokemonUniqueID")
 simplepokemonlist = []
 
 # convert to simple list
