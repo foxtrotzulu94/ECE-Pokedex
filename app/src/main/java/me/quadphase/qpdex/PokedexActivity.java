@@ -116,10 +116,10 @@ public class PokedexActivity extends AppCompatActivity {
 
         // this is a test to ensure that the database is working
         PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(this.getApplicationContext());
-        MinimalPokemon[] listy = pokemonFactory.getAllPokemon();
+        MinimalPokemon[] listy = pokemonFactory.getAllMinimalPokemon();
         listy[2] = new MinimalPokemon(3,"Bulbasaur",
                 "Bulbasaur can be seen napping in bright sunlight. There is a seed on its back. By soaking up the sun’s rays, the seed grows progressively larger. ",
-                Arrays.asList(new Type("Grass",""), new Type("Poison","")), false);
+                Arrays.asList(new Type("Grass"), new Type("Poison")), false);
 
         pokemonFactory.getMinimalPokemonByNationalID(5);
         // until here
