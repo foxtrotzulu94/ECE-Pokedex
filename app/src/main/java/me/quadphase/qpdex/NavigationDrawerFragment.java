@@ -122,17 +122,10 @@ public class NavigationDrawerFragment extends Fragment {
 //                R.layout.pokedexrow,
 //                R.id.textview_pkmn_list_entry,
                 listy);
+        pokedexEntries.setFontSize(10.0f);
         mDrawerListView.setAdapter(pokedexEntries);
-//        mDrawerListView.setAdapter(new ArrayAdapter<String>(
-//                getActivity(),
-//                android.R.layout.simple_list_item_activated_1,
-//                android.R.id.text1,
-//                new String[]{
-//                        getString(R.string.title_section1),
-//                        getString(R.string.title_section2),
-//                        getString(R.string.title_section3),
-//                }));
-//        mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+        //TODO: Set selection here according to Pokemon in focus from PokedexManager.
+
         return mDrawerListView;
     }
 
