@@ -99,7 +99,7 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:text="Base Stats"
-                        android:id="@+id/textView27"
+                        android:id="@+id/title_stats"
                         android:layout_weight="0.1"
                         android:layout_margin="0dp"
                         android:background="#bc3a3a3a" />
@@ -111,20 +111,21 @@
                         android:orientation="horizontal"
                         android:gravity="center_horizontal"
                         android:layout_weight="0.05"
-                        android:layout_marginTop="10dp" >
+                        android:layout_marginTop="10dp"
+                        android:id="@+id/table_pkmnstats">
 
                         <TableRow
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:measureWithLargestChild="false"
-                            android:id="@+id/tableRow7"
+                            android:id="@+id/tr_hp"
                             android:layout_marginLeft="5dp" >
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:id="@+id/textView28"
+                                android:id="@+id/text_hp"
                                 android:layout_weight="0.5"
                                 android:text="@string/hp" />
 
@@ -132,14 +133,14 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:text="128"
-                                android:id="@+id/textView29"
+                                android:id="@+id/text_hpval"
                                 android:layout_weight="0.9" />
 
                             <ProgressBar
                                 style="?android:attr/progressBarStyleHorizontal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:id="@+id/progressBar11"
+                                android:id="@+id/pbar_hpval"
                                 android:layout_weight="0.5"
                                 android:progress="128"
                                 android:max="255" />
@@ -150,13 +151,13 @@
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:measureWithLargestChild="false"
-                            android:id="@+id/tableRow8"
+                            android:id="@+id/tr_attack"
                             android:layout_marginLeft="5dp" >
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:id="@+id/textView30"
+                                android:id="@+id/text_attack"
                                 android:layout_weight="0.5"
                                 android:text="@string/attack" />
 
@@ -164,14 +165,14 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:text="128"
-                                android:id="@+id/textView31"
+                                android:id="@+id/text_attackval"
                                 android:layout_weight="0.9" />
 
                             <ProgressBar
                                 style="?android:attr/progressBarStyleHorizontal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:id="@+id/progressBar12"
+                                android:id="@+id/pbar_attackval"
                                 android:layout_weight="0.5"
                                 android:progress="128"
                                 android:max="255" />
@@ -182,13 +183,13 @@
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:measureWithLargestChild="false"
-                            android:id="@+id/tableRow9"
+                            android:id="@+id/tr_defence"
                             android:layout_marginLeft="5dp" >
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:id="@+id/textView32"
+                                android:id="@+id/text_defense"
                                 android:layout_weight="0.5"
                                 android:text="@string/defense" />
 
@@ -196,14 +197,14 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:text="128"
-                                android:id="@+id/textView33"
+                                android:id="@+id/text_defenseval"
                                 android:layout_weight="0.9" />
 
                             <ProgressBar
                                 style="?android:attr/progressBarStyleHorizontal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:id="@+id/progressBar13"
+                                android:id="@+id/pbar_defenseval"
                                 android:layout_weight="0.5"
                                 android:progress="128"
                                 android:max="255" />
@@ -214,13 +215,13 @@
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:measureWithLargestChild="false"
-                            android:id="@+id/tableRow10"
+                            android:id="@+id/tr_spatk"
                             android:layout_marginLeft="5dp" >
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:id="@+id/textView34"
+                                android:id="@+id/text_spatk"
                                 android:layout_weight="0.5"
                                 android:text="@string/spattack" />
 
@@ -228,14 +229,14 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:text="128"
-                                android:id="@+id/textView35"
+                                android:id="@+id/text_spatkval"
                                 android:layout_weight="0.9" />
 
                             <ProgressBar
                                 style="?android:attr/progressBarStyleHorizontal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:id="@+id/progressBar14"
+                                android:id="@+id/pbar_spatkval"
                                 android:layout_weight="0.5"
                                 android:progress="128"
                                 android:max="255" />
@@ -246,13 +247,13 @@
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:measureWithLargestChild="false"
-                            android:id="@+id/tableRow11"
+                            android:id="@+id/tr_spdef"
                             android:layout_marginLeft="5dp" >
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:id="@+id/textView36"
+                                android:id="@+id/text_spdef"
                                 android:layout_weight="0.5"
                                 android:text="@string/spdefense" />
 
@@ -260,14 +261,14 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:text="128"
-                                android:id="@+id/textView37"
+                                android:id="@+id/text_spdefval"
                                 android:layout_weight="0.9" />
 
                             <ProgressBar
                                 style="?android:attr/progressBarStyleHorizontal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:id="@+id/progressBar15"
+                                android:id="@+id/pbar_spdefval"
                                 android:layout_weight="0.5"
                                 android:progress="128"
                                 android:max="255" />
@@ -278,13 +279,13 @@
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:measureWithLargestChild="false"
-                            android:id="@+id/tableRow12"
+                            android:id="@+id/tr_speed"
                             android:layout_marginLeft="5dp" >
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:id="@+id/textView38"
+                                android:id="@+id/text_speed"
                                 android:layout_weight="0.5"
                                 android:text="@string/speed" />
 
@@ -292,14 +293,14 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:text="128"
-                                android:id="@+id/textView39"
+                                android:id="@+id/text_speedval"
                                 android:layout_weight="0.9" />
 
                             <ProgressBar
                                 style="?android:attr/progressBarStyleHorizontal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:id="@+id/progressBar16"
+                                android:id="@+id/pbar_speedval"
                                 android:layout_weight="0.5"
                                 android:progress="128"
                                 android:max="255" />
@@ -318,7 +319,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="18sp"
                             android:text="Stats Total"
-                            android:id="@+id/textView40"
+                            android:id="@+id/text_statstotal"
                             android:layout_marginRight="5dp" />
 
                         <TextView
@@ -326,7 +327,7 @@
                             android:layout_height="wrap_content"
                             android:text="300"
                             android:textSize="20sp"
-                            android:id="@+id/textView41" />
+                            android:id="@+id/text_statstotalval" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -361,7 +362,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Description"
-                    android:id="@+id/textView25"
+                    android:id="@+id/title_description"
                     android:layout_marginRight="5dp"
                     android:layout_marginLeft="5dp"
                     android:background="#bc3a3a3a" />
@@ -370,7 +371,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="@string/pokedex_init_description"
-                    android:id="@+id/textView26"
+                    android:id="@+id/textview_detailedpkmndescript"
                     android:layout_weight="0.95"
                     android:layout_gravity="center"
                     android:layout_marginLeft="5dp"
@@ -379,12 +380,25 @@
                     android:padding="5dp" />
             </LinearLayout>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Type Match"
+                android:id="@+id/title_typematch"
+                android:layout_weight="0.8"
+                android:background="#bc3a3a3a"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp" />
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.6"
-                android:gravity="center" >
+                android:gravity="center"
+                android:background="#c89b9b9b"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp">
 
                 <LinearLayout
                     android:orientation="vertical"
@@ -392,251 +406,18 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.5"
                     android:layout_margin="5dp"
-                    android:background="#c89b9b9b"
-                    android:gravity="top">
+                    android:gravity="top"
+                    android:id="@+id/linlayout_typestrong">
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Base Stats"
-                        android:id="@+id/title_stats_base"
+                        android:text="Strengths"
+                        android:id="@+id/title_strength"
                         android:layout_weight="0.1"
                         android:layout_margin="0dp"
                         android:background="#bc3a3a3a" />
-
-                    <TableLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="0dp"
-                        android:orientation="horizontal"
-                        android:gravity="center_horizontal"
-                        android:layout_weight="0.05"
-                        android:layout_marginTop="10dp">
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:measureWithLargestChild="false"
-                            android:id="@+id/tr_hp"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginLeft="5dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:id="@+id/stat_hp"
-                                android:layout_weight="0.5"
-                                android:text="@string/hp" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:text="128"
-                                android:id="@+id/textview_hpval"
-                                android:layout_weight="0.9" />
-
-                            <ProgressBar
-                                style="?android:attr/progressBarStyleHorizontal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:id="@+id/progbar_hpval"
-                                android:layout_weight="0.5"
-                                android:progress="128"
-                                android:max="255" />
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:measureWithLargestChild="false"
-                            android:id="@+id/tr_attack"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginLeft="5dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:id="@+id/stat_attack"
-                                android:layout_weight="0.5"
-                                android:text="@string/attack" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:text="128"
-                                android:id="@+id/textview_attackval"
-                                android:layout_weight="0.9" />
-
-                            <ProgressBar
-                                style="?android:attr/progressBarStyleHorizontal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:id="@+id/progbar_attackval"
-                                android:layout_weight="0.5"
-                                android:progress="128"
-                                android:max="255" />
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:measureWithLargestChild="false"
-                            android:id="@+id/tr_defense"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginLeft="5dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:id="@+id/stat_defense"
-                                android:layout_weight="0.5"
-                                android:text="@string/defense" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:text="128"
-                                android:id="@+id/textView4"
-                                android:layout_weight="0.9" />
-
-                            <ProgressBar
-                                style="?android:attr/progressBarStyleHorizontal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:id="@+id/progressBar7"
-                                android:layout_weight="0.5"
-                                android:progress="128"
-                                android:max="255" />
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:measureWithLargestChild="false"
-                            android:id="@+id/tr_spattack"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginLeft="5dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:id="@+id/textView5"
-                                android:layout_weight="0.5"
-                                android:text="@string/spattack" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:text="128"
-                                android:id="@+id/textView9"
-                                android:layout_weight="0.9" />
-
-                            <ProgressBar
-                                style="?android:attr/progressBarStyleHorizontal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:id="@+id/progressBar8"
-                                android:layout_weight="0.5"
-                                android:progress="128"
-                                android:max="255" />
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:measureWithLargestChild="false"
-                            android:id="@+id/tr_spdefense"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginLeft="5dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:id="@+id/textView10"
-                                android:layout_weight="0.5"
-                                android:text="@string/spdefense" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:text="128"
-                                android:id="@+id/textView20"
-                                android:layout_weight="0.9" />
-
-                            <ProgressBar
-                                style="?android:attr/progressBarStyleHorizontal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:id="@+id/progressBar9"
-                                android:layout_weight="0.5"
-                                android:progress="128"
-                                android:max="255" />
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:measureWithLargestChild="false"
-                            android:id="@+id/tr_speed"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginLeft="5dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:id="@+id/textView21"
-                                android:layout_weight="0.5"
-                                android:text="@string/speed" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:text="128"
-                                android:id="@+id/textView22"
-                                android:layout_weight="0.9" />
-
-                            <ProgressBar
-                                style="?android:attr/progressBarStyleHorizontal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:id="@+id/progressBar10"
-                                android:layout_weight="0.5"
-                                android:progress="128"
-                                android:max="255" />
-                        </TableRow>
-
-                    </TableLayout>
-
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.9"
-                        android:gravity="top">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="18sp"
-                            android:text="Stats Total"
-                            android:id="@+id/title_sum"
-                            android:layout_margin="5dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="300"
-                            android:textSize="20sp"
-                            android:id="@+id/textview_statstotalsum"
-                            android:layout_margin="5dp" />
-                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -645,253 +426,78 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.5"
                     android:layout_margin="5dp"
-                    android:background="#c89b9b9b"
-                    android:gravity="top" >
+                    android:gravity="top"
+                    android:id="@+id/linlayout_typeweak">
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Base Stats"
-                        android:id="@+id/textView"
+                        android:text="Weaknesses"
+                        android:id="@+id/title_weak"
                         android:layout_weight="0.1"
                         android:layout_margin="0dp"
                         android:background="#bc3a3a3a" />
 
-                    <TableLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="0dp"
-                        android:orientation="horizontal"
-                        android:gravity="center_horizontal"
-                        android:layout_weight="0.05"
-                        android:layout_marginTop="10dp" >
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:measureWithLargestChild="false"
-                            android:id="@+id/tableRow"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginLeft="5dp" >
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:id="@+id/textView2"
-                                android:layout_weight="0.5"
-                                android:text="@string/hp" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:text="128"
-                                android:id="@+id/textView3"
-                                android:layout_weight="0.9" />
-
-                            <ProgressBar
-                                style="?android:attr/progressBarStyleHorizontal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:id="@+id/progressBar"
-                                android:layout_weight="0.5"
-                                android:progress="128"
-                                android:max="255" />
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:measureWithLargestChild="false"
-                            android:id="@+id/tableRow2"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginLeft="5dp" >
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:id="@+id/textView6"
-                                android:layout_weight="0.5"
-                                android:text="@string/attack" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:text="128"
-                                android:id="@+id/textView7"
-                                android:layout_weight="0.9" />
-
-                            <ProgressBar
-                                style="?android:attr/progressBarStyleHorizontal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:id="@+id/progressBar2"
-                                android:layout_weight="0.5"
-                                android:progress="128"
-                                android:max="255" />
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:measureWithLargestChild="false"
-                            android:id="@+id/tableRow3"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginLeft="5dp" >
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:id="@+id/textView8"
-                                android:layout_weight="0.5"
-                                android:text="@string/defense" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:text="128"
-                                android:id="@+id/textView11"
-                                android:layout_weight="0.9" />
-
-                            <ProgressBar
-                                style="?android:attr/progressBarStyleHorizontal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:id="@+id/progressBar3"
-                                android:layout_weight="0.5"
-                                android:progress="128"
-                                android:max="255" />
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:measureWithLargestChild="false"
-                            android:id="@+id/tableRow4"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginLeft="5dp" >
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:id="@+id/textView12"
-                                android:layout_weight="0.5"
-                                android:text="@string/spattack" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:text="128"
-                                android:id="@+id/textView13"
-                                android:layout_weight="0.9" />
-
-                            <ProgressBar
-                                style="?android:attr/progressBarStyleHorizontal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:id="@+id/progressBar4"
-                                android:layout_weight="0.5"
-                                android:progress="128"
-                                android:max="255" />
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:measureWithLargestChild="false"
-                            android:id="@+id/tableRow5"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginLeft="5dp" >
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:id="@+id/textView14"
-                                android:layout_weight="0.5"
-                                android:text="@string/spdefense" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:text="128"
-                                android:id="@+id/textView15"
-                                android:layout_weight="0.9" />
-
-                            <ProgressBar
-                                style="?android:attr/progressBarStyleHorizontal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:id="@+id/progressBar5"
-                                android:layout_weight="0.5"
-                                android:progress="128"
-                                android:max="255" />
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:measureWithLargestChild="false"
-                            android:id="@+id/tableRow6"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginLeft="5dp" >
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:id="@+id/textView16"
-                                android:layout_weight="0.5"
-                                android:text="@string/speed" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:text="128"
-                                android:id="@+id/textView17"
-                                android:layout_weight="0.9" />
-
-                            <ProgressBar
-                                style="?android:attr/progressBarStyleHorizontal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:id="@+id/progressBar6"
-                                android:layout_weight="0.5"
-                                android:progress="128"
-                                android:max="255" />
-                        </TableRow>
-                    </TableLayout>
-
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.9"
-                        android:gravity="top" >
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="18sp"
-                            android:text="Stats Total"
-                            android:id="@+id/textView18"
-                            android:layout_margin="5dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="300"
-                            android:textSize="20sp"
-                            android:id="@+id/textView19"
-                            android:layout_margin="5dp" />
-                    </LinearLayout>
                 </LinearLayout>
 
             </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Breeding Info"
+                android:id="@+id/textView"
+                android:layout_weight="0.8"
+                android:background="#bc3a3a3a"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Egg Group"
+                android:id="@+id/textView2"
+                android:layout_weight="0.95"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="#c89b9b9b"
+                android:padding="5dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Hatch Time (Base Steps)"
+                android:id="@+id/textView3"
+                android:layout_weight="0.95"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="#c89b9b9b"
+                android:padding="5dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Move Set"
+                android:id="@+id/textView6"
+                android:layout_weight="0.8"
+                android:background="#bc3a3a3a"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="[Insert Moves Here]"
+                android:id="@+id/textView7"
+                android:layout_weight="0.95"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="#c89b9b9b"
+                android:padding="5dp" />
 
             <TextView
                 android:layout_width="wrap_content"

@@ -14,6 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TextView;
 
 import java.io.InputStream;
 
@@ -30,6 +33,9 @@ public class DetailedPokemonActivity extends FragmentActivity
      * Used to store the last screen title. For use in {restoreActionBar()}.
      */
     private CharSequence mTitle;
+
+    private TextView pkmnName;
+    private TableLayout statsTable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
