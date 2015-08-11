@@ -55,9 +55,4 @@ public class MinimalPokemon {
     public boolean isCaught() {
         return caught;
     }
-
-    @Override
-    public String toString(){
-        return String.format("%s. %s",nationalID,name);
-    }
 }
