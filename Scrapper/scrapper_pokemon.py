@@ -42,16 +42,6 @@ for pokemons in data["pokemon"]:
 
 
 
-    # Generation that pokemon was first introduced,
-    # temp goes through json file to find how many generations the pokemon is in, obviously it is in the latest
-    # generation, so [( 1 + currentGeneration) - temp] determines the generation the pokemon was first introduced
-    temp = len(pokemons["genfamily"])
-    generation = 1 + currentGeneration - temp
-
-    # Generation first appeared is stored in pokemon_common_info table
-    # Need to get national ID of the pokemon currently being populated
-
-    # c.execute("UPDATE pokemon_common_info set genFirstAppeared=? WHERE ")
 
     #length = len(pokemons["alts"])
 

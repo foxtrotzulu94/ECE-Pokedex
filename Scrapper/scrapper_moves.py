@@ -87,9 +87,7 @@ for moves in data["moves"]:
     temp = len(moves["genfamily"])
     genFirstAppeared = 1 + currentGeneration - temp
 
-     # TODO Not sure about secondary effect, like can a move burn and lower attack for example.
-     # Growth increases attack and sp attack. Does that count as secondary effect?
-     # I feel like we've had this conversation before...
+     # TODO Affects column in table needs to be added
 
     typeString = moves["type"]
     typeID = typeList.index(typeString) + 1

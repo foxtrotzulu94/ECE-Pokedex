@@ -44,14 +44,18 @@ for pokemons in data["pokemon"]:
         pokemon_NationalID = c.fetchall()[0]
 
 
-        print(pokemon_NationalID)
-        print(pokemon_NationalID_List)
         c.execute("UPDATE pokemon_common_info set genFirstAppeared=? WHERE pokemonNationalID = (?)", (generation, pokemon_NationalID[1]))
 
         # Types that a Pokemon has
-        # types = pokemons["alts"][uniqueID]["types"]
-        #
-        # c.execute("INSERT INTO pokemon_types VALUES (?,?)", (None, types,))
+        typesList = pokemonForm["types"]
+
+        for types in typesList:
+            typesTuple = (types,)
+            pokemon_Types_List = c.execute("select * from types WHERE name=?", typesTuple)
+            pokemon_Types = c.fetchone()
+            c.execute("INSERT INTO pokemon_types VALUES (?,?)", (uniqueID, pokemon_Types[0]))
+            print(pokemon_Types[0])
+
 
         conn.commit()
 
