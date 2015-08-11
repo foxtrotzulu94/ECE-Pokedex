@@ -46,15 +46,15 @@ public class PokedexManager {
                     null,                // abilities,
                     null,                // moves,
                     Arrays.asList(       //types
-                            new Type("Bird","Invalid Type"),
-                            new Type("Normal","Normal")),
+                            new Type("Bird"),
+                            new Type("Normal")),
                     null,                // eggGroups,
                     null                 // evolutions,
             );
         }
 
         public MinimalPokemon minimal(){
-            return new MinimalPokemon(getNationalID(), super.getName(), super.getDescription(), super.getTypes(), false);
+            return new MinimalPokemon(getPokemonNationalID(), super.getName(), super.getDescription(), super.getTypes(), false);
         }
 
     }
