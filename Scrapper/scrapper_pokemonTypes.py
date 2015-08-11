@@ -5,6 +5,8 @@ __author__ = 'as'
 # 2) links the pokemonID to NationalID,
 # 3) links type to typeID
 # 4) links ability to abilityID
+# 5) pokemon evolutions
+# 6) pokemon evolutions
 
 import json
 import bs4
@@ -76,6 +78,11 @@ for pokemons in data["pokemon"]:
             pokemon_Abilities = c.fetchone()
             c.execute("INSERT INTO pokemon_abilities VALUES (?,?)", (uniqueID, pokemon_Abilities[0]))
             print(pokemon_Abilities[1])
+
+
+
+        # Evolutions that a pokemon has
+        # evolutionsList = pokemonForm["evos"]
 
 
         conn.commit()
