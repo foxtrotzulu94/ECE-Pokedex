@@ -41,16 +41,10 @@ public class Type {
     private String name;
 
     /**
-     * description of the type
-     */
-    private String description;
-
-    /**
      * Constructor
      */
-    public Type(String name, String description) {
+    public Type(String name) {
         this.name = name;
-        this.description = description;
     }
 
     /**
@@ -58,10 +52,6 @@ public class Type {
      */
     public String getName() {
         return name;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
 }

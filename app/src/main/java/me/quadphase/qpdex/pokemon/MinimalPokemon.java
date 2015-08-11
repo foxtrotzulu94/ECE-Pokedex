@@ -2,6 +2,8 @@ package me.quadphase.qpdex.pokemon;
 
 import java.util.List;
 
+import me.quadphase.qpdex.databaseAccess.PokemonFactory;
+
 /**
  * This is a minimal Pokemon that only has the bare minimum necessary to be used on the main screen.
  */
@@ -54,5 +56,21 @@ public class MinimalPokemon {
 
     public boolean isCaught() {
         return caught;
+    }
+
+    /**
+     * Toggles the caught status of this minimalPokemon in memory and in the database.
+     */
+    public void toggleCaught() {
+        // toggle in memory
+        this.caught = !this.caught;
+        // toggle in the database:
+        PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(null);
+        pokemonFactory.toggleCaught(this.nationalID);
+    }
+
+    @Override
+    public String toString(){
+        return String.format("%s. %s",nationalID,name);
     }
 }
