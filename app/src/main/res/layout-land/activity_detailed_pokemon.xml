@@ -186,7 +186,7 @@
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:id="@+id/stat_hp"
+                                    android:id="@+id/text_hp"
                                     android:layout_weight="0.1"
                                     android:text="@string/hp"
                                     android:layout_gravity="right"
@@ -196,14 +196,14 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:text="128"
-                                    android:id="@+id/textview_hpval"
+                                    android:id="@+id/text_hpval"
                                     android:layout_weight="0.1" />
 
                                 <ProgressBar
                                     style="?android:attr/progressBarStyleHorizontal"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:id="@+id/progbar_hpval"
+                                    android:id="@+id/pbar_hpval"
                                     android:layout_weight="1"
                                     android:progress="128"
                                     android:max="255" />
@@ -220,7 +220,7 @@
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:id="@+id/stat_attack"
+                                    android:id="@+id/text_attack"
                                     android:layout_weight="0.1"
                                     android:text="@string/attack"
                                     android:layout_gravity="right"
@@ -230,14 +230,14 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     android:text="128"
-                                    android:id="@+id/textview_attackval"
+                                    android:id="@+id/text_attackval"
                                     android:layout_weight="0.1" />
 
                                 <ProgressBar
                                     style="?android:attr/progressBarStyleHorizontal"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:id="@+id/progbar_attackval"
+                                    android:id="@+id/pbar_attackval"
                                     android:layout_weight="1"
                                     android:progress="128"
                                     android:max="255" />
@@ -254,7 +254,7 @@
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:id="@+id/stat_defense"
+                                    android:id="@+id/text_defense"
                                     android:layout_weight="0.1"
                                     android:text="@string/defense"
                                     android:layout_gravity="right"
@@ -264,14 +264,14 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:text="128"
-                                    android:id="@+id/textView4"
+                                    android:id="@+id/text_defenseval"
                                     android:layout_weight="0.1" />
 
                                 <ProgressBar
                                     style="?android:attr/progressBarStyleHorizontal"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:id="@+id/progressBar7"
+                                    android:id="@+id/pbar_defenseval"
                                     android:layout_weight="1"
                                     android:progress="128"
                                     android:max="255" />
@@ -288,7 +288,7 @@
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:id="@+id/textView5"
+                                    android:id="@+id/text_spattack"
                                     android:layout_weight="0.1"
                                     android:text="@string/spattack"
                                     android:layout_gravity="right"
@@ -298,14 +298,14 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:text="128"
-                                    android:id="@+id/textView9"
+                                    android:id="@+id/text_spatkval"
                                     android:layout_weight="0.1" />
 
                                 <ProgressBar
                                     style="?android:attr/progressBarStyleHorizontal"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:id="@+id/progressBar8"
+                                    android:id="@+id/pbar_spatkval"
                                     android:layout_weight="1"
                                     android:progress="128"
                                     android:max="255" />
@@ -322,7 +322,7 @@
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:id="@+id/textView10"
+                                    android:id="@+id/text_spdefense"
                                     android:layout_weight="0.1"
                                     android:text="@string/spdefense"
                                     android:layout_gravity="right"
@@ -332,14 +332,14 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:text="128"
-                                    android:id="@+id/textView20"
+                                    android:id="@+id/text_spdefval"
                                     android:layout_weight="0.1" />
 
                                 <ProgressBar
                                     style="?android:attr/progressBarStyleHorizontal"
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
-                                    android:id="@+id/progressBar9"
+                                    android:id="@+id/pbar_spdefval"
                                     android:layout_weight="1"
                                     android:progress="128"
                                     android:max="255" />
@@ -356,7 +356,7 @@
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:id="@+id/textView21"
+                                    android:id="@+id/text_speed"
                                     android:layout_weight="0.1"
                                     android:text="@string/speed"
                                     android:layout_gravity="right"
@@ -366,14 +366,14 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:text="128"
-                                    android:id="@+id/textView22"
+                                    android:id="@+id/text_speedval"
                                     android:layout_weight="0.1" />
 
                                 <ProgressBar
                                     style="?android:attr/progressBarStyleHorizontal"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:id="@+id/progressBar10"
+                                    android:id="@+id/pbar_speedval"
                                     android:layout_weight="1"
                                     android:progress="128"
                                     android:max="255" />

@@ -19,6 +19,7 @@ import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -96,13 +97,16 @@ public class DetailedPokemonActivity extends FragmentActivity
 //        ImageView typy = new ImageView(this);
 //        typy.setImageDrawable(new BitmapDrawable(getResources(), PokedexAssetFactory.getTypeBadge(this, "none")));
         List<Type> typeList = new ArrayList<Type>(3);
-        typeList.add(new Type("Normal",""));
+        typeList.add(new Type("Normal", ""));
         typeList.add(new Type("Electric", ""));
         typeList.add(new Type("Ice", ""));
 
         LinearLayout testy = createTypeMatchBlock("Immune",typeList);
+        testy.setBackgroundResource(R.color.dex_blue_transparent);
         LinearLayout testy2 = createTypeMatchBlock("Resists",typeList);
+        testy2.setBackgroundResource(R.color.dex_blue_transparent);
         LinearLayout testy3 = createTypeMatchBlock("Resists",typeList);
+        testy3.setBackgroundResource(R.color.dex_yellow_transparent);
         typeStrong.addView(testy);
         typeStrong.addView(testy2);
         typeWeak.addView(testy3);
@@ -126,10 +130,41 @@ public class DetailedPokemonActivity extends FragmentActivity
             evolutionChain.addView(img);
         }
 
+        //TODO: Abstract this to update for all general table rows.
+        Thread spawnOff = new Thread(){
+            @Override
+            public void run(){
+                //Use getResources().getIdentifier("titleText", "id", getContext().getPackageName());
+                final TableLayout base = (TableLayout) findViewById(R.id.table_pkmnstats);
+                final TextView display = (TextView) findViewById(R.id.text_hpval);
+                final ProgressBar anim = (ProgressBar) findViewById(R.id.pbar_hpval);
+                for(int i=0; i<129; i++){
+                    final int j = i;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //HACK: NOT THREAD SAFE CODE!!!
+                            display.setText(Integer.toString(j));
+                            anim.setProgress(j);
+                        }
+                    });
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
-        //Load the Detailed View Image Button.
-        //TODO: Extract and place in asset handling "Pokedex" class.
-        ImageButton sprite = (ImageButton)findViewById(R.id.imgbutton_pkmnsprite_detail);
+                }
+
+          }
+        };
+        spawnOff.start();
+
+
+
+                //Load the Detailed View Image Button.
+                //TODO: Extract and place in asset handling "Pokedex" class.
+                ImageButton sprite = (ImageButton) findViewById(R.id.imgbutton_pkmnsprite_detail);
         InputStream rawBits;
         try{
             rawBits = getAssets().open("1/-1.png");

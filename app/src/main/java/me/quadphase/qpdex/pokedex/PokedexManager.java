@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import me.quadphase.qpdex.pokemon.MinimalPokemon;
@@ -64,6 +65,7 @@ public class PokedexManager {
     private static CentralAudioPlayer jukebox=null;
     private static TTSController roboVoice;
     private boolean isReady=false;
+    private boolean isDetailed=false;
 
 
     //Variables for context to handle global application state
@@ -87,6 +89,8 @@ public class PokedexManager {
     private MinimalPokemon currentMinimalPokemon;
 
     private BitmapDrawable currentOverviewSprite;
+
+    private ArrayList<BitmapDrawable> allOverviewSprites;
 
     private BitmapDrawable currentType1;
 
@@ -127,6 +131,13 @@ public class PokedexManager {
         return instance;
     }
 
+    //TODO: Implement!
+    private void updateDetailedPokemon(){
+
+        //Finally, say we're done.
+        isDetailed = true;
+    }
+
     /**
      * Change the currently selected Pokemon in the Pokedex and send a message to update all classes
      * This will also store a reference to the assets the Pokemon with the National ID is associated with.
@@ -135,6 +146,7 @@ public class PokedexManager {
      */
     public void updatePokedexSelection(MinimalPokemon pokedexSelection, Context currentContext){
         isReady = false;
+        isDetailed = false;
         currentMinimalPokemon = pokedexSelection;
         currentPokemonNationalID = pokedexSelection.getNationalID();
 
@@ -156,6 +168,7 @@ public class PokedexManager {
         }
         //roboVoice.setText(pokedexSelection.getDescription());
 
+        //TODO:
         //Can also prepare for Full Pokemon Object Construction here (i.e. spawn a worker thread)
 
         isReady = true;
