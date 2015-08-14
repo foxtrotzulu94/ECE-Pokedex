@@ -115,7 +115,8 @@
                     android:layout_margin="5dp"
                     android:clickable="true"
                     android:onClick="saySomething"
-                    android:padding="5dp" />
+                    android:padding="5dp"
+                    android:ellipsize="end"/>
 
 
 
@@ -205,7 +206,8 @@
             android:clickable="true"
             android:headerDividersEnabled="false"
             android:listSelector="@drawable/pokedexrow_selector"
-            android:choiceMode="singleChoice" />
+            android:choiceMode="singleChoice"
+            android:longClickable="true" />
     </LinearLayout>
 
 </LinearLayout>

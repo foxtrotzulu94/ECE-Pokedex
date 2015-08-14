@@ -188,7 +188,8 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:listSelector="@drawable/pokedexrow_selector"
-            android:choiceMode="singleChoice" />
+            android:choiceMode="singleChoice"
+            android:longClickable="true" />
     </LinearLayout>
 
 </LinearLayout>

@@ -115,7 +115,7 @@ public class PokedexActivity extends AppCompatActivity {
         //This is a test, remove after real list can populate the ListView
         Log.d("QPDEX", "Artifically creating objects");
         // this is a test to ensure that the database is working
-        PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(this.getApplicationContext());
+//        PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(this.getApplicationContext());
 //        MinimalPokemon[] listy = pokemonFactory.getAllPokemon();
 //        listy[2] = new MinimalPokemon(3,"Bulbasaur",
 //                "Bulbasaur can be seen napping in bright sunlight. There is a seed on its back. By soaking up the sun’s rays, the seed grows progressively larger. ",
@@ -180,6 +180,15 @@ public class PokedexActivity extends AppCompatActivity {
                 contextMaster.updatePokedexSelection(retrieved, getApplicationContext());
                 dexVoice.setText(retrieved.getDescription());
                 refreshPokedexOverviewPanel();
+            }
+        });
+        pokedexListView.setLongClickable(true);
+        pokedexListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> arg0, View v,int pos, long id) {
+                switchToPokemonData(v);
+                pokedexListView.performItemClick(v,pos,id);
+                return true;
             }
         });
 

@@ -1,7 +1,9 @@
 package me.quadphase.qpdex;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,12 +15,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
+import android.widget.GridLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import me.quadphase.qpdex.pokedex.PokedexAssetFactory;
+import me.quadphase.qpdex.pokemon.Type;
 
 
 public class DetailedPokemonActivity extends FragmentActivity
@@ -36,6 +46,37 @@ public class DetailedPokemonActivity extends FragmentActivity
 
     private TextView pkmnName;
     private TableLayout statsTable;
+    private LinearLayout typeWeak;
+    private LinearLayout typeStrong;
+    private LinearLayout evolutionChain;
+
+    private void retrieveInterfaceElements(){
+        pkmnName = (TextView) findViewById(R.id.textview_pkmnname_detail);
+        statsTable = (TableLayout) findViewById(R.id.table_pkmnstats);
+        typeStrong = (LinearLayout) findViewById(R.id.linlayout_typestrong);
+        typeWeak = (LinearLayout) findViewById(R.id.linlayout_typeweak);
+        evolutionChain = (LinearLayout) findViewById(R.id.linlayout_evolutions_detail);
+    }
+
+    private LinearLayout createTypeMatchBlock(String quantifier, List<Type> types){
+        LinearLayout typeMatchBlock = (LinearLayout) getLayoutInflater().inflate(R.layout.custom_typematch_block, null);
+        GridLayout frame=(GridLayout) typeMatchBlock.findViewById(R.id.gridlay_types);
+        TextView title = (TextView) typeMatchBlock.findViewById(R.id.characteristic);
+
+        title.setText(quantifier);
+
+        for (int i=0;i<types.size();i++) {
+            ImageView typeBadge = new ImageView(this);
+
+            typeBadge.setImageDrawable(
+                    new BitmapDrawable(getResources(),
+                            PokedexAssetFactory.getTypeBadge(this, types.get(i).getName())));
+            typeBadge.setMaxHeight(30);
+            typeBadge.setAdjustViewBounds(true);
+            frame.addView(typeBadge);
+        }
+        return typeMatchBlock;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +86,45 @@ public class DetailedPokemonActivity extends FragmentActivity
         //Pickup any garbage.
         Runtime.getRuntime().gc();
         System.gc();
+        retrieveInterfaceElements();
 
         //TODO: Show tabs on this view if displaying multi-variant (suffixed) pokemon
         //      This could be Mega-Evolution, male and female forms, etc.
+
+//        TextView testy = new TextView(this);
+//        testy.setText("Immune To");
+//        ImageView typy = new ImageView(this);
+//        typy.setImageDrawable(new BitmapDrawable(getResources(), PokedexAssetFactory.getTypeBadge(this, "none")));
+        List<Type> typeList = new ArrayList<Type>(3);
+        typeList.add(new Type("Normal",""));
+        typeList.add(new Type("Electric", ""));
+        typeList.add(new Type("Ice", ""));
+
+        LinearLayout testy = createTypeMatchBlock("Immune",typeList);
+        LinearLayout testy2 = createTypeMatchBlock("Resists",typeList);
+        LinearLayout testy3 = createTypeMatchBlock("Resists",typeList);
+        typeStrong.addView(testy);
+        typeStrong.addView(testy2);
+        typeWeak.addView(testy3);
+
+        for(int i = 1; i<=7; i++){
+            BitmapDrawable miniEvo = new BitmapDrawable(getResources(),PokedexAssetFactory.getPokemonMinimalSprite(this,i));
+            ImageView img = new ImageView(this);
+            img.setImageDrawable(miniEvo);
+            img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("QPDEX", v.toString());
+                }
+            });
+            img.setLayoutParams(new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    .3f));
+            img.setAdjustViewBounds(true);
+
+            evolutionChain.addView(img);
+        }
 
 
         //Load the Detailed View Image Button.
@@ -81,6 +158,8 @@ public class DetailedPokemonActivity extends FragmentActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+
 
     }
 
