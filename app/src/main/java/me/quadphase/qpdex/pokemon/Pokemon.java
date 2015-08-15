@@ -299,4 +299,29 @@ public class Pokemon {
     public void toggleCaught() {
         caught = !caught;
     }
+
+
+    public int retrieveStatFromString(String specific){
+        int statVal = 0;
+        if(specific.equals("hp")){
+            statVal = this.hp;
+        }
+        else if(specific.equals("attack")){
+            statVal = this.attack;
+        }
+        else if(specific.equals("defense")){
+            statVal = this.defence;
+        }
+        else if(specific.equals("spatk")){
+            statVal = this.spAttack;
+        }
+        else if(specific.equals("spdef")){
+            statVal = this.spDefence;
+        }
+        else if(specific.equals("speed")){
+            statVal = this.speed;
+        }
+        return statVal;
+    }
+
 }

@@ -82,7 +82,7 @@
                     android:layout_height="match_parent"
                     android:id="@+id/imgbutton_pkmnsprite_detail"
                     android:layout_weight="0.5"
-                    android:src="@drawable/spritetest"
+                    android:src="@drawable/sprite_unknown"
                     android:scaleType="fitCenter" />
 
                 <LinearLayout
@@ -175,7 +175,7 @@
                                 android:id="@+id/pbar_attackval"
                                 android:layout_weight="0.5"
                                 android:progress="128"
-                                android:max="255" />
+                                android:max="190" />
                         </TableRow>
 
                         <TableRow
@@ -207,7 +207,7 @@
                                 android:id="@+id/pbar_defenseval"
                                 android:layout_weight="0.5"
                                 android:progress="128"
-                                android:max="255" />
+                                android:max="230" />
                         </TableRow>
 
                         <TableRow
@@ -239,7 +239,7 @@
                                 android:id="@+id/pbar_spatkval"
                                 android:layout_weight="0.5"
                                 android:progress="128"
-                                android:max="255" />
+                                android:max="194" />
                         </TableRow>
 
                         <TableRow
@@ -271,7 +271,7 @@
                                 android:id="@+id/pbar_spdefval"
                                 android:layout_weight="0.5"
                                 android:progress="128"
-                                android:max="255" />
+                                android:max="230" />
                         </TableRow>
 
                         <TableRow
@@ -303,7 +303,7 @@
                                 android:id="@+id/pbar_speedval"
                                 android:layout_weight="0.5"
                                 android:progress="128"
-                                android:max="255" />
+                                android:max="180" />
                         </TableRow>
                     </TableLayout>
 
@@ -327,7 +327,7 @@
                             android:layout_height="wrap_content"
                             android:text="300"
                             android:textSize="20sp"
-                            android:id="@+id/text_statstotalval" />
+                            android:id="@+id/textview_statstotalval" />
                     </LinearLayout>
                 </LinearLayout>
 

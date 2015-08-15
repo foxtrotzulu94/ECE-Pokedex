@@ -1,7 +1,7 @@
 package me.quadphase.qpdex;
 
-import android.app.ActionBar;
-import android.app.Activity;
+import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.FragmentActivity;
@@ -20,7 +20,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -29,11 +28,82 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.quadphase.qpdex.pokedex.PokedexAssetFactory;
+import me.quadphase.qpdex.pokedex.PokedexManager;
+import me.quadphase.qpdex.pokemon.Pokemon;
 import me.quadphase.qpdex.pokemon.Type;
 
 
 public class DetailedPokemonActivity extends FragmentActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+
+    private class statsUpdaterWorkerThread extends Thread{
+        final private String textViewPrefix="text_";
+        final private String progressBarPrefix="pbar_";
+        private String statIdentifier="hp";
+        private int finalValue=10;
+        private Context current;
+
+        public statsUpdaterWorkerThread(String idName, int val, Context cur){
+            statIdentifier = idName;
+            finalValue = val;
+            current = cur;
+        }
+
+        @Override
+        public void run(){
+            int displayID = getResources().getIdentifier(
+                    String.format("%s%sval",textViewPrefix,statIdentifier),
+                    "id", current.getPackageName());
+            int barID = getResources().getIdentifier(
+                    String.format("%s%sval",progressBarPrefix,statIdentifier),
+                    "id", current.getPackageName());
+            final TextView display = (TextView) findViewById(displayID);
+            final ProgressBar anim = (ProgressBar) findViewById(barID);
+            for(int i=0; i<=finalValue; i++){
+                final int j = i;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        display.setText(Integer.toString(j));
+                        anim.setProgress(j);
+                    }
+                });
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+
+    }
+
+    private class statsUpdaterMasterThread extends Thread{
+        @Override
+        public void run() {
+            Pokemon focused = PokedexManager.getInstance().getCurrentDetailedPokemon();
+            int statSum = 0;
+            for (int i = 0;i<statIdentifiers.length;i++)
+            {
+                int statVal = focused.retrieveStatFromString(statIdentifiers[i]);
+                statSum+=statVal;
+                Thread updaterThread = new statsUpdaterWorkerThread(
+                        statIdentifiers[i],
+                        statVal,
+                        getBaseContext());
+                updaterThread.start();
+            }
+            final TextView total = (TextView) findViewById(R.id.textview_statstotalval);
+            final int totalStatSum = statSum;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    total.setText(Integer.toString(totalStatSum));
+                }
+            });
+        }
+    }
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -45,15 +115,25 @@ public class DetailedPokemonActivity extends FragmentActivity
      */
     private CharSequence mTitle;
 
+//    private Threa
+
+    private PokedexManager contextMaster;
+
+    private String[] statIdentifiers = {"hp","attack","defense","spatk","spdef","speed"};
+
     private TextView pkmnName;
-    private TableLayout statsTable;
+    private ImageView pkmnSprite;
+    private TextView pkmnDescription;
+
     private LinearLayout typeWeak;
     private LinearLayout typeStrong;
     private LinearLayout evolutionChain;
 
     private void retrieveInterfaceElements(){
         pkmnName = (TextView) findViewById(R.id.textview_pkmnname_detail);
-        statsTable = (TableLayout) findViewById(R.id.table_pkmnstats);
+        pkmnSprite = (ImageView) findViewById(R.id.imgbutton_pkmnsprite_detail);
+        pkmnDescription = (TextView) findViewById(R.id.textview_detailedpkmndescript);
+
         typeStrong = (LinearLayout) findViewById(R.id.linlayout_typestrong);
         typeWeak = (LinearLayout) findViewById(R.id.linlayout_typeweak);
         evolutionChain = (LinearLayout) findViewById(R.id.linlayout_evolutions_detail);
@@ -72,11 +152,45 @@ public class DetailedPokemonActivity extends FragmentActivity
             typeBadge.setImageDrawable(
                     new BitmapDrawable(getResources(),
                             PokedexAssetFactory.getTypeBadge(this, types.get(i).getName())));
-            typeBadge.setMaxHeight(30);
+
+            typeBadge.setLayoutParams(new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT));
+            typeBadge.setScaleType(ImageView.ScaleType.FIT_XY);
+//            typeBadge.setMaxHeight(30);
             typeBadge.setAdjustViewBounds(true);
+            typeBadge.getLayoutParams().width = 160;
             frame.addView(typeBadge);
         }
+
+        //TODO: We need to calculate for screen sizes
+        // (Ultra high DP devices may take 3 columns)
+        // Mid DP devices can take 2
+        // low DP can take only 1
+        frame.setColumnCount(1);
+
+        Configuration configuration = getResources().getConfiguration();
+        int smallestScreenWidthDp = configuration.screenWidthDp;
+        Log.d("QPDEX",String.format("min DP of screen: %s",smallestScreenWidthDp));
+
         return typeMatchBlock;
+    }
+
+    //Call when change is needed on all things (New Pokemon in Focus)
+    private void refreshAllDetails(){
+        Pokemon currentDetails = PokedexManager.getInstance().getCurrentDetailedPokemon();
+
+        //Load New Sprites
+
+        //Reload stats
+
+        //Place Description
+
+        //Put the Evolution Chain
+
+        //Populate Types
+
+        //Fill in Egg Groups
     }
 
     @Override
@@ -89,28 +203,10 @@ public class DetailedPokemonActivity extends FragmentActivity
         System.gc();
         retrieveInterfaceElements();
 
+        contextMaster = PokedexManager.getInstance();
+
         //TODO: Show tabs on this view if displaying multi-variant (suffixed) pokemon
         //      This could be Mega-Evolution, male and female forms, etc.
-
-//        TextView testy = new TextView(this);
-//        testy.setText("Immune To");
-//        ImageView typy = new ImageView(this);
-//        typy.setImageDrawable(new BitmapDrawable(getResources(), PokedexAssetFactory.getTypeBadge(this, "none")));
-        List<Type> typeList = new ArrayList<Type>(3);
-        typeList.add(new Type("Normal", ""));
-        typeList.add(new Type("Electric", ""));
-        typeList.add(new Type("Ice", ""));
-
-        LinearLayout testy = createTypeMatchBlock("Immune",typeList);
-        testy.setBackgroundResource(R.color.dex_blue_transparent);
-        LinearLayout testy2 = createTypeMatchBlock("Resists",typeList);
-        testy2.setBackgroundResource(R.color.dex_blue_transparent);
-        LinearLayout testy3 = createTypeMatchBlock("Resists",typeList);
-        testy3.setBackgroundResource(R.color.dex_yellow_transparent);
-        typeStrong.addView(testy);
-        typeStrong.addView(testy2);
-        typeWeak.addView(testy3);
-
         for(int i = 1; i<=7; i++){
             BitmapDrawable miniEvo = new BitmapDrawable(getResources(),PokedexAssetFactory.getPokemonMinimalSprite(this,i));
             ImageView img = new ImageView(this);
@@ -130,41 +226,28 @@ public class DetailedPokemonActivity extends FragmentActivity
             evolutionChain.addView(img);
         }
 
-        //TODO: Abstract this to update for all general table rows.
-        Thread spawnOff = new Thread(){
-            @Override
-            public void run(){
-                //Use getResources().getIdentifier("titleText", "id", getContext().getPackageName());
-                final TableLayout base = (TableLayout) findViewById(R.id.table_pkmnstats);
-                final TextView display = (TextView) findViewById(R.id.text_hpval);
-                final ProgressBar anim = (ProgressBar) findViewById(R.id.pbar_hpval);
-                for(int i=0; i<129; i++){
-                    final int j = i;
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            //HACK: NOT THREAD SAFE CODE!!!
-                            display.setText(Integer.toString(j));
-                            anim.setProgress(j);
-                        }
-                    });
-                    try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+        List<Type> typeList = new ArrayList<Type>(3);
+        typeList.add(new Type("Normal", ""));
+        typeList.add(new Type("Electric", ""));
+        typeList.add(new Type("Ice", ""));
 
-                }
+        LinearLayout testy = createTypeMatchBlock("Immune",typeList);
+        testy.setBackgroundResource(R.color.dex_blue_transparent);
+        LinearLayout testy2 = createTypeMatchBlock("Resists",typeList);
+        testy2.setBackgroundResource(R.color.dex_blue_transparent);
+        LinearLayout testy3 = createTypeMatchBlock("Resists",typeList);
+        testy3.setBackgroundResource(R.color.dex_yellow_transparent);
+        typeStrong.addView(testy);
+        typeStrong.addView(testy2);
+        typeWeak.addView(testy3);
 
-          }
-        };
+
+        Thread spawnOff = new statsUpdaterMasterThread();
         spawnOff.start();
 
-
-
-                //Load the Detailed View Image Button.
-                //TODO: Extract and place in asset handling "Pokedex" class.
-                ImageButton sprite = (ImageButton) findViewById(R.id.imgbutton_pkmnsprite_detail);
+        //Load the Detailed View Image Button.
+        //NOTE: Remove in future!
+        ImageButton sprite = (ImageButton) findViewById(R.id.imgbutton_pkmnsprite_detail);
         InputStream rawBits;
         try{
             rawBits = getAssets().open("1/-1.png");
@@ -174,14 +257,18 @@ public class DetailedPokemonActivity extends FragmentActivity
             Log.e("QPDEX","EXCEPTION OCCURRED");
         }
 
+        pkmnDescription.setText(contextMaster.getCurrentDetailedPokemon().getDescription());
+
+        if(contextMaster.getSelectionOverviewSprite()!=null)
+            pkmnSprite.setImageDrawable(contextMaster.getSelectionOverviewSprite());
+
         //TODO: REMOVE LATER - TESTING ONLY!
-        sprite.setOnClickListener(new View.OnClickListener() {
+        pkmnSprite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 throw new RuntimeException("Clicked on an Invalid Pokemon!");
             }
         });
-
 
 
 
@@ -193,8 +280,6 @@ public class DetailedPokemonActivity extends FragmentActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-
-
 
     }
 

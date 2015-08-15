@@ -51,7 +51,7 @@
                     android:layout_height="match_parent"
                     android:id="@+id/imgbutton_pkmnsprite_detail"
                     android:layout_weight="0.3"
-                    android:src="@drawable/spritetest"
+                    android:src="@drawable/sprite_unknown"
                     android:scaleType="fitCenter" />
 
                 <TextView
@@ -401,7 +401,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="300"
                                 android:textSize="20sp"
-                                android:id="@+id/textview_statstotalsum"
+                                android:id="@+id/textview_statstotalval"
                                 android:layout_margin="5dp" />
                         </LinearLayout>
 

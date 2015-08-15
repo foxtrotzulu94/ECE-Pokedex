@@ -119,6 +119,7 @@ public class PokedexManager {
         jukebox = CentralAudioPlayer.getInstance();
         //roboVoice = TTSController.getInstance();
         missingNo = new MissingNo();
+        currentDetailedPokemon = missingNo;
     }
 
     /**
@@ -187,6 +188,12 @@ public class PokedexManager {
      */
     public MinimalPokemon getCurrentMinimalPokemon() {
         return currentMinimalPokemon;
+    }
+    /**
+     * Retrieve a reference to the MinimalPokemon currently loaded
+     */
+    public Pokemon getCurrentDetailedPokemon() {
+        return currentDetailedPokemon;
     }
     /**
      * Get the currentMinimalPokemon's Sprite
