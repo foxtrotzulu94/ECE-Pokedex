@@ -115,11 +115,11 @@ public class DetailedPokemonActivity extends FragmentActivity
      */
     private CharSequence mTitle;
 
-//    private Threa
 
     private PokedexManager contextMaster;
 
     private String[] statIdentifiers = {"hp","attack","defense","spatk","spdef","speed"};
+    private int spriteIndex;
 
     private TextView pkmnName;
     private ImageView pkmnSprite;
@@ -178,6 +178,7 @@ public class DetailedPokemonActivity extends FragmentActivity
 
     //Call when change is needed on all things (New Pokemon in Focus)
     private void refreshAllDetails(){
+        //TODO: IMPLEMENT!
         Pokemon currentDetails = PokedexManager.getInstance().getCurrentDetailedPokemon();
 
         //Load New Sprites
@@ -204,6 +205,7 @@ public class DetailedPokemonActivity extends FragmentActivity
         retrieveInterfaceElements();
 
         contextMaster = PokedexManager.getInstance();
+        spriteIndex = contextMaster.latestGeneration-1;
 
         //TODO: Show tabs on this view if displaying multi-variant (suffixed) pokemon
         //      This could be Mega-Evolution, male and female forms, etc.
@@ -264,13 +266,19 @@ public class DetailedPokemonActivity extends FragmentActivity
 
         //TODO: REMOVE LATER - TESTING ONLY!
         pkmnSprite.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                throw new RuntimeException("Clicked on an Invalid Pokemon!");
+                spriteIndex+=1;
+                List<BitmapDrawable> sprites = contextMaster.getAllDetailedPokemonSprites();
+                if(sprites!=null) {
+                    spriteIndex = spriteIndex % sprites.size();
+                    BitmapDrawable newSprite = sprites.get(spriteIndex);
+                    pkmnSprite.setImageDrawable(newSprite);
+//                throw new RuntimeException("Clicked on an Invalid Pokemon!");
+                }
             }
         });
-
-
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -311,14 +319,6 @@ public class DetailedPokemonActivity extends FragmentActivity
                 break;
         }
     }
-
-//    public void restoreActionBar() {
-//        ActionBar actionBar = getSupportActionBar();
-//        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-//        actionBar.setDisplayShowTitleEnabled(true);
-//        actionBar.setTitle(mTitle);
-//    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -379,12 +379,5 @@ public class DetailedPokemonActivity extends FragmentActivity
             View rootView = inflater.inflate(R.layout.fragment_detailed_pokemon, container, false);
             return rootView;
         }
-
-//        @Override
-//        public void onAttach(Activity activity) {
-//            super.onAttach(activity);
-//            ((DetailedPokemonActivity) activity).onSectionAttached(
-//                    getArguments().getInt(ARG_SECTION_NUMBER));
-//        }
     }
 }

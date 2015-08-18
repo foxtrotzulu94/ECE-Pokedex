@@ -6,6 +6,8 @@ import android.graphics.drawable.BitmapDrawable;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 import me.quadphase.qpdex.pokemon.MinimalPokemon;
 import me.quadphase.qpdex.pokemon.Pokemon;
@@ -15,7 +17,6 @@ import me.quadphase.qpdex.pokemon.Type;
  * High level manager of all Pokemon related information
  * This class is a singleton that should be use when interaction is needed with activities.
  */
-//TODO: Document with JavaDocs
 public class PokedexManager {
 
     /**
@@ -110,7 +111,7 @@ public class PokedexManager {
     //Cache variables
     //private int cacheSize;
     //private HashMap<String,Pokemon> cachedDetailedPokemon; //Tentative, use an LRUHashMap
-    //private List<InputStream> cachedDisplaySprites;
+    private List<BitmapDrawable> cachedDisplaySprites;
 
     //Methods
 
@@ -145,7 +146,7 @@ public class PokedexManager {
      * @param pokedexSelection The minimal pokemon, preferrably from the {@link PokedexArrayAdapter}
      * @param currentContext The context in which the update occurs (usually, "this" within an Activity)
      */
-    public void updatePokedexSelection(MinimalPokemon pokedexSelection, Context currentContext){
+    public void updatePokedexSelection(MinimalPokemon pokedexSelection, final Context currentContext){
         isReady = false;
         isDetailed = false;
         currentMinimalPokemon = pokedexSelection;
@@ -153,7 +154,6 @@ public class PokedexManager {
 
         jukebox.updateInstance(currentPokemonNationalID, PokedexAssetFactory.getPokemonCry(currentContext, currentPokemonNationalID));
 
-        //TODO: Investigate why these are getting Garbage Collected. Might need to change the variable to a Drawable asset.
         currentOverviewSprite = new BitmapDrawable(currentContext.getResources(),
                 PokedexAssetFactory.getPokemonSpriteInGeneration(currentContext,currentPokemonNationalID,restrictUpToGeneration));
 
@@ -168,6 +168,26 @@ public class PokedexManager {
                     PokedexAssetFactory.getTypeBadge(currentContext,"empty"));
         }
         //roboVoice.setText(pokedexSelection.getDescription());
+
+        Thread bitmapRetrieve = new Thread(){
+            @Override
+            public void run(){
+                cachedDisplaySprites = new LinkedList<BitmapDrawable>();
+                for (int i = 1; i <= latestGeneration; i++) {
+                    InputStream file = PokedexAssetFactory.getPokemonSpriteInGeneration(
+                            currentContext,
+                            currentMinimalPokemon.getNationalID(),
+                            i);
+                    BitmapDrawable sprite = new BitmapDrawable(
+                            currentContext.getResources(),
+                            file
+                            );
+                    if(file!=null)
+                        cachedDisplaySprites.add(sprite);
+                }
+            }
+        };
+        bitmapRetrieve.start();
 
         //TODO:
         //Can also prepare for Full Pokemon Object Construction here (i.e. spawn a worker thread)
@@ -212,5 +232,11 @@ public class PokedexManager {
      */
     public BitmapDrawable getCurrentType2() {
         return currentType2;
+    }
+    /**
+     * Get the list of all Sprites valid for the current pokemon.
+     */
+    public List<BitmapDrawable> getAllDetailedPokemonSprites() {
+        return cachedDisplaySprites;
     }
 }
