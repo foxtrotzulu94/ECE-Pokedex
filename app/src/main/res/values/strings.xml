@@ -68,4 +68,5 @@
     <string name="action_example">Example action</string>
     <string name="title_activity_wip">WIPActivity</string>
     <string name="title_activity_exception_caught">Uncaught Exception Occured</string>
+    <string name="title_activity_pokemon_resources">PokemonResources</string>
 </resources>
