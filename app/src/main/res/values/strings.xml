@@ -29,6 +29,13 @@
     <string name="speed">Speed</string>
     <!-- DetailedPokemonActivity Strings End-->
 
+
+    <!-- PokemonResources Strings Start-->
+    <string name="website_bulbapedia">http://bulbapedia.bulbagarden.net/wiki/Main_Page</string>
+    <string name="website_smogon">http://www.smogon.com/</string>
+
+    <!-- PokemonResources Strings End-->
+
     <!-- Work in Progress strings-->
     <string name="wip_banner">Pikachu and the Developers are hard at work here!</string>
     <string name="wip_text">Sorry but this isn\'t complete yet!\n We\'re doing our best working day
