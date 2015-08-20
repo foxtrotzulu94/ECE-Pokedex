@@ -152,14 +152,19 @@ public class PokedexManager {
         currentMinimalPokemon = pokedexSelection;
         currentPokemonNationalID = pokedexSelection.getNationalID();
 
+        //Update Media Controller
         jukebox.updateInstance(currentPokemonNationalID, PokedexAssetFactory.getPokemonCry(currentContext, currentPokemonNationalID));
 
+        //Update Graphics Assets
+        //Load Sprite
         currentOverviewSprite = new BitmapDrawable(currentContext.getResources(),
                 PokedexAssetFactory.getPokemonSpriteInGeneration(currentContext,currentPokemonNationalID,restrictUpToGeneration));
 
+        //Load first type
         currentType1 = new BitmapDrawable(currentContext.getResources(),
                 PokedexAssetFactory.getTypeBadge(currentContext, pokedexSelection.getTypes().get(0).getName()));
         if(pokedexSelection.getTypes().size()>1) {
+            //Load second type (if any)
             currentType2 = new BitmapDrawable(currentContext.getResources(),
                     PokedexAssetFactory.getTypeBadge(currentContext, pokedexSelection.getTypes().get(1).getName()));
         }
@@ -167,8 +172,10 @@ public class PokedexManager {
             currentType2 = new BitmapDrawable(currentContext.getResources(),
                     PokedexAssetFactory.getTypeBadge(currentContext,"empty"));
         }
+        //Set the description to be heard
         //roboVoice.setText(pokedexSelection.getDescription());
 
+        //Spawn a thread to collect overview sprites
         Thread bitmapRetrieve = new Thread(){
             @Override
             public void run(){

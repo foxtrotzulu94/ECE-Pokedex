@@ -82,11 +82,10 @@ public class DetailedPokemonActivity extends FragmentActivity
     private class statsUpdaterMasterThread extends Thread{
         @Override
         public void run() {
-            Pokemon focused = PokedexManager.getInstance().getCurrentDetailedPokemon();
             int statSum = 0;
             for (int i = 0;i<statIdentifiers.length;i++)
             {
-                int statVal = focused.retrieveStatFromString(statIdentifiers[i]);
+                int statVal = detailedPokemon.retrieveStatFromString(statIdentifiers[i]);
                 statSum+=statVal;
                 Thread updaterThread = new statsUpdaterWorkerThread(
                         statIdentifiers[i],
@@ -115,8 +114,9 @@ public class DetailedPokemonActivity extends FragmentActivity
      */
     private CharSequence mTitle;
 
-
     private PokedexManager contextMaster;
+
+    private Pokemon detailedPokemon;
 
     private String[] statIdentifiers = {"hp","attack","defense","spatk","spdef","speed"};
     private int spriteIndex;
@@ -180,37 +180,34 @@ public class DetailedPokemonActivity extends FragmentActivity
     private void refreshAllDetails(){
         //TODO: IMPLEMENT!
         Pokemon currentDetails = PokedexManager.getInstance().getCurrentDetailedPokemon();
+        spriteIndex = PokedexManager.latestGeneration-1; //Might remove in the future
 
-        //Load New Sprites
+        //Set the name
+        pkmnName.setText(String.format("  %s. %s",detailedPokemon.getNationalID(), detailedPokemon.getName()));
 
         //Reload stats
+        Thread spawnOff = new statsUpdaterMasterThread();
+        spawnOff.start();
 
         //Place Description
+        pkmnDescription.setText(detailedPokemon.getDescription());
 
         //Put the Evolution Chain
+        buildEvolutionChain();
 
         //Populate Types
+        fillTypeComparisonInfo();
 
         //Fill in Egg Groups
+
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detailed_pokemon);
 
-        //Pickup any garbage.
-        Runtime.getRuntime().gc();
-        System.gc();
-        retrieveInterfaceElements();
-
-        contextMaster = PokedexManager.getInstance();
-        spriteIndex = contextMaster.latestGeneration-1;
-
+    private void buildEvolutionChain(){
         //TODO: Show tabs on this view if displaying multi-variant (suffixed) pokemon
         //      This could be Mega-Evolution, male and female forms, etc.
-        for(int i = 1; i<=7; i++){
-            BitmapDrawable miniEvo = new BitmapDrawable(getResources(),PokedexAssetFactory.getPokemonMinimalSprite(this,i));
+        for(int i = 1; i<=7; i++) {
+            BitmapDrawable miniEvo = new BitmapDrawable(getResources(), PokedexAssetFactory.getPokemonMinimalSprite(this, i));
             ImageView img = new ImageView(this);
             img.setImageDrawable(miniEvo);
             img.setOnClickListener(new View.OnClickListener() {
@@ -227,7 +224,10 @@ public class DetailedPokemonActivity extends FragmentActivity
 
             evolutionChain.addView(img);
         }
+    }
 
+    private void fillTypeComparisonInfo(){
+        //TODO: Replace with real logic later
         List<Type> typeList = new ArrayList<Type>(3);
         typeList.add(new Type("Normal", ""));
         typeList.add(new Type("Electric", ""));
@@ -242,8 +242,30 @@ public class DetailedPokemonActivity extends FragmentActivity
         typeStrong.addView(testy);
         typeStrong.addView(testy2);
         typeWeak.addView(testy3);
+    }
 
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_detailed_pokemon);
+
+        //Pickup any garbage
+        Runtime.getRuntime().gc();
+        System.gc();
+
+        retrieveInterfaceElements();
+
+        contextMaster = PokedexManager.getInstance();
+        detailedPokemon = contextMaster.getCurrentDetailedPokemon();
+        spriteIndex = PokedexManager.latestGeneration-1; //Might remove in the future
+
+        pkmnName.setText(String.format("  %s. %s",detailedPokemon.getNationalID(), detailedPokemon.getName()));
+        buildEvolutionChain();
+        fillTypeComparisonInfo();
+        pkmnDescription.setText(contextMaster.getCurrentDetailedPokemon().getDescription());
+
+        //Do a cool animation effect to fill the stats.
         Thread spawnOff = new statsUpdaterMasterThread();
         spawnOff.start();
 
@@ -259,12 +281,10 @@ public class DetailedPokemonActivity extends FragmentActivity
             Log.e("QPDEX","EXCEPTION OCCURRED");
         }
 
-        pkmnDescription.setText(contextMaster.getCurrentDetailedPokemon().getDescription());
-
         if(contextMaster.getSelectionOverviewSprite()!=null)
             pkmnSprite.setImageDrawable(contextMaster.getSelectionOverviewSprite());
 
-        //TODO: REMOVE LATER - TESTING ONLY!
+        //Set the on click listener for a carousel.
         pkmnSprite.setOnClickListener(new View.OnClickListener() {
 
             @Override
