@@ -198,8 +198,20 @@ public class PokedexManager {
 
         //TODO:
         //Can also prepare for Full Pokemon Object Construction here (i.e. spawn a worker thread)
+//        currentDetailedPokemon = this.missingNo;
 
         isReady = true;
+    }
+
+    /**
+     * Change the currently selected Pokemon in the Pokedex, mainly in the DetailedPokemonActivty
+     * This will also store a reference to the assets the Pokemon with the National ID is associated with.
+     * @param detailedPokemon The fully detailed pokemon. Should be given from a Pokemon's evolution list
+     * @param currentContext The context in which the update occurs (usually, "this" within an Activity)
+     */
+    public void updatePokedexSelection(Pokemon detailedPokemon, Context currentContext){
+        //For now, it just sets this variable. Later it should probably do more in terms of assets
+        currentDetailedPokemon = detailedPokemon;
     }
 
     //Getters and Setters
@@ -246,4 +258,6 @@ public class PokedexManager {
     public List<BitmapDrawable> getAllDetailedPokemonSprites() {
         return cachedDisplaySprites;
     }
+
+
 }

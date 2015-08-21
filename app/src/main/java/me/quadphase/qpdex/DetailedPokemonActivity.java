@@ -1,8 +1,10 @@
 package me.quadphase.qpdex;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.Fragment;
@@ -15,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -22,6 +25,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -119,24 +125,31 @@ public class DetailedPokemonActivity extends FragmentActivity
     private Pokemon detailedPokemon;
 
     private String[] statIdentifiers = {"hp","attack","defense","spatk","spdef","speed"};
+    private boolean createdActivity=false;
     private int spriteIndex;
 
     private TextView pkmnName;
     private ImageView pkmnSprite;
     private TextView pkmnDescription;
+    private TextView eggGroupSteps;
 
     private LinearLayout typeWeak;
     private LinearLayout typeStrong;
     private LinearLayout evolutionChain;
+    private LinearLayout eggGroupBox;
+    private LinearLayout abilitiesBox;
 
     private void retrieveInterfaceElements(){
         pkmnName = (TextView) findViewById(R.id.textview_pkmnname_detail);
         pkmnSprite = (ImageView) findViewById(R.id.imgbutton_pkmnsprite_detail);
         pkmnDescription = (TextView) findViewById(R.id.textview_detailedpkmndescript);
+        eggGroupSteps = (TextView) findViewById(R.id.textview_eggsteps);
 
         typeStrong = (LinearLayout) findViewById(R.id.linlayout_typestrong);
         typeWeak = (LinearLayout) findViewById(R.id.linlayout_typeweak);
         evolutionChain = (LinearLayout) findViewById(R.id.linlayout_evolutions_detail);
+        eggGroupBox = (LinearLayout) findViewById(R.id.linlay_egggroupbox);
+        abilitiesBox = (LinearLayout) findViewById(R.id.linlay_abilitiesbox);
     }
 
     private LinearLayout createTypeMatchBlock(String quantifier, List<Type> types){
@@ -164,6 +177,7 @@ public class DetailedPokemonActivity extends FragmentActivity
         }
 
         //TODO: We need to calculate for screen sizes
+        // http://developer.android.com/reference/android/util/DisplayMetrics.html
         // (Ultra high DP devices may take 3 columns)
         // Mid DP devices can take 2
         // low DP can take only 1
@@ -178,8 +192,23 @@ public class DetailedPokemonActivity extends FragmentActivity
 
     //Call when change is needed on all things (New Pokemon in Focus)
     private void refreshAllDetails(){
-        //TODO: IMPLEMENT!
-        Pokemon currentDetails = PokedexManager.getInstance().getCurrentDetailedPokemon();
+
+        if(createdActivity){
+            //Remove all of the dynamically created elements.
+            typeStrong.removeAllViews();
+            typeWeak.removeAllViews();
+            eggGroupBox.removeAllViews();
+
+            //TODO: Conditional Remove! (Don't remove if it's another similar Evolution
+            evolutionChain.removeAllViews();
+        }
+
+        if(detailedPokemon==null){
+            //Default to the fail-safe Pokemon
+            contextMaster.updatePokedexSelection(contextMaster.missingNo,this);
+            detailedPokemon = contextMaster.getCurrentDetailedPokemon();
+        }
+
         spriteIndex = PokedexManager.latestGeneration-1; //Might remove in the future
 
         //Set the name
@@ -198,15 +227,17 @@ public class DetailedPokemonActivity extends FragmentActivity
         //Populate Types
         fillTypeComparisonInfo();
 
+        //Load Pokemon Abilities
+        populateAbilitiesInfo();
+
         //Fill in Egg Groups
-
+        fillEggGroupInfo();
     }
-
 
     private void buildEvolutionChain(){
         //TODO: Show tabs on this view if displaying multi-variant (suffixed) pokemon
         //      This could be Mega-Evolution, male and female forms, etc.
-        for(int i = 1; i<=7; i++) {
+        for(int i = 1; i<=3; i++) {
             BitmapDrawable miniEvo = new BitmapDrawable(getResources(), PokedexAssetFactory.getPokemonMinimalSprite(this, i));
             ImageView img = new ImageView(this);
             img.setImageDrawable(miniEvo);
@@ -238,10 +269,43 @@ public class DetailedPokemonActivity extends FragmentActivity
         LinearLayout testy2 = createTypeMatchBlock("Resists",typeList);
         testy2.setBackgroundResource(R.color.dex_blue_transparent);
         LinearLayout testy3 = createTypeMatchBlock("Resists",typeList);
-        testy3.setBackgroundResource(R.color.dex_yellow_transparent);
+        testy3.setBackgroundResource(R.color.dex_pink_transparent);
         typeStrong.addView(testy);
         typeStrong.addView(testy2);
         typeWeak.addView(testy3);
+    }
+
+    private void populateAbilitiesInfo(){
+        //TODO: Fill with real logic later
+        for (int i=0;i<3;i++) {
+            final String ability = String.format("[ABILITY%s]",i);
+            Button abilityButton = new Button(this, null, android.R.attr.buttonStyleSmall);
+            abilityButton.setText(ability);
+            abilityButton.setMaxHeight(32);
+            abilityButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //TODO: replace with code to call Modal
+                    Toast.makeText(getBaseContext(), ability, Toast.LENGTH_SHORT).show();
+                }
+            });
+            abilitiesBox.addView(abilityButton);
+        }
+    }
+
+    private void fillEggGroupInfo(){
+        //TODO: Fill with real logic later
+        for(int i=0;i<3;i++){
+            Button eggGroupButton = new Button(this, null, android.R.attr.buttonStyleSmall);
+            eggGroupButton.setHeight(5);
+            eggGroupButton.setText(String.format("EGG_GR%s", i));
+            eggGroupButton.setTextColor(Color.DKGRAY);
+
+            eggGroupBox.addView(eggGroupButton);
+        }
+
+        eggGroupSteps.setText(String.format("%s Steps",1999));
+
     }
 
 
@@ -254,20 +318,14 @@ public class DetailedPokemonActivity extends FragmentActivity
         Runtime.getRuntime().gc();
         System.gc();
 
+        //Setup everything to start working
         retrieveInterfaceElements();
-
         contextMaster = PokedexManager.getInstance();
         detailedPokemon = contextMaster.getCurrentDetailedPokemon();
-        spriteIndex = PokedexManager.latestGeneration-1; //Might remove in the future
 
-        pkmnName.setText(String.format("  %s. %s",detailedPokemon.getNationalID(), detailedPokemon.getName()));
-        buildEvolutionChain();
-        fillTypeComparisonInfo();
-        pkmnDescription.setText(contextMaster.getCurrentDetailedPokemon().getDescription());
-
-        //Do a cool animation effect to fill the stats.
-        Thread spawnOff = new statsUpdaterMasterThread();
-        spawnOff.start();
+        //Refresh all UI Elements and set the createdActivity boolean for others to know.
+        refreshAllDetails();
+        createdActivity=true;
 
         //Load the Detailed View Image Button.
         //NOTE: Remove in future!
