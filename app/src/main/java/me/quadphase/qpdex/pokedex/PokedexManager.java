@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import me.quadphase.qpdex.pokemon.MinimalPokemon;
 import me.quadphase.qpdex.pokemon.Pokemon;
@@ -57,6 +58,54 @@ public class PokedexManager {
 
         public MinimalPokemon minimal(){
             return new MinimalPokemon(getNationalID(), super.getName(), super.getDescription(), super.getTypes(), false);
+        }
+
+    }
+
+    private class M00 extends Pokemon{
+        Random rng;
+        public M00(){
+            super(
+                    -1,                  // pokemonUniqueID,
+                    0,                   // pokemonNationalID,
+                    "M'(00)",        // name,
+                    "Often called the \"sister\" glitch counterpart to Missingno. due to having the same sprite and Pokédex number, and is found exclusively in Pokémon Red and Blue. If RBGlitchName00.png is traded to Pokémon Yellow, it will become a 3TrainerPoké $.\n" +
+                            "\n" +
+                            "Although similar to Missingno. at first glance, the two are separate glitch Pokémon with many differences as they have different index numbers; for example, RBGlitchName00.png can evolve into Kangaskhan while Missingno. cannot.",
+                            // description,
+                    0,                 // height in Meters,
+                    0,              // weight in Kilograms,
+                    0,                 // attack,
+                    0,                   // defence,
+                    0,                  // hp,
+                    0,                   // spAttack,
+                    0,                   // spDefence,
+                    0,                  // speed,
+                    false,               // caught,
+                    1,                   // genFirstAppeared,
+                    0,                   // hatchTime,
+                    29,                  // catchRate,
+                    -1,                  // genderRatioMale,
+                    null,                // locations,
+                    null,                // abilities,
+                    null,                // moves,
+                    Arrays.asList(       //types
+                            new Type("Bird","Invalid Type"),
+                            new Type("Normal","Normal")),
+                    null,                // eggGroups,
+                    null                 // evolutions,
+            );
+            rng = new Random();
+            rng.setSeed(System.nanoTime());
+        }
+
+        public MinimalPokemon minimal(){
+            return new MinimalPokemon(getNationalID(), super.getName(), super.getDescription(), super.getTypes(), false);
+        }
+
+        @Override
+        public int retrieveStatFromString(String specific){
+            return rng.nextInt(200);
         }
 
     }
@@ -120,7 +169,8 @@ public class PokedexManager {
         jukebox = CentralAudioPlayer.getInstance();
         //roboVoice = TTSController.getInstance();
         missingNo = new MissingNo();
-        currentDetailedPokemon = missingNo;
+        //TODO: REMOVE! testing ONLY!
+        currentDetailedPokemon = new M00();
     }
 
     /**

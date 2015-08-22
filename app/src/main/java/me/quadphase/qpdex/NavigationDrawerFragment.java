@@ -1,5 +1,6 @@
 package me.quadphase.qpdex;
 
+import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.app.Activity;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 import java.util.Arrays;
 
 import me.quadphase.qpdex.pokedex.PokedexArrayAdapter;
+import me.quadphase.qpdex.pokedex.PokedexManager;
 import me.quadphase.qpdex.pokemon.MinimalPokemon;
 import me.quadphase.qpdex.pokemon.Type;
 
@@ -35,6 +37,20 @@ import me.quadphase.qpdex.pokemon.Type;
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
 public class NavigationDrawerFragment extends Fragment {
+
+    private class PokedexDrawerClickListener implements AdapterView.OnItemClickListener{
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+            //Simply update the Pokedex Manager and advise the parent activity to update
+            MinimalPokemon retrieved = (MinimalPokemon) parent.getItemAtPosition(position);
+            PokedexManager.getInstance().updatePokedexSelection(retrieved, getActivity());
+            DetailedPokemonActivity parentActivity = (DetailedPokemonActivity)getActivity();
+            if(parentActivity!=null){
+                parentActivity.notifyUpdate();
+            }
+            selectItem(position);
+        }
+    }
 
     /**
      * Remember the position of the selected item.
@@ -96,14 +112,9 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mDrawerListView = (ListView) inflater.inflate(
-                R.layout.fragment_navigation_drawer, container, false);
-        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectItem(position);
-            }
-        });
+        mDrawerListView = (ListView) inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
+
+        mDrawerListView.setOnItemClickListener(new PokedexDrawerClickListener());
 
         //TODO: CLEANUP when this list is available in the PokedexManager
         int testNumber = 721;
@@ -119,8 +130,6 @@ public class NavigationDrawerFragment extends Fragment {
 
         PokedexArrayAdapter pokedexEntries = new PokedexArrayAdapter(
                 getActivity(),
-//                R.layout.pokedexrow,
-//                R.id.textview_pkmn_list_entry,
                 listy);
         pokedexEntries.setFontSize(10.0f);
         mDrawerListView.setAdapter(pokedexEntries);
@@ -210,6 +219,7 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
+    //NOTE: Not deleting for now in case we might want to default back to the previous behaviour.
     private void selectItem(int position) {
         mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {

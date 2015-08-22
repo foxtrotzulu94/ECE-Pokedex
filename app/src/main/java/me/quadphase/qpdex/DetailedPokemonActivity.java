@@ -1,7 +1,6 @@
 package me.quadphase.qpdex;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -23,18 +22,17 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import me.quadphase.qpdex.pokedex.PokedexAssetFactory;
 import me.quadphase.qpdex.pokedex.PokedexManager;
+import me.quadphase.qpdex.pokemon.Move;
 import me.quadphase.qpdex.pokemon.Pokemon;
 import me.quadphase.qpdex.pokemon.Type;
 
@@ -48,6 +46,7 @@ public class DetailedPokemonActivity extends FragmentActivity
         private String statIdentifier="hp";
         private int finalValue=10;
         private Context current;
+        private boolean updateUI=true;
 
         public statsUpdaterWorkerThread(String idName, int val, Context cur){
             statIdentifier = idName;
@@ -65,30 +64,35 @@ public class DetailedPokemonActivity extends FragmentActivity
                     "id", current.getPackageName());
             final TextView display = (TextView) findViewById(displayID);
             final ProgressBar anim = (ProgressBar) findViewById(barID);
-            for(int i=0; i<=finalValue; i++){
-                final int j = i;
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        display.setText(Integer.toString(j));
-                        anim.setProgress(j);
+            try {
+                for(int i=0; i<=finalValue; i++) {
+                    final int j = i;
+                    if(updateUI){
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                display.setText(Integer.toString(j));
+                                anim.setProgress(j);
+                            }
+                        });
+                        Thread.sleep(10);
                     }
-                });
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
-
+            } catch (InterruptedException e) {
+                Log.d("QPDEX_thread","STAT BAR INTERRUPTED");
+                updateUI = false;
+                e.printStackTrace();
             }
         }
 
     }
 
     private class statsUpdaterMasterThread extends Thread{
+        List<Thread> workers;
         @Override
         public void run() {
             int statSum = 0;
+            workers = new LinkedList<>();
             for (int i = 0;i<statIdentifiers.length;i++)
             {
                 int statVal = detailedPokemon.retrieveStatFromString(statIdentifiers[i]);
@@ -98,6 +102,7 @@ public class DetailedPokemonActivity extends FragmentActivity
                         statVal,
                         getBaseContext());
                 updaterThread.start();
+                workers.add(updaterThread);
             }
             final TextView total = (TextView) findViewById(R.id.textview_statstotalval);
             final int totalStatSum = statSum;
@@ -107,6 +112,15 @@ public class DetailedPokemonActivity extends FragmentActivity
                     total.setText(Integer.toString(totalStatSum));
                 }
             });
+        }
+
+        public void preventFurtherExecution(){
+            //This does not seem to work...
+            for (int i = 0; i < workers.size(); i++) {
+                statsUpdaterWorkerThread updater = (statsUpdaterWorkerThread)workers.get(i);
+                updater.updateUI=false;
+                updater.interrupt();
+            }
         }
     }
 
@@ -121,6 +135,7 @@ public class DetailedPokemonActivity extends FragmentActivity
     private CharSequence mTitle;
 
     private PokedexManager contextMaster;
+    private statsUpdaterMasterThread statsBarController;
 
     private Pokemon detailedPokemon;
 
@@ -130,6 +145,8 @@ public class DetailedPokemonActivity extends FragmentActivity
 
     private TextView pkmnName;
     private ImageView pkmnSprite;
+    private ImageView pkmnType1;
+    private ImageView pkmnType2;
     private TextView pkmnDescription;
     private TextView eggGroupSteps;
 
@@ -138,10 +155,13 @@ public class DetailedPokemonActivity extends FragmentActivity
     private LinearLayout evolutionChain;
     private LinearLayout eggGroupBox;
     private LinearLayout abilitiesBox;
+    private LinearLayout movesBox;
 
     private void retrieveInterfaceElements(){
         pkmnName = (TextView) findViewById(R.id.textview_pkmnname_detail);
         pkmnSprite = (ImageView) findViewById(R.id.imgbutton_pkmnsprite_detail);
+        pkmnType1 = (ImageView) findViewById(R.id.imgview_pkmntype1_detail);
+        pkmnType2 = (ImageView) findViewById(R.id.imgview_pkmntype2_detail);
         pkmnDescription = (TextView) findViewById(R.id.textview_detailedpkmndescript);
         eggGroupSteps = (TextView) findViewById(R.id.textview_eggsteps);
 
@@ -150,6 +170,7 @@ public class DetailedPokemonActivity extends FragmentActivity
         evolutionChain = (LinearLayout) findViewById(R.id.linlayout_evolutions_detail);
         eggGroupBox = (LinearLayout) findViewById(R.id.linlay_egggroupbox);
         abilitiesBox = (LinearLayout) findViewById(R.id.linlay_abilitiesbox);
+        movesBox = (LinearLayout) findViewById(R.id.linlay_movebox);
     }
 
     private LinearLayout createTypeMatchBlock(String quantifier, List<Type> types){
@@ -185,19 +206,42 @@ public class DetailedPokemonActivity extends FragmentActivity
 
         Configuration configuration = getResources().getConfiguration();
         int smallestScreenWidthDp = configuration.screenWidthDp;
-        Log.d("QPDEX",String.format("min DP of screen: %s",smallestScreenWidthDp));
+        Log.d("QPDEX", String.format("min DP of screen: %s", smallestScreenWidthDp));
 
         return typeMatchBlock;
+    }
+
+    private LinearLayout createMovesSubBox(String condition, Move move){
+        LinearLayout moveBox = (LinearLayout) getLayoutInflater().inflate(R.layout.custom_movebox,null);
+        ((TextView)moveBox.findViewById(R.id.textview_movecondition)).setText(condition);
+        ((TextView)moveBox.findViewById(R.id.textview_movename)).setText(move.getName());
+
+        ImageView moveType = (ImageView) moveBox.findViewById(R.id.imgview_movetype);
+        moveType.setImageDrawable(new BitmapDrawable(getResources(), PokedexAssetFactory.getTypeBadge(this, move.getType().getName())));
+
+        return moveBox;
     }
 
     //Call when change is needed on all things (New Pokemon in Focus)
     private void refreshAllDetails(){
 
         if(createdActivity){
+            if(contextMaster.getSelectionOverviewSprite()!=null) {
+                pkmnSprite.setImageDrawable(contextMaster.getSelectionOverviewSprite());
+            }
+            else {
+                pkmnSprite.setImageResource(R.drawable.sprite_unknown);
+            }
+
+            statsBarController.preventFurtherExecution();
+            statsBarController = null;
+
             //Remove all of the dynamically created elements.
             typeStrong.removeAllViews();
             typeWeak.removeAllViews();
             eggGroupBox.removeAllViews();
+            abilitiesBox.removeAllViews();
+            movesBox.removeAllViews();
 
             //TODO: Conditional Remove! (Don't remove if it's another similar Evolution
             evolutionChain.removeAllViews();
@@ -214,9 +258,12 @@ public class DetailedPokemonActivity extends FragmentActivity
         //Set the name
         pkmnName.setText(String.format("  %s. %s",detailedPokemon.getNationalID(), detailedPokemon.getName()));
 
+        //Set the Pokemon Type Badges
+        setPokemonTypeInfo();
+
         //Reload stats
-        Thread spawnOff = new statsUpdaterMasterThread();
-        spawnOff.start();
+        statsBarController = new statsUpdaterMasterThread();
+        statsBarController.start();
 
         //Place Description
         pkmnDescription.setText(detailedPokemon.getDescription());
@@ -232,6 +279,16 @@ public class DetailedPokemonActivity extends FragmentActivity
 
         //Fill in Egg Groups
         fillEggGroupInfo();
+
+        //Place all moves
+        populateMoveInfo();
+    }
+
+    private void setPokemonTypeInfo(){
+        if (contextMaster.getCurrentType1()!=null) {
+            pkmnType1.setImageDrawable(contextMaster.getCurrentType1());
+            pkmnType2.setImageDrawable(contextMaster.getCurrentType2());
+        }
     }
 
     private void buildEvolutionChain(){
@@ -296,15 +353,37 @@ public class DetailedPokemonActivity extends FragmentActivity
     private void fillEggGroupInfo(){
         //TODO: Fill with real logic later
         for(int i=0;i<3;i++){
-            Button eggGroupButton = new Button(this, null, android.R.attr.buttonStyleSmall);
-            eggGroupButton.setHeight(5);
-            eggGroupButton.setText(String.format("EGG_GR%s", i));
-            eggGroupButton.setTextColor(Color.DKGRAY);
+            TextView eggGroupName = new TextView(this);
+            eggGroupName.setText(String.format("EGG_GR%s", i));
+            eggGroupName.setTextColor(Color.DKGRAY);
 
-            eggGroupBox.addView(eggGroupButton);
+            eggGroupBox.addView(eggGroupName);
         }
 
         eggGroupSteps.setText(String.format("%s Steps",1999));
+
+    }
+
+    private void populateMoveInfo(){
+        //TODO: Fill with real logic later
+        List<Move> testy = new ArrayList<>();
+        testy.add(new Move("Peck","Peck",0,0,0,"",0,"",new Type("Flying","")));
+        testy.add(new Move("Gust", "Gust", 0, 0, 0, "", 0, "", new Type("Flying", "")));
+
+        TextView firstNote = new TextView(this);
+        firstNote.setText("Moves Learnt By TM");
+        movesBox.addView(firstNote);
+
+        for (int i = 0; i < testy.size(); i++) {
+            LinearLayout someMove =createMovesSubBox(String.format("TM%s",i), testy.get(i));
+            LinearLayout.LayoutParams marginTest = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            marginTest.setMargins(5,5,5,5);
+            someMove.setLayoutParams(marginTest);
+            movesBox.addView(someMove);
+        }
 
     }
 
@@ -341,6 +420,8 @@ public class DetailedPokemonActivity extends FragmentActivity
 
         if(contextMaster.getSelectionOverviewSprite()!=null)
             pkmnSprite.setImageDrawable(contextMaster.getSelectionOverviewSprite());
+        else
+            pkmnSprite.setImageResource(R.drawable.sprite_unknown);
 
         //Set the on click listener for a carousel.
         pkmnSprite.setOnClickListener(new View.OnClickListener() {
@@ -424,6 +505,10 @@ public class DetailedPokemonActivity extends FragmentActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void notifyUpdate(){
+        refreshAllDetails();
     }
 
     /**

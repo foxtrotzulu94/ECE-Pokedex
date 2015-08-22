@@ -32,13 +32,13 @@
                 android:textSize="20sp"
                 android:layout_margin="5dp"
                 android:layout_gravity="center"
-                android:layout_weight="0.3" />
+                android:layout_weight="0.2" />
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.7">
+                android:layout_weight="0.9">
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -46,15 +46,17 @@
                     android:id="@+id/imgview_pkmntype1_detail"
                     android:layout_weight="0.5"
                     android:src="@drawable/typenone"
-                    android:scaleType="fitCenter" />
+                    android:scaleType="fitXY"
+                    android:adjustViewBounds="false" />
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:id="@+id/imgview_pkmntype2_detail"
                     android:layout_weight="0.5"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/typenone" />
+                    android:scaleType="fitXY"
+                    android:src="@drawable/typenone"
+                    android:adjustViewBounds="false" />
             </LinearLayout>
 
         </LinearLayout>

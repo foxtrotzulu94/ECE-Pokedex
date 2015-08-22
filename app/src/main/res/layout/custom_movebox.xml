@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/linlayout_move"
+    android:orientation="horizontal"
+    android:padding="6dp"
+    android:gravity="center_vertical"
+    android:background="@drawable/custom_moveboxborder"
+    android:descendantFocusability="blocksDescendants">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="TM99"
+        android:id="@+id/textview_movecondition"
+        android:textSize="18sp"
+        android:layout_weight="0.5"
+        android:gravity="center" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="[MOVE NAME HERE]"
+        android:textSize="16sp"
+        android:id="@+id/textview_movename"
+        android:layout_weight="0.3" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/imgview_movetype"
+        android:layout_weight="0.5"
+        android:src="@drawable/typenone"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true" />
+
+</LinearLayout>
