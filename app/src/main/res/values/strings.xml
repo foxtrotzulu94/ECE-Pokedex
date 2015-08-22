@@ -31,9 +31,15 @@
 
 
     <!-- PokemonResources Strings Start-->
-    <string name="website_bulbapedia">http://bulbapedia.bulbagarden.net/wiki/Main_Page</string>
+    <string name="website_bulbapedia"><a href="http://bulbapedia.bulbagarden.net/wiki/Main_Page">
+        bulbapedia.net</a></string>
     <string name="website_smogon">http://www.smogon.com/</string>
-
+    <!--<string name="website_smogon"><a href="http://www.smogon.com/">smogon.com</a></string>-->
+    <string name="website_pldh"><a href="http://pldh.net/">pldh.net</a></string>
+    <string name="website_veekun"><a href="http://veekun.com/">veekun.com</a></string>
+    <string name="website_pokemonvideogames">
+        <a href="http://www.pokemon.com/us/pokemon-video-games/all-pokemon-games/">pokemon.com
+        </a></string>
     <!-- PokemonResources Strings End-->
 
     <!-- Work in Progress strings-->

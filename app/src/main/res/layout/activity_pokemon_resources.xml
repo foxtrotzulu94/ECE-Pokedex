@@ -5,7 +5,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="me.quadphase.qpdex.PokemonResources"
-    android:id="@+id/"
+    android:id="@+id/pokemon_resources"
     android:orientation="vertical"
     android:background="#ff2d8c99">
 
@@ -53,7 +53,41 @@
                         android:src="@drawable/logo_smogon"
                         android:layout_marginRight="10dp"
                         android:scaleType="fitCenter"
-                        android:layout_weight="0.6" />
+                        android:layout_weight="0.6"
+                        android:autoLink="web"
+                        android:clickable="true"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="@string/website_smogon"
+                        android:id="@+id/smogon"
+                        android:layout_weight="0.3"
+                        android:clickable="false"
+                        android:textColor="#FFFFFFFF"
+                        android:linksClickable="true"
+                        android:textIsSelectable="true"
+                        android:autoLink="web" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2" >
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/bulbapediaimage"
+                        android:src="@drawable/logo_bulbapedia"
+                        android:layout_marginRight="10dp"
+                        android:scaleType="fitCenter"
+                        android:layout_weight="0.6"
+                        android:autoLink="web"
+                        android:clickable="true" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -61,10 +95,109 @@
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:text="@string/website_bulbapedia"
                         android:id="@+id/bulbapedia"
-                        android:layout_weight="0.3" />
-
+                        android:layout_weight="0.3"
+                        android:clickable="false"
+                        android:textColor="#FFFFFFFF"
+                        android:linksClickable="true"
+                        android:textIsSelectable="true"
+                        android:autoLink="web" />
                 </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2" >
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/pldhimage"
+                        android:src="@drawable/logo_pldh"
+                        android:layout_marginRight="10dp"
+                        android:scaleType="fitCenter"
+                        android:layout_weight="0.6"
+                        android:autoLink="web"
+                        android:clickable="true" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="@string/website_pldh"
+                        android:id="@+id/pldh"
+                        android:layout_weight="0.3"
+                        android:clickable="false"
+                        android:textColor="#FFFFFFFF"
+                        android:linksClickable="true"
+                        android:textIsSelectable="true"
+                        android:autoLink="web" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2" >
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/imageveekun"
+                        android:src="@drawable/logo_veekun"
+                        android:layout_marginRight="10dp"
+                        android:scaleType="fitCenter"
+                        android:layout_weight="0.6"
+                        android:autoLink="web"
+                        android:clickable="true" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="@string/website_veekun"
+                        android:id="@+id/veekun"
+                        android:layout_weight="0.3"
+                        android:clickable="false"
+                        android:textColor="#FFFFFFFF"
+                        android:linksClickable="true"
+                        android:textIsSelectable="true"
+                        android:autoLink="web" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2" >
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/imagepokemonvideogames"
+                        android:src="@drawable/logo_pokemonvideogames"
+                        android:layout_marginRight="10dp"
+                        android:scaleType="fitCenter"
+                        android:layout_weight="0.6"
+                        android:autoLink="web"
+                        android:clickable="true" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="@string/website_pokemonvideogames"
+                        android:id="@+id/pokemonvideogames"
+                        android:layout_weight="0.3"
+                        android:clickable="false"
+                        android:textColor="#FFFFFFFF"
+                        android:linksClickable="true"
+                        android:textIsSelectable="true"
+                        android:autoLink="web" />
+                </LinearLayout>
+
             </LinearLayout>
+
         </ScrollView>
 
     </LinearLayout>
