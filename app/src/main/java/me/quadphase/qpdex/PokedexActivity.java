@@ -2,10 +2,7 @@ package me.quadphase.qpdex;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,7 +23,6 @@ import android.widget.TextView;
 
 import java.util.Arrays;
 
-import me.quadphase.qpdex.databaseAccess.PokemonFactory;
 import me.quadphase.qpdex.pokedex.CentralAudioPlayer;
 import me.quadphase.qpdex.pokedex.PokedexArrayAdapter;
 import me.quadphase.qpdex.pokedex.PokedexAssetFactory;
@@ -125,8 +121,10 @@ public class PokedexActivity extends AppCompatActivity {
 
     private void refreshPokedexOverviewPanel(){
         overviewDescription.setText(contextMaster.getCurrentMinimalPokemon().getDescription());
-        overviewType1.setImageDrawable(contextMaster.getCurrentType1());
-        overviewType2.setImageDrawable(contextMaster.getCurrentType2());
+        overviewType1.setImageDrawable(contextMaster.getCurrentMinimalType1());
+        overviewType1.setScaleType(ImageView.ScaleType.FIT_XY);
+        overviewType2.setImageDrawable(contextMaster.getCurrentMinimalType2());
+        overviewType2.setScaleType(ImageView.ScaleType.FIT_XY);
         overviewImage.setImageDrawable(contextMaster.getSelectionOverviewSprite());
     }
 

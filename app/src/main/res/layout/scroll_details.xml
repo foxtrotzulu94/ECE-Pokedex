@@ -14,7 +14,7 @@
             android:id="@+id/title_description"
             android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"
-            android:background="#bc3a3a3a" />
+            android:background="@color/dex_detail_grey3" />
 
         <TextView
             android:layout_width="match_parent"
@@ -25,7 +25,7 @@
             android:layout_gravity="center"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:background="#c89b9b9b"
+            android:background="@color/dex_detail_greyback"
             android:padding="5dp" />
     </LinearLayout>
 
@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:text="Type Match"
         android:id="@+id/title_typematch"
-        android:background="#bc3a3a3a"
+        android:background="@color/dex_detail_grey3"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp" />
 
@@ -42,7 +42,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#c89b9b9b"
+        android:background="@color/dex_detail_greyback"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:gravity="top">
@@ -63,7 +63,7 @@
                 android:text="Strengths"
                 android:id="@+id/title_strength"
                 android:layout_margin="0dp"
-                android:background="#bc3a3a3a" />
+                android:background="@color/dex_detail_grey3" />
 
         </LinearLayout>
 
@@ -83,7 +83,7 @@
                 android:text="Weaknesses"
                 android:id="@+id/title_weak"
                 android:layout_margin="0dp"
-                android:background="#bc3a3a3a" />
+                android:background="@color/dex_detail_grey3" />
 
         </LinearLayout>
 
@@ -98,14 +98,14 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.7">
+            android:layout_weight="0.5">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="Abilities"
                 android:id="@+id/textView8"
-                android:background="#bc3a3a3a"
+                android:background="@color/dex_detail_grey3"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp" />
 
@@ -113,7 +113,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
-                android:background="#c89b9b9b"
+                android:background="@color/dex_detail_greyback"
                 android:id="@+id/linlay_abilitiesbox"
                 android:layout_marginLeft="5dp"></LinearLayout>
 
@@ -123,7 +123,7 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.7">
+            android:layout_weight="0.5">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -131,7 +131,7 @@
                 android:text="Breeding Info"
                 android:id="@+id/textView"
                 android:layout_weight="0.8"
-                android:background="#bc3a3a3a"
+                android:background="@color/dex_detail_grey3"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp" />
 
@@ -139,7 +139,7 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#c89b9b9b"
+                android:background="@color/dex_detail_greyback"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp">
 
@@ -156,14 +156,15 @@
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/linlay_egggroupbox"></LinearLayout>
+                    android:id="@+id/linlay_egggroupbox"
+                    android:gravity="center"></LinearLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#c89b9b9b"
+                android:background="@color/dex_detail_greyback"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp">
 
@@ -174,7 +175,8 @@
                     android:id="@+id/title_hatchtime"
                     android:layout_gravity="center|left"
                     android:padding="5dp"
-                    android:layout_weight="0.7" />
+                    android:layout_weight="0.5"
+                    android:gravity="center" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -183,7 +185,7 @@
                     android:id="@+id/textview_eggsteps"
                     android:layout_gravity="center|left"
                     android:padding="5dp"
-                    android:layout_weight="0.3" />
+                    android:layout_weight="0.5" />
             </LinearLayout>
 
         </LinearLayout>
@@ -195,7 +197,7 @@
         android:layout_height="wrap_content"
         android:text="Move Set"
         android:id="@+id/textView6"
-        android:background="#bc3a3a3a"
+        android:background="@color/dex_detail_grey3"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp" />
 
@@ -203,7 +205,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#c89b9b9b"
+        android:background="@color/dex_detail_greyback"
         android:id="@+id/linlay_movebox"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp">

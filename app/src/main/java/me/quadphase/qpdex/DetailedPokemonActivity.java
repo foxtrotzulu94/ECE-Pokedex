@@ -32,6 +32,8 @@ import java.util.List;
 
 import me.quadphase.qpdex.pokedex.PokedexAssetFactory;
 import me.quadphase.qpdex.pokedex.PokedexManager;
+import me.quadphase.qpdex.pokemon.Ability;
+import me.quadphase.qpdex.pokemon.MinimalPokemon;
 import me.quadphase.qpdex.pokemon.Move;
 import me.quadphase.qpdex.pokemon.Pokemon;
 import me.quadphase.qpdex.pokemon.Type;
@@ -156,6 +158,9 @@ public class DetailedPokemonActivity extends FragmentActivity
     private LinearLayout eggGroupBox;
     private LinearLayout abilitiesBox;
     private LinearLayout movesBox;
+
+    private View evolutionChainContent;
+    private View alternateFormsContent;
 
     private void retrieveInterfaceElements(){
         pkmnName = (TextView) findViewById(R.id.textview_pkmnname_detail);
@@ -285,37 +290,47 @@ public class DetailedPokemonActivity extends FragmentActivity
     }
 
     private void setPokemonTypeInfo(){
-        if (contextMaster.getCurrentType1()!=null) {
-            pkmnType1.setImageDrawable(contextMaster.getCurrentType1());
-            pkmnType2.setImageDrawable(contextMaster.getCurrentType2());
+        if (contextMaster.getCurrentDetailedType1()!=null) {
+            pkmnType1.setImageDrawable(contextMaster.getCurrentDetailedType1());
+            pkmnType2.setImageDrawable(contextMaster.getCurrentDetailedType2());
+        }
+        else{
+            Log.w("QPDEX","Types were not available or null!!");
         }
     }
 
     private void buildEvolutionChain(){
-        //TODO: Show tabs on this view if displaying multi-variant (suffixed) pokemon
-        //      This could be Mega-Evolution, male and female forms, etc.
-        for(int i = 1; i<=3; i++) {
-            BitmapDrawable miniEvo = new BitmapDrawable(getResources(), PokedexAssetFactory.getPokemonMinimalSprite(this, i));
-            ImageView img = new ImageView(this);
-            img.setImageDrawable(miniEvo);
-            img.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d("QPDEX", v.toString());
-                }
-            });
-            img.setLayoutParams(new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    .3f));
-            img.setAdjustViewBounds(true);
+        if(detailedPokemon.getEvolutions()!=null && !detailedPokemon.getEvolutions().isEmpty()){
+            for (int i = 0; i < detailedPokemon.getEvolutions().size(); i++) {
+                MinimalPokemon miniEvoPokemon = detailedPokemon.getEvolutions().get(i).getEvolvesInto();
+                BitmapDrawable miniEvo = new BitmapDrawable(getResources(), PokedexAssetFactory.getPokemonMinimalSprite(this, i));
+                ImageView img = new ImageView(this);
+                img.setImageDrawable(miniEvo);
+                img.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.d("QPDEX", v.toString());
+                    }
+                });
+                img.setLayoutParams(new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        .3f));
+                img.setAdjustViewBounds(true);
 
-            evolutionChain.addView(img);
+                evolutionChain.addView(img);
+            }
+
+        }
+        else{
+            TextView notApplicable = new TextView(this);
+            notApplicable.setText("No Evolutions to show");
+            evolutionChain.addView(notApplicable);
         }
     }
 
     private void fillTypeComparisonInfo(){
-        //TODO: Replace with real logic later
+        //TODO: Replace with real logic when the sparse type matrix is available!
         List<Type> typeList = new ArrayList<Type>(3);
         typeList.add(new Type("Normal", ""));
         typeList.add(new Type("Electric", ""));
@@ -333,58 +348,60 @@ public class DetailedPokemonActivity extends FragmentActivity
     }
 
     private void populateAbilitiesInfo(){
-        //TODO: Fill with real logic later
-        for (int i=0;i<3;i++) {
-            final String ability = String.format("[ABILITY%s]",i);
-            Button abilityButton = new Button(this, null, android.R.attr.buttonStyleSmall);
-            abilityButton.setText(ability);
-            abilityButton.setMaxHeight(32);
-            abilityButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //TODO: replace with code to call Modal
-                    Toast.makeText(getBaseContext(), ability, Toast.LENGTH_SHORT).show();
-                }
-            });
-            abilitiesBox.addView(abilityButton);
+        if(detailedPokemon.getAbilities()!=null && !detailedPokemon.getAbilities().isEmpty()) {
+            final List<Ability> allAbilities = detailedPokemon.getAbilities();
+            for (int i = 0; i < detailedPokemon.getAbilities().size(); i++) {
+                String ability = allAbilities.get(i).getName();
+                final String description = allAbilities.get(i).getDescription();
+                Button abilityButton = new Button(this, null, android.R.attr.buttonStyleSmall);
+                abilityButton.setText(ability);
+                abilityButton.setMaxHeight(32);
+                abilityButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //TODO: replace with code to call Modal
+                        Toast.makeText(getBaseContext(), description, Toast.LENGTH_SHORT).show();
+                    }
+                });
+                abilitiesBox.addView(abilityButton);
+            }
+        }
+        else{
+            Log.d("QPDEX", "Pokemon possibly not correctly built. Has no abilities!" + detailedPokemon.toString());
         }
     }
 
     private void fillEggGroupInfo(){
-        //TODO: Fill with real logic later
-        for(int i=0;i<3;i++){
-            TextView eggGroupName = new TextView(this);
-            eggGroupName.setText(String.format("EGG_GR%s", i));
-            eggGroupName.setTextColor(Color.DKGRAY);
+        if(detailedPokemon.getEggGroups()!=null && !detailedPokemon.getEggGroups().isEmpty()) {
+            for (int i = 0; i < detailedPokemon.getEggGroups().size(); i++) {
+                TextView eggGroupName = new TextView(this);
+                eggGroupName.setText(detailedPokemon.getEggGroups().get(i).getName());
+                eggGroupName.setTextColor(Color.DKGRAY);
 
-            eggGroupBox.addView(eggGroupName);
+                eggGroupBox.addView(eggGroupName);
+            }
         }
-
-        eggGroupSteps.setText(String.format("%s Steps",1999));
-
+        eggGroupSteps.setText(String.format("%s\n Steps",detailedPokemon.getHatchTime()));
     }
 
     private void populateMoveInfo(){
-        //TODO: Fill with real logic later
-        List<Move> testy = new ArrayList<>();
-        testy.add(new Move("Peck","Peck",0,0,0,"",0,"",new Type("Flying","")));
-        testy.add(new Move("Gust", "Gust", 0, 0, 0, "", 0, "", new Type("Flying", "")));
-
         TextView firstNote = new TextView(this);
-        firstNote.setText("Moves Learnt By TM");
+        firstNote.setText("Moves Learnt By Level Up");
         movesBox.addView(firstNote);
 
-        for (int i = 0; i < testy.size(); i++) {
-            LinearLayout someMove =createMovesSubBox(String.format("TM%s",i), testy.get(i));
-            LinearLayout.LayoutParams marginTest = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-            marginTest.setMargins(5,5,5,5);
-            someMove.setLayoutParams(marginTest);
-            movesBox.addView(someMove);
+        if(detailedPokemon.getMoves()!=null){
+            List<Move> allMoves = detailedPokemon.getMoves();
+            for (int i = 0; i < allMoves.size(); i++) {
+                LinearLayout someMove =createMovesSubBox("Start", allMoves.get(i));
+                LinearLayout.LayoutParams marginTest = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                marginTest.setMargins(5,5,5,5);
+                someMove.setLayoutParams(marginTest);
+                movesBox.addView(someMove);
+            }
         }
-
     }
 
 

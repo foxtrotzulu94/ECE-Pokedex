@@ -2,6 +2,7 @@ package me.quadphase.qpdex.pokedex;
 
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -10,7 +11,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import me.quadphase.qpdex.pokemon.Ability;
+import me.quadphase.qpdex.pokemon.EggGroup;
+import me.quadphase.qpdex.pokemon.Evolution;
 import me.quadphase.qpdex.pokemon.MinimalPokemon;
+import me.quadphase.qpdex.pokemon.Move;
 import me.quadphase.qpdex.pokemon.Pokemon;
 import me.quadphase.qpdex.pokemon.Type;
 
@@ -68,13 +73,13 @@ public class PokedexManager {
             super(
                     -1,                  // pokemonUniqueID,
                     0,                   // pokemonNationalID,
-                    "M'(00)",        // name,
+                    "'M(00)",        // name,
                     "Often called the \"sister\" glitch counterpart to Missingno. due to having the same sprite and Pokédex number, and is found exclusively in Pokémon Red and Blue. If RBGlitchName00.png is traded to Pokémon Yellow, it will become a 3TrainerPoké $.\n" +
                             "\n" +
                             "Although similar to Missingno. at first glance, the two are separate glitch Pokémon with many differences as they have different index numbers; for example, RBGlitchName00.png can evolve into Kangaskhan while Missingno. cannot.",
                             // description,
-                    0,                 // height in Meters,
-                    0,              // weight in Kilograms,
+                    7,                 // height in Meters,
+                    399.4,              // weight in Kilograms,
                     0,                 // attack,
                     0,                   // defence,
                     0,                  // hp,
@@ -83,17 +88,21 @@ public class PokedexManager {
                     0,                  // speed,
                     false,               // caught,
                     1,                   // genFirstAppeared,
-                    0,                   // hatchTime,
+                    1999,                   // hatchTime,
                     29,                  // catchRate,
                     -1,                  // genderRatioMale,
                     null,                // locations,
-                    null,                // abilities,
-                    null,                // moves,
+                    Arrays.asList(// abilities,
+                            new Ability("Glitch Master","Can corrupt anything in its path")),
+                    Arrays.asList(// moves,
+                            new Move("Water Gun","",0,0,0,"op",1,"",new Type("water","")),
+                            new Move("Water Gun","",0,0,0,"op",1,"",new Type("water","")),
+                            new Move("Sky Attack","",0,0,0,"op",1,"",new Type("Flying",""))  ),
                     Arrays.asList(       //types
                             new Type("Bird","Invalid Type"),
                             new Type("Normal","Normal")),
-                    null,                // eggGroups,
-                    null                 // evolutions,
+                    Arrays.asList(new EggGroup("glitch")),                // eggGroups,
+                    Arrays.asList(new Evolution("Level Up",new MissingNo().minimal()))// evolutions,
             );
             rng = new Random();
             rng.setSeed(System.nanoTime());
@@ -142,10 +151,13 @@ public class PokedexManager {
 
     private ArrayList<BitmapDrawable> allOverviewSprites;
 
-    private BitmapDrawable currentType1;
+    private BitmapDrawable currentMinimalType1;
 
-    private BitmapDrawable currentType2;
+    private BitmapDrawable currentMinimalType2;
 
+    private BitmapDrawable currentDetailedType1;
+
+    private BitmapDrawable currentDetailedType2;
 
     //Collections to assist the Pokedex display
 
@@ -197,6 +209,7 @@ public class PokedexManager {
      * @param currentContext The context in which the update occurs (usually, "this" within an Activity)
      */
     public void updatePokedexSelection(MinimalPokemon pokedexSelection, final Context currentContext){
+        Log.d("QPDex","Beginning minimal build "+System.nanoTime());
         isReady = false;
         isDetailed = false;
         currentMinimalPokemon = pokedexSelection;
@@ -211,15 +224,15 @@ public class PokedexManager {
                 PokedexAssetFactory.getPokemonSpriteInGeneration(currentContext,currentPokemonNationalID,restrictUpToGeneration));
 
         //Load first type
-        currentType1 = new BitmapDrawable(currentContext.getResources(),
+        currentMinimalType1 = new BitmapDrawable(currentContext.getResources(),
                 PokedexAssetFactory.getTypeBadge(currentContext, pokedexSelection.getTypes().get(0).getName()));
         if(pokedexSelection.getTypes().size()>1) {
             //Load second type (if any)
-            currentType2 = new BitmapDrawable(currentContext.getResources(),
+            currentMinimalType2 = new BitmapDrawable(currentContext.getResources(),
                     PokedexAssetFactory.getTypeBadge(currentContext, pokedexSelection.getTypes().get(1).getName()));
         }
         else{
-            currentType2 = new BitmapDrawable(currentContext.getResources(),
+            currentMinimalType2 = new BitmapDrawable(currentContext.getResources(),
                     PokedexAssetFactory.getTypeBadge(currentContext,"empty"));
         }
         //Set the description to be heard
@@ -246,8 +259,24 @@ public class PokedexManager {
         };
         bitmapRetrieve.start();
 
-        //TODO:
-        //Can also prepare for Full Pokemon Object Construction here (i.e. spawn a worker thread)
+        //TODO: (THIS SHOULD BE ITS OWN TASK!)
+        // We are spawning off a thread to build the detailed Pokemon, however, for now we rely on
+        // our test subject: 'M (00). This is to ensure that the UI works as intended.
+        // When the time comes to actually use this, remove "currentDetailedPokemon" as the argument
+        // and pass the correct detailedPokemon that maps to the National ID.
+        // You will also want to
+        // (A) make the Thread below non-anonymous, such that we can manage having several of these in construction
+        // (B) altogether eliminate this code segment and prebuild a massive list of detailed pokemon
+        //      That would be executed, as a Thread, some time after building the minimalPokemon list
+        //      and some time before the first execution of DetailedPokemonActivity.
+        Thread buildInDetail = new Thread(){
+            @Override
+            public void run(){
+                updatePokedexSelection(currentDetailedPokemon,currentContext);
+                Log.d("QPDEX","Full detailed pokemon completed "+System.nanoTime());
+            }
+        };
+        buildInDetail.start();
 //        currentDetailedPokemon = this.missingNo;
 
         isReady = true;
@@ -262,6 +291,25 @@ public class PokedexManager {
     public void updatePokedexSelection(Pokemon detailedPokemon, Context currentContext){
         //For now, it just sets this variable. Later it should probably do more in terms of assets
         currentDetailedPokemon = detailedPokemon;
+        //Load Sprite
+        currentOverviewSprite = new BitmapDrawable(currentContext.getResources(),
+                PokedexAssetFactory.getPokemonSpriteInGeneration(currentContext,currentPokemonNationalID,restrictUpToGeneration));
+
+        //Load first type
+        currentDetailedType1 = new BitmapDrawable(currentContext.getResources(),
+                PokedexAssetFactory.getTypeBadge(currentContext, detailedPokemon.getTypes().get(0).getName()));
+        if(detailedPokemon.getTypes().size()>1) {
+            //Load second type (if any)
+            currentDetailedType2 = new BitmapDrawable(currentContext.getResources(),
+                    PokedexAssetFactory.getTypeBadge(currentContext, detailedPokemon.getTypes().get(1).getName()));
+        }
+        else{
+            currentDetailedType2 = new BitmapDrawable(currentContext.getResources(),
+                    PokedexAssetFactory.getTypeBadge(currentContext,"empty"));
+        }
+
+        //TODO: Load form specific overview sprite (if any)
+
     }
 
     //Getters and Setters
@@ -293,14 +341,26 @@ public class PokedexManager {
     /**
      * Get the currentMinimalPokemon's 1st Type image badge
      */
-    public BitmapDrawable getCurrentType1() {
-        return currentType1;
+    public BitmapDrawable getCurrentMinimalType1() {
+        return currentMinimalType1;
     }
     /**
      * Get the currentMinimalPokemon's 2nd Type image badge. May return a transparent image if no 2nd type
      */
-    public BitmapDrawable getCurrentType2() {
-        return currentType2;
+    public BitmapDrawable getCurrentMinimalType2() {
+        return currentMinimalType2;
+    }
+    /**
+     * Get the currentMinimalPokemon's 1st Type image badge
+     */
+    public BitmapDrawable getCurrentDetailedType1() {
+        return currentDetailedType1;
+    }
+    /**
+     * Get the currentMinimalPokemon's 2nd Type image badge. May return a transparent image if no 2nd type
+     */
+    public BitmapDrawable getCurrentDetailedType2() {
+        return currentDetailedType2;
     }
     /**
      * Get the list of all Sprites valid for the current pokemon.
