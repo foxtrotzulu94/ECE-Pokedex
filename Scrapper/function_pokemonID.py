@@ -33,6 +33,11 @@ def returnPokemonUniqueIDFromName(pokemonName, databasecursor):
     pokemon_NationalID_List = databasecursor.execute("select * from pokemon_unique_info WHERE name=?", pokemonNametuple)
     return databasecursor.fetchall()
 
+def returnPokemonNamefromUniqueID(uniqueID, databasecursor):
+
+    pokemonIDtuple = (uniqueID,)
+    pokemon_NationalID_List = databasecursor.execute("select * from pokemon_unique_info WHERE pokemonUniqueID=?", pokemonIDtuple)
+    return databasecursor.fetchall()
 
 # example of use:
 # >>> function_pokemonID.returnPokemonNationalIDFromUniqueID(675, c)

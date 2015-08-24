@@ -175,7 +175,7 @@ for index, pokemonURL in enumerate(pokemonlinklist):
 
     malegenderratioreal = "NaN"
     genderratiostring = ""
-    #Default flag to assume the pokemon has female
+    # Default flag to assume the pokemon has female
     hasFemale = True
 
     if genderratiotable is not None and len(genderratiotable) > 0:
@@ -184,7 +184,7 @@ for index, pokemonURL in enumerate(pokemonlinklist):
 
     genderratiostring = TAG_RE3.sub("", genderratiostring)
 
-    #Check if word female is not contained
+    # Check if word female is not contained
     if "female" not in genderratiostring:
         hasFemale = False
 
