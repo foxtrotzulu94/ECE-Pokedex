@@ -49,3 +49,10 @@ def returnPokemonNationalIDFromUniqueID(uniqueID, databasecursor):
     pokemonIDtuple = (uniqueID,)
     pokemon_NationalID_List = databasecursor.execute("select * from pokemon_nationalID WHERE pokemonUniqueID=?", pokemonIDtuple)
     return databasecursor.fetchall()
+
+def returnCommonInfoFromNationalID(nationalID, databasecursor):
+
+    pokemonIDtuple = (nationalID,)
+    pokemon_NationalID_List = databasecursor.execute("select * from pokemon_common_info WHERE pokemonNationalID=?", pokemonIDtuple)
+    return databasecursor.fetchall()
+
