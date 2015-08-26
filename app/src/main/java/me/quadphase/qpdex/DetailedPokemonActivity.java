@@ -384,16 +384,17 @@ public class DetailedPokemonActivity extends FragmentActivity
 
                 //TODO: Fix this modeling! Since Evolutions might be Mega, we should get a Pokemon!
                 // NOT a minimal!
-                final MinimalPokemon miniEvoPokemon = detailedPokemon.getEvolutions().get(i).getEvolvesInto();
+                final Pokemon evoPokemon = detailedPokemon.getEvolutions().get(i).getEvolvesInto();
 
                 LinearLayout evolutionBox = createCustomPokemonBox(
-                        miniEvoPokemon.getName(),
-                        new BitmapDrawable(getResources(), PokedexAssetFactory.getPokemonMinimalSprite(this, i)));
+                        evoPokemon.getName(),
+                        new BitmapDrawable(getResources(),
+                                PokedexAssetFactory.getPokemonMinimalSprite(this, evoPokemon.getPokemonNationalID())));
 
                 evolutionBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        contextMaster.updatePokedexSelection(miniEvoPokemon,getBaseContext());
+                        contextMaster.updatePokedexSelection(evoPokemon,getBaseContext());
                         refreshAllDetails();
                     }
                 });

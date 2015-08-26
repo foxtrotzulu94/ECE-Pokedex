@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import me.quadphase.qpdex.DetailedPokemonActivity;
 import me.quadphase.qpdex.exceptions.PartyFullException;
 import me.quadphase.qpdex.pokedex.PokedexManager;
 import me.quadphase.qpdex.pokemon.Ability;
@@ -31,6 +32,96 @@ import me.quadphase.qpdex.pokemon.Type;
  * Class used to retrieve pokemon and their information from the database.
  */
 public class PokemonFactory {
+
+    private class DetailedListBuilder extends Thread{
+        int startIndex;
+        int endIndex;
+
+        DetailedListBuilder(int startingPoint,int endPoint){
+            startIndex = startingPoint;
+            endIndex = endPoint;
+        }
+
+        @Override
+        public void run(){
+            buildPartOfDetailedPokemonList(startIndex,endIndex-startIndex);
+        }
+
+    }
+
+    private class DetailedListMaster extends Thread{
+
+        //Best arbitrary number I could choose...
+        int coreMultiplier = 2;
+
+        List<Thread> workerList;
+
+        @Override
+        public void run(){
+            if (allDetailedPokemon==null && detailedPokemonShortList==null) {
+                workerList = new LinkedList<>();
+
+                //Create new short list (matches minimalPokemon with a corresponding Pokemon)
+                detailedPokemonShortList = new Pokemon[getMaxNationalID()+1];
+
+                //Create a new Large Pokemon List
+                allDetailedPokemon = new Pokemon[getMaxUniqueID()+1];
+
+                //Set the fail-safe
+                allDetailedPokemon[0] = PokedexManager.getInstance().missingNo;
+                detailedPokemonShortList[0] = allDetailedPokemon[0];
+
+                int optimalWorkerNumber = Runtime.getRuntime().availableProcessors()*coreMultiplier;
+                int subdivisionSize = getMaxNationalID() / optimalWorkerNumber;
+                int remainder = getMaxNationalID() % optimalWorkerNumber;
+                int currentIndex=1;
+
+                Log.d("QPDEX_PkmnBuilder",String.format("Optimal Workers: %s",optimalWorkerNumber));
+
+                for (int i = 1; i <= optimalWorkerNumber/2; i++) {
+                    Thread worker1;
+                    Thread worker2;
+
+                    //Build the list from the opposite ends
+                    // We do this because the user is VERY likely to touch either the first couple
+                    // of entries OR the last couple, rather than anything smack in the middle
+
+                    if(i==1){
+                        worker1 = new DetailedListBuilder(currentIndex, subdivisionSize * i);
+                        worker2 = new DetailedListBuilder(subdivisionSize*(optimalWorkerNumber-1), (subdivisionSize*optimalWorkerNumber)+remainder);
+                    }
+                    else{
+                        worker1 = new DetailedListBuilder(currentIndex, subdivisionSize * i);
+                        worker2 = new DetailedListBuilder(subdivisionSize*(optimalWorkerNumber-i), subdivisionSize * (optimalWorkerNumber-i));
+                    }
+
+
+//                    if(i<optimalWorkerNumber) {
+//                        worker = new DetailedListBuilder(currentIndex, subdivisionSize * i);
+//                    }
+//                    else {
+//                        worker = new DetailedListBuilder(currentIndex, (subdivisionSize*i)+remainder);
+//                    }
+                    currentIndex = currentIndex+subdivisionSize-1;
+                    worker1.start();
+                    worker2.start();
+                    workerList.add(worker1);
+                    workerList.add(worker2);
+
+                }
+
+                try {
+                    for (int i = 0; i < workerList.size(); i++) {
+                        workerList.get(i).join();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+    }
+
 
     private final boolean PRINT_DEBUG = false;
 
@@ -99,6 +190,10 @@ public class PokemonFactory {
     private final String FROM_POKEMON_ID = "fromPokemonID";
     private final String TO_POKEMON_ID = "toPokemonID";
 
+    private MinimalPokemon[] allMinimalPokemon;
+    private Pokemon[] detailedPokemonShortList;
+    private Pokemon[] allDetailedPokemon;
+
     private static PokemonFactory instance = null;
 
     private HashMap<Integer,Type> types;
@@ -141,16 +236,91 @@ public class PokemonFactory {
      * @return List of all main (no suffix) minimalPokemon in the database
      */
     public MinimalPokemon[] getAllMinimalPokemon() {
-        MinimalPokemon[] allPokemon = new MinimalPokemon[getMaxNationalID()];
 
-        //Secretly added the fail-safe Pokemon...
-        allPokemon[0] = PokedexManager.getInstance().missingNo.minimal();
+        if (allMinimalPokemon==null) {
+            allMinimalPokemon = new MinimalPokemon[getMaxNationalID()+1];
 
-        for (int i = 0; i < getMaxNationalID(); i++) {
-            allPokemon[i] = getMinimalPokemonByNationalID(i + 1);
+            //Secretly added the fail-safe Pokemon...
+            allMinimalPokemon[0] = PokedexManager.getInstance().missingNo.minimal();
+
+            for (int i = 1; i <= getMaxNationalID(); i++) {
+                allMinimalPokemon[i] = getMinimalPokemonByNationalID(i);
+            }
         }
 
-        return allPokemon;
+        return allMinimalPokemon;
+    }
+
+    public Pokemon[] getAllDetailedPokemon(){
+        //TODO: we have to be a bit smarter to avoid crashing the application
+        // Though the DFS is pretty good, the way we're building right now leaks memory massively.
+        // We should have a large cached list of these objects, such that we can refer to it before
+        // Building an evolution within the DFS loop.
+
+        if (allDetailedPokemon==null && detailedPokemonShortList==null) {
+            //Create new short list (matches minimalPokemon with a corresponding Pokemon)
+            detailedPokemonShortList = new Pokemon[getMaxNationalID()+1];
+
+            //Create a new Large Pokemon List
+            allDetailedPokemon = new Pokemon[getMaxUniqueID()+1];
+
+            //Set the fail-safe
+            allDetailedPokemon[0] = PokedexManager.getInstance().missingNo;
+            detailedPokemonShortList[0] = allDetailedPokemon[0];
+
+            for (int i = 1; i <= getMaxNationalID(); i++) {
+                //If the entry is null
+                if(detailedPokemonShortList[i]==null){
+                    //Check the mapping to the long list if it's there by any chance
+                    if(allDetailedPokemon[checkUniqueIDFromNationalID(i)]!=null){
+                        detailedPokemonShortList[i] = allDetailedPokemon[checkUniqueIDFromNationalID(i)];
+                    }
+                    //Or build it from scratch
+                    else {
+                        detailedPokemonShortList[i] = getPokemonByNationalID(i);
+                    }
+                }
+                if(PRINT_DEBUG)
+                    Log.d("QPDEX",String.format("Building %s",i));
+//                //We have to slow down the loop intentionally...
+//                try {
+//                    Thread.sleep(10);
+//                }
+//                catch(InterruptedException e){
+//
+//                }
+            }
+        }
+
+        return allDetailedPokemon;
+    }
+
+    public void getAllDetailedPokemonInParallel(){
+        Thread masterBuilder = new DetailedListMaster();
+        masterBuilder.start();
+        try {
+            masterBuilder.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void buildPartOfDetailedPokemonList(int start, int end){
+        for (int i = start; i < end; i++) {
+            //If the entry is null
+            if(detailedPokemonShortList[i]==null){
+                //Check the mapping to the long list if it's there by any chance
+                if(allDetailedPokemon[checkUniqueIDFromNationalID(i)]!=null){
+                    detailedPokemonShortList[i] = allDetailedPokemon[checkUniqueIDFromNationalID(i)];
+                }
+                //Or build it from scratch
+                else {
+                    detailedPokemonShortList[i] = getPokemonByNationalID(i);
+                }
+            }
+
+            Log.d("QPDEX",String.format("Building %s",i));
+        }
     }
 
     /**
@@ -226,54 +396,62 @@ public class PokemonFactory {
      *          move(s) and ability(ies)
      */
     public Pokemon getPokemonByPokemonID(int pokemonID) {
-        // move the cursor to the correct entry of the pokemon table
-        Cursor cursor = database.query(POKEMON_UNIQUE_INFO_TABLE, null, POKEMON_UNIQUE_ID +"=?", new String[]{String.valueOf(pokemonID)}, null, null, null, null);
-        cursor.moveToFirst();
+        if (allDetailedPokemon!=null && allDetailedPokemon[pokemonID]!=null) {
+            return allDetailedPokemon[pokemonID];
+        } else {
+            // move the cursor to the correct entry of the pokemon table
+            Cursor cursor = database.query(POKEMON_UNIQUE_INFO_TABLE, null, POKEMON_UNIQUE_ID +"=?", new String[]{String.valueOf(pokemonID)}, null, null, null, null);
+            cursor.moveToFirst();
 
-        // get all of the information stored in pokemon table:
-        String name = cursor.getString(cursor.getColumnIndex(NAME));
-        double height = cursor.getFloat(cursor.getColumnIndex(HEIGHT));
-        double weight = cursor.getFloat(cursor.getColumnIndex(WEIGHT));
-        int attack = cursor.getInt(cursor.getColumnIndex(ATTACK));
-        int defence = cursor.getInt(cursor.getColumnIndex(DEFENCE));
-        int hp = cursor.getInt(cursor.getColumnIndex(HP));
-        int spAttack = cursor.getInt(cursor.getColumnIndex(SPECIAL_ATTACK));
-        int spDefence = cursor.getInt(cursor.getColumnIndex(SPECIAL_DEFENCE));
-        int speed = cursor.getInt(cursor.getColumnIndex(SPEED));
+            // get all of the information stored in pokemon table:
+            String name = cursor.getString(cursor.getColumnIndex(NAME));
+            double height = cursor.getFloat(cursor.getColumnIndex(HEIGHT));
+            double weight = cursor.getFloat(cursor.getColumnIndex(WEIGHT));
+            int attack = cursor.getInt(cursor.getColumnIndex(ATTACK));
+            int defence = cursor.getInt(cursor.getColumnIndex(DEFENCE));
+            int hp = cursor.getInt(cursor.getColumnIndex(HP));
+            int spAttack = cursor.getInt(cursor.getColumnIndex(SPECIAL_ATTACK));
+            int spDefence = cursor.getInt(cursor.getColumnIndex(SPECIAL_DEFENCE));
+            int speed = cursor.getInt(cursor.getColumnIndex(SPEED));
 
-        // get the nationalID:
-        String[] selectionArg = {String.valueOf(pokemonID)};
-        cursor = database.query(POKEMON_NATIONAL_ID_TO_UNIQUE_ID_TABLE, null, POKEMON_UNIQUE_ID+"=?", selectionArg, null, null, null);
-        cursor.moveToFirst();
-        int nationalID = cursor.getInt(cursor.getColumnIndex(POKEMON_NATIONAL_ID));
+            // get the nationalID:
+            String[] selectionArg = {String.valueOf(pokemonID)};
+            cursor = database.query(POKEMON_NATIONAL_ID_TO_UNIQUE_ID_TABLE, null, POKEMON_UNIQUE_ID+"=?", selectionArg, null, null, null);
+            cursor.moveToFirst();
+            int nationalID = cursor.getInt(cursor.getColumnIndex(POKEMON_NATIONAL_ID));
 
-        // get the description:
-        selectionArg[0] = String.valueOf(nationalID);
-        cursor = database.query(POKEMON_COMMON_INFO_TABLE, null, POKEMON_NATIONAL_ID + "=?", selectionArg, null, null, null, null);
-        cursor.moveToFirst();
-        String description = cursor.getString(cursor.getColumnIndex(DESCRIPTION));
-        int genFirstAppeared = cursor.getInt(cursor.getColumnIndex(GENERATION_FIRST_APPEARED));
-        int hatchTime = cursor.getInt(cursor.getColumnIndex(HATCH_TIME));
-        int catchRate = cursor.getInt(cursor.getColumnIndex(CATCH_RATE));
-        int genderRatioMale = cursor.getInt(cursor.getColumnIndex(GENDER_RATIO_MALE));
+            // get the description:
+            selectionArg[0] = String.valueOf(nationalID);
+            cursor = database.query(POKEMON_COMMON_INFO_TABLE, null, POKEMON_NATIONAL_ID + "=?", selectionArg, null, null, null, null);
+            cursor.moveToFirst();
+            String description = cursor.getString(cursor.getColumnIndex(DESCRIPTION));
+            int genFirstAppeared = cursor.getInt(cursor.getColumnIndex(GENERATION_FIRST_APPEARED));
+            int hatchTime = cursor.getInt(cursor.getColumnIndex(HATCH_TIME));
+            int catchRate = cursor.getInt(cursor.getColumnIndex(CATCH_RATE));
+            int genderRatioMale = cursor.getInt(cursor.getColumnIndex(GENDER_RATIO_MALE));
 
-        // close the cursor
-        cursor.close();
+            // close the cursor
+            cursor.close();
 
-        boolean caught = isCaught(nationalID);
+            boolean caught = isCaught(nationalID);
 
-        // lists to fetch:
-        List<Location> locations = null;//getLocations(nationalID);
-        List<Ability> abilities = getAbilities(pokemonID);
-        List<Move> moves = null;//getMoves(nationalID);
-        List<Type> types = getTypes(pokemonID);
-        List<EggGroup> eggGroups = getEggGroups(nationalID);
-        List<Evolution> evolutions = getEvolutions(pokemonID);
+            // lists to fetch:
+            List<Location> locations = null;//getLocations(nationalID);
+            List<Ability> abilities = getAbilities(pokemonID);
+            List<Move> moves = null;//getMoves(nationalID);
+            List<Type> types = getTypes(pokemonID);
+            List<EggGroup> eggGroups = getEggGroups(nationalID);
+            List<Evolution> evolutions = getEvolutions(pokemonID);
 
 
-        return new Pokemon(pokemonID, nationalID, name, description, height, weight, attack, defence, hp,
-                spAttack, spDefence, speed, caught, genFirstAppeared, hatchTime, catchRate, genderRatioMale,
-                locations, abilities, moves, types, eggGroups, evolutions);
+             Pokemon newEntry = new Pokemon(pokemonID, nationalID, name, description, height, weight, attack, defence, hp,
+                    spAttack, spDefence, speed, caught, genFirstAppeared, hatchTime, catchRate, genderRatioMale,
+                    locations, abilities, moves, types, eggGroups, evolutions);
+
+            allDetailedPokemon[pokemonID] = newEntry;
+
+            return newEntry;
+        }
     }
 
     /**
@@ -285,6 +463,10 @@ public class PokemonFactory {
      *          move(s) and ability(ies)
      */
     public Pokemon getPokemonByNationalID(int nationalID) { // TODO: return list of all
+        return getPokemonByPokemonID(checkUniqueIDFromNationalID(nationalID));
+    }
+
+    public int checkUniqueIDFromNationalID(int nationalID){
         // find the pokemonID from the nationalID using the pokemon_nationalID mapping table
         String[] selectionArg = {String.valueOf(nationalID)};
         Cursor cursor = database.query(POKEMON_NATIONAL_ID_TO_UNIQUE_ID_TABLE, null, POKEMON_NATIONAL_ID + "=?", selectionArg, null, null, null);
@@ -293,11 +475,10 @@ public class PokemonFactory {
         // that we want to fetch, since there are many pokemon with the same nationalID in the case
         // of mega evolutions and various types.
         cursor.moveToFirst();
-        int pokemonID = cursor.getInt(cursor.getColumnIndex(POKEMON_UNIQUE_ID));
-        // close the cursor
+        int retVal = cursor.getInt(cursor.getColumnIndex(POKEMON_UNIQUE_ID));
         cursor.close();
+        return retVal;
 
-        return getPokemonByPokemonID(pokemonID);
     }
 
     /**
@@ -508,10 +689,13 @@ public class PokemonFactory {
         Cursor mappingCursor = database.query(POKEMON_EVOLUTIONS_TABLE, null, FROM_POKEMON_ID + "=?", selectionArg, null, null, null);
         mappingCursor.moveToFirst();
 
+        //By having Evolutions point to a full Pokemon object, Building a single instance of a Pokemon
+        // will result in a DFS to build all of its evolutions. Therefore, with good reason, this
+        // should only be done once!
         while (!mappingCursor.isAfterLast()) {
             int evolvesToPokemonID = mappingCursor.getInt(mappingCursor.getColumnIndex(TO_POKEMON_ID));
             String condition = mappingCursor.getString(mappingCursor.getColumnIndex(CONDITION));
-            evolutions.add(new Evolution(condition, getMinimalPokemonByPokemonID(evolvesToPokemonID)));
+            evolutions.add(new Evolution(condition, getPokemonByPokemonID(evolvesToPokemonID)));
 
             // go to the next evolution for this pokemonID
             mappingCursor.moveToNext();
@@ -625,6 +809,19 @@ public class PokemonFactory {
         database.endTransaction();
     }
 
+    public void setCaught(int nationalID, boolean value){
+        int caught = value? 1 : 0;
+        // create new row content
+        ContentValues content = new ContentValues();
+        content.put(POKEMON_NATIONAL_ID, nationalID);
+        content.put(CAUGHT, caught);
+
+        // replace the row with the nationalID with the new row
+        database.beginTransaction();
+        database.replaceOrThrow(POKEMON_CAUGHT_TABLE, null, content);
+        database.endTransaction();
+    }
+
     /**
      * Determines the current generation of the games.
      *
@@ -664,6 +861,23 @@ public class PokemonFactory {
     }
 
     /**
+     * Determines the current number of pokemon by their unique ID
+     *
+     * @return max national ID
+     */
+    public int getMaxUniqueID() {
+        Cursor cursor = database.query(POKEMON_UNIQUE_INFO_TABLE, null, null, null, null, null, null);
+        cursor.moveToLast();
+
+        int maxUniqueID = cursor.getInt(cursor.getColumnIndex(POKEMON_UNIQUE_ID));
+
+        // close the cursor:
+        cursor.close();
+
+        return maxUniqueID;
+    }
+
+    /**
      * Determines the current number of types
      *
      * @return max typeID
@@ -680,6 +894,7 @@ public class PokemonFactory {
 
         return maxTypeID;
     }
+
 
     /**
      * Get the party including all of the {@link Pokemon} and their respective {@link MoveSet}
@@ -851,6 +1066,13 @@ public class PokemonFactory {
         cursor.close();
 
         return moveID;
+    }
+
+    public boolean isDetailedNationaIDBuiltAndReady(int nationalID){
+        if(detailedPokemonShortList!=null){
+            return detailedPokemonShortList[nationalID] != null;
+        }
+        return false;
     }
 
 }

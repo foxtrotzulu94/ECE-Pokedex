@@ -74,7 +74,7 @@ public class MinimalPokemon {
         this.caught = !this.caught;
         // toggle in the database:
         PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(null);
-        pokemonFactory.toggleCaught(this.nationalID);
+        pokemonFactory.setCaught(this.nationalID,this.caught);
     }
 
     @Override

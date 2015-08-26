@@ -1,6 +1,10 @@
 package me.quadphase.qpdex.pokemon;
 
+import android.content.Context;
+
 import java.util.List;
+
+import me.quadphase.qpdex.databaseAccess.PokemonFactory;
 
 //
 //
@@ -296,8 +300,9 @@ public class Pokemon {
     /**
      * toggles whether or not a pokemon has been caught
      */
-    public void toggleCaught() {
+    public void toggleCaught(Context currentContext) {
         caught = !caught;
+        PokemonFactory.getPokemonFactory(currentContext).setCaught(this.pokemonNationalID,this.caught);
     }
 
     @Override

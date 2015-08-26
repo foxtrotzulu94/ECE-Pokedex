@@ -1,5 +1,6 @@
 package me.quadphase.qpdex.pokedex;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
@@ -11,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import me.quadphase.qpdex.databaseAccess.PokemonFactory;
 import me.quadphase.qpdex.pokemon.Ability;
 import me.quadphase.qpdex.pokemon.EggGroup;
 import me.quadphase.qpdex.pokemon.Evolution;
@@ -102,7 +104,7 @@ public class PokedexManager {
                             new Type("Bird"),
                             new Type("Normal")),
                     Arrays.asList(new EggGroup("glitch")),                // eggGroups,
-                    Arrays.asList(new Evolution("Level Up",new MissingNo().minimal()))// evolutions,
+                    Arrays.asList(new Evolution("Level Up",new MissingNo()))// evolutions,
             );
             rng = new Random();
             rng.setSeed(System.nanoTime());
@@ -122,6 +124,7 @@ public class PokedexManager {
     //Entity variables that describe inner state and function
     private static PokedexManager instance=null;
     private static CentralAudioPlayer jukebox=null;
+    private static PokemonFactory pkmnBuild=null;
     private boolean isReady=false;
     private boolean isDetailed=false;
 
@@ -180,10 +183,13 @@ public class PokedexManager {
     //Singleton Constructor
     protected PokedexManager(){
         jukebox = CentralAudioPlayer.getInstance();
-        missingNo = new MissingNo();
 
-        //TODO: REMOVE when DB access complete! UI testing ONLY!
+        missingNo = new MissingNo();
         TrainerPoke$ = new M00();
+
+        isReady = false;
+
+        currentMinimalPokemon = missingNo.minimal();
         currentDetailedPokemon = TrainerPoke$;
     }
 
@@ -204,8 +210,12 @@ public class PokedexManager {
      * @param currentContext The context in which the update occurs (usually, "this" within an Activity)
      */
     public void updatePokedexSelection(MinimalPokemon pokedexSelection, final Context currentContext){
+
+        if(pkmnBuild==null){
+            pkmnBuild = PokemonFactory.getPokemonFactory(currentContext);
+        }
+
         Log.d("QPDex","Beginning minimal build "+System.nanoTime());
-        isReady = false;
         isDetailed = false;
         currentMinimalPokemon = pokedexSelection;
         currentPokemonNationalID = pokedexSelection.getPokemonNationalID();
@@ -247,13 +257,25 @@ public class PokedexManager {
         Thread buildInDetail = new Thread(){
             @Override
             public void run(){
-                updatePokedexSelection(TrainerPoke$,currentContext);
+                int nationalID= currentMinimalPokemon.getPokemonNationalID();
+                if (nationalID>0 && (isReady || pkmnBuild.isDetailedNationaIDBuiltAndReady(nationalID))){
+                        updatePokedexSelection(
+                                pkmnBuild.getPokemonByNationalID(nationalID),
+                                currentContext);
+
+                }
+                else{ //If the Manager isn't ready or we had an unexpected ID, then display MissingNo!!!
+                    //TODO: Fix/Hide exceptional behaviour
+                    // The manager not being ready can be a combination of factors. Most likely, the
+                    // threads are running late and we hit a Race Condition.
+                    // In this case, the UI should show this clearly and display a loading modal
+                    // so that the User knows what to expect.
+                    updatePokedexSelection(missingNo, currentContext);
+                }
                 Log.d("QPDEX","Full detailed pokemon completed "+System.nanoTime());
             }
         };
         buildInDetail.start();
-
-        isReady = true;
     }
 
     /**
@@ -270,7 +292,7 @@ public class PokedexManager {
         //Load Sprite
         currentOverviewSprite = new BitmapDrawable(currentContext.getResources(),
                 PokedexAssetFactory.getPokemonSpriteInGeneration(
-                        currentContext,currentMinimalPokemon.getPokemonNationalID(),restrictUpToGeneration));
+                        currentContext,currentDetailedPokemon.getPokemonNationalID(),restrictUpToGeneration));
 
         //Load first type
         currentDetailedType1 = new BitmapDrawable(currentContext.getResources(),
@@ -293,7 +315,7 @@ public class PokedexManager {
                 for (int i = restrictUpToGeneration; i >0; i--) {
                     InputStream file = PokedexAssetFactory.getPokemonSpriteInGeneration(
                             currentContext, //TODO: replace currentMinimalPokemon back with currentDetailedPokemon
-                            currentMinimalPokemon.getPokemonNationalID(),
+                            currentDetailedPokemon.getPokemonNationalID(),
                             i);
                     BitmapDrawable sprite = new BitmapDrawable(
                             currentContext.getResources(),
@@ -365,6 +387,43 @@ public class PokedexManager {
      */
     public List<BitmapDrawable> getAllDetailedPokemonSprites() {
         return cachedDisplaySprites;
+    }
+
+    public void setupWithPokedexFactory(final PokemonFactory builderInstance){
+        //First ask for the instance
+        pkmnBuild = builderInstance;
+
+        //Then spawn off 2 Threads
+
+        // thread 2 to create the Full Pokemon Objects
+        final Thread initFull = new Thread(){
+            @Override
+            public void run(){
+                // This builds all the Detailed Pokemon, even though we might not want to store it!
+                //TODO: Paralelize and optimize for speed
+                pkmnBuild.getAllDetailedPokemonInParallel();
+
+                //Signals full completion
+                isReady = true;
+            }
+        };
+
+        // thread 1 to create the Minimal Pokemon list.
+        Thread initMin = new Thread(){
+            @Override
+            public void run(){
+                allMinimalPokemon = pkmnBuild.getAllMinimalPokemon();
+
+                // After this is done, spawn off initFull to finish the setup
+                initFull.start();
+            }
+        };
+
+        // Start with the initMin thread and it will call initFull afterwards.
+        initMin.start();
+
+
+
     }
 
 

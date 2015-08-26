@@ -27,15 +27,42 @@ import me.quadphase.qpdex.BuildConfig;
 import me.quadphase.qpdex.PokedexActivity;
 import me.quadphase.qpdex.R;
 import me.quadphase.qpdex.WIPActivity;
+import me.quadphase.qpdex.databaseAccess.PokemonFactory;
+import me.quadphase.qpdex.pokedex.PokedexManager;
+import me.quadphase.qpdex.pokemon.Pokemon;
 
 public class IntroActivity extends AppCompatActivity {
+
+    private void setupAndLoad(){
+        //Register with the ExceptionHandler
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+
+        //Initialize the PokedexManager class
+        PokedexManager contextMaster = PokedexManager.getInstance();
+
+        //Tell the PokedexManager to begin caching operations with the PokedexFactory
+        //This takes care of any steps related to pre-fetching objects and building them together.
+        contextMaster.setupWithPokedexFactory(PokemonFactory.getPokemonFactory(this));
+
+//
+//        //Create the minimal pokemon objects
+//        final long minBuild = System.nanoTime();
+//        Thread fullBuilder = new Thread(){
+//            @Override
+//            public void run(){
+//                Pokemon[] fullListy = PokemonFactory.getPokemonFactory(getApplicationContext()).getAllDetailedPokemon();
+//                Log.d("QPDEX",String.format("All Pokemon objects done in: %s ns",System.nanoTime()-minBuild));
+//            }
+//        };
+//        fullBuilder.start();
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
-//        Window ourWin = getWindow();
-//        ourWin.setFormat(PixelFormat.R);
+
         //Set the background by manually calling the bitmap decoder.
         BitmapFactory.Options op = new BitmapFactory.Options();
         op.inPreferredConfig = Bitmap.Config.RGB_565;
@@ -59,8 +86,8 @@ public class IntroActivity extends AppCompatActivity {
             buildField.setText(formatter.toString());
         }
 
-        //Register with the ExceptionHandler
-        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+        //Signal a prefetch.
+        setupAndLoad();
 
         //Signal for collection if needed
         Runtime.getRuntime().gc();

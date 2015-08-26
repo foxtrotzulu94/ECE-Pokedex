@@ -48,12 +48,13 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
             this.getReadableDatabase();
             try {
                 copyDataBase();
+                Log.d(this.getClass().toString(),"Copying Database");
             } catch (IOException e) {
                 Log.e(this.getClass().toString(), "Copying error");
                 throw new Error("Error copying database!");
             }
         } else {
-            Log.i(this.getClass().toString(), "Database already exists");
+            Log.d(this.getClass().toString(), "Database already exists");
         }
     }
 

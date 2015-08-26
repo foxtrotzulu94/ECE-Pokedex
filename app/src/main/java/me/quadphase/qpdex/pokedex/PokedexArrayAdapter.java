@@ -54,18 +54,26 @@ public class PokedexArrayAdapter extends ArrayAdapter<MinimalPokemon> implements
         LinearLayout row = (LinearLayout) rowEntry.findViewById(R.id.linlayout_pokedexrow);
         TextView entryString = (TextView) rowEntry.findViewById(R.id.textview_pkmn_list_entry);
         ImageView miniSprite = (ImageView) rowEntry.findViewById(R.id.img_pkmnmini);
-        ImageButton caught = (ImageButton) rowEntry.findViewById(R.id.imgbutton_caught);
+        final ImageButton caught = (ImageButton) rowEntry.findViewById(R.id.imgbutton_caught);
 
         if(entryObjects[position].isCaught()){
             caught.setAlpha(1.0f);
         }
+        else{
+            caught.setAlpha(0.2f);
+        }
 
-        if(!caught.hasOnClickListeners()){
+        if (!caught.hasOnClickListeners()) {
             caught.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    entryObjects[position].toggleCaught();
-                    Log.d("QPDEX",String.format("Pokemon %s has been caught",entryObjects[position].getPokemonNationalID()));
+                    entryObjects[position].toggleCaught();
+                    Log.d("QPDEX", String.format("Pokemon %s has been caught", entryObjects[position].getPokemonNationalID()));
+                    if (entryObjects[position].isCaught()) {
+                        caught.setAlpha(1.0f);
+                    } else {
+                        caught.setAlpha(0.2f);
+                    }
                 }
             });
         }
