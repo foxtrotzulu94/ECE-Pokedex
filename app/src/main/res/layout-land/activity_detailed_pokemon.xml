@@ -74,7 +74,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:text="Alternate Forms"
-                        android:id="@+id/textView2"
+                        android:id="@+id/title_altforms"
                         android:layout_weight="0.8"
                         android:background="@color/dex_detail_grey2"
                         android:layout_marginLeft="5dp"

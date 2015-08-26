@@ -159,8 +159,8 @@ public class DetailedPokemonActivity extends FragmentActivity
     private LinearLayout abilitiesBox;
     private LinearLayout movesBox;
 
-    private View evolutionChainContent;
-    private View alternateFormsContent;
+    private TextView evolutionTab;
+    private TextView alternatesTab;
 
     private void retrieveInterfaceElements(){
         pkmnName = (TextView) findViewById(R.id.textview_pkmnname_detail);
@@ -176,6 +176,9 @@ public class DetailedPokemonActivity extends FragmentActivity
         eggGroupBox = (LinearLayout) findViewById(R.id.linlay_egggroupbox);
         abilitiesBox = (LinearLayout) findViewById(R.id.linlay_abilitiesbox);
         movesBox = (LinearLayout) findViewById(R.id.linlay_movebox);
+
+        evolutionTab = (TextView) findViewById(R.id.title_evolutions);
+        alternatesTab = (TextView) findViewById(R.id.title_altforms);
     }
 
     private LinearLayout createTypeMatchBlock(String quantifier, List<Type> types){
@@ -227,6 +230,18 @@ public class DetailedPokemonActivity extends FragmentActivity
         return moveBox;
     }
 
+    private LinearLayout createCustomPokemonBox(String evoName, BitmapDrawable evoSprite){
+        LinearLayout evoBox = (LinearLayout) getLayoutInflater().inflate(R.layout.custom_pkmnbox, null);
+
+        TextView evolutionText = (TextView) evoBox.findViewById(R.id.textview_evoname);
+        evolutionText.setText(evoName);
+
+        ImageView evolutionSprite = (ImageView) evoBox.findViewById(R.id.imgview_evosprite);
+        evolutionSprite.setImageDrawable(evoSprite);
+
+        return evoBox;
+    }
+
     //Call when change is needed on all things (New Pokemon in Focus)
     private void refreshAllDetails(){
 
@@ -258,7 +273,7 @@ public class DetailedPokemonActivity extends FragmentActivity
             detailedPokemon = contextMaster.getCurrentDetailedPokemon();
         }
 
-        spriteIndex = PokedexManager.latestGeneration-1; //Might remove in the future
+        spriteIndex = 0; //Might remove in the future
 
         //Set the name
         pkmnName.setText(String.format("  %s. %s",detailedPokemon.getNationalID(), detailedPokemon.getName()));
@@ -301,24 +316,27 @@ public class DetailedPokemonActivity extends FragmentActivity
 
     private void buildEvolutionChain(){
         if(detailedPokemon.getEvolutions()!=null && !detailedPokemon.getEvolutions().isEmpty()){
+            //TODO: Fix Evolution class to detect MegaEvolutions and check for those sprites.
             for (int i = 0; i < detailedPokemon.getEvolutions().size(); i++) {
+
                 MinimalPokemon miniEvoPokemon = detailedPokemon.getEvolutions().get(i).getEvolvesInto();
-                BitmapDrawable miniEvo = new BitmapDrawable(getResources(), PokedexAssetFactory.getPokemonMinimalSprite(this, i));
-                ImageView img = new ImageView(this);
-                img.setImageDrawable(miniEvo);
-                img.setOnClickListener(new View.OnClickListener() {
+
+                LinearLayout evolutionBox = createCustomPokemonBox(
+                        miniEvoPokemon.getName(),
+                        new BitmapDrawable(getResources(), PokedexAssetFactory.getPokemonMinimalSprite(this, i)));
+
+                evolutionBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Log.d("QPDEX", v.toString());
                     }
                 });
-                img.setLayoutParams(new LinearLayout.LayoutParams(
+                evolutionBox.setLayoutParams(new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         .3f));
-                img.setAdjustViewBounds(true);
 
-                evolutionChain.addView(img);
+                evolutionChain.addView(evolutionBox);
             }
 
         }
@@ -327,6 +345,24 @@ public class DetailedPokemonActivity extends FragmentActivity
             notApplicable.setText("No Evolutions to show");
             evolutionChain.addView(notApplicable);
         }
+    }
+
+    private void buildAlternateForms(){
+        //TODO: Fill in Alternates
+        //This requires a refactoring of the Pokemon Class to include an Alternate Form attribute
+        // Which would probably be a separate List<Pokemon> with a particular name and format
+
+        //For now, we'll place 3PokeTrainer$ to show it's not working
+
+        LinearLayout altForm = createCustomPokemonBox("3TrainerPoke$",
+                new BitmapDrawable(getResources(), PokedexAssetFactory.getPokemonMinimalSprite(this, 0)));
+        altForm.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                .3f));
+        evolutionChain.addView(altForm);
+
+
     }
 
     private void fillTypeComparisonInfo(){
@@ -424,17 +460,6 @@ public class DetailedPokemonActivity extends FragmentActivity
         createdActivity=true;
 
         //Load the Detailed View Image Button.
-        //NOTE: Remove in future!
-        ImageButton sprite = (ImageButton) findViewById(R.id.imgbutton_pkmnsprite_detail);
-        InputStream rawBits;
-        try{
-            rawBits = getAssets().open("1/-1.png");
-            sprite.setImageBitmap(BitmapFactory.decodeStream(rawBits));
-        }
-        catch (Exception e){
-            Log.e("QPDEX","EXCEPTION OCCURRED");
-        }
-
         if(contextMaster.getSelectionOverviewSprite()!=null)
             pkmnSprite.setImageDrawable(contextMaster.getSelectionOverviewSprite());
         else
@@ -456,6 +481,25 @@ public class DetailedPokemonActivity extends FragmentActivity
             }
         });
 
+        //Set the onclick listeners for our "tabs" if they DON'T have them
+        if(! (evolutionTab.hasOnClickListeners() && alternatesTab.hasOnClickListeners())){
+            evolutionTab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showEvolutionChain();
+                }
+            });
+
+            alternatesTab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showAlternateForms();
+                }
+            });
+        }
+
+
+        //Setup the Navigation fragment
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
@@ -526,6 +570,20 @@ public class DetailedPokemonActivity extends FragmentActivity
 
     public void notifyUpdate(){
         refreshAllDetails();
+    }
+
+    public void showEvolutionChain(){
+        evolutionChain.removeAllViews();
+        buildEvolutionChain();
+        evolutionTab.setBackgroundColor(getResources().getColor(R.color.dex_detail_grey3));
+        alternatesTab.setBackgroundColor(getResources().getColor(R.color.dex_detail_grey2));
+    }
+
+    public void showAlternateForms(){
+        evolutionChain.removeAllViews();
+        buildAlternateForms();
+        evolutionTab.setBackgroundColor(getResources().getColor(R.color.dex_detail_grey2));
+        alternatesTab.setBackgroundColor(getResources().getColor(R.color.dex_detail_grey3));
     }
 
     /**
