@@ -122,11 +122,11 @@ public class NavigationDrawerFragment extends Fragment {
         for(int i =0; i<testNumber; i++){
             listy[i] = new MinimalPokemon(i,"Pokemon",
                     "The franchise began as a pair of video games for the original Game Boy, developed by Game Freak and published by Nintendo. The franchise now spans video games, trading card games, animated television shows and movies, comic books, and toys",
-                    Arrays.asList(new Type("electric", ""), new Type("ice", "")));
+                    Arrays.asList(new Type("electric"), new Type("ice")));
         }
         listy[1] = new MinimalPokemon(1,"Bulbasaur",
                 "Bulbasaur can be seen napping in bright sunlight. There is a seed on its back. By soaking up the sun’s rays, the seed grows progressively larger. ",
-                Arrays.asList(new Type("Grass",""), new Type("Poison","")));
+                Arrays.asList(new Type("Grass"), new Type("Poison")));
 
         PokedexArrayAdapter pokedexEntries = new PokedexArrayAdapter(
                 getActivity(),

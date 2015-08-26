@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import me.quadphase.qpdex.exceptions.PartyFullException;
+import me.quadphase.qpdex.pokedex.PokedexManager;
 import me.quadphase.qpdex.pokemon.Ability;
 import me.quadphase.qpdex.pokemon.EggGroup;
 import me.quadphase.qpdex.pokemon.Evolution;
@@ -72,7 +73,7 @@ public class PokemonFactory {
     private final String SPECIAL_DEFENCE = "spdefence";
     private final String SPEED = "speed";
     private final String CATCH_RATE = "catchRate";
-    private final String CAUGHT = "isCaught";
+    private final String CAUGHT = "caught";
     private final String CONDITION = "condition";
     private final String GENDER_RATIO_MALE = "genderRatioMale";
     private final String HATCH_TIME = "hatchTime";
@@ -89,8 +90,8 @@ public class PokemonFactory {
     private final String MOVE_ID = "moveID";
     private final String TYPE_ID = "typeID";
     private final String PARTY_ID = "partyID";
-    private final String POKEMON_UNIQUE_ID = "uniqueID";
-    private final String POKEMON_NATIONAL_ID = "nationalID";
+    private final String POKEMON_UNIQUE_ID = "pokemonUniqueID";
+    private final String POKEMON_NATIONAL_ID = "pokemonNationalID";
     private final String FROM_TYPE_ID = "fromTypeID";
     private final String TO_TYPE_ID = "toTypeID";
     private final String FROM_POKEMON_ID = "fromPokemonID";
@@ -139,7 +140,7 @@ public class PokemonFactory {
      */
     public MinimalPokemon[] getAllMinimalPokemon() {
         MinimalPokemon[] allPokemon = new MinimalPokemon[getMaxNationalID()];
-
+        allPokemon[0] = PokedexManager.getInstance().missingNo.minimal();
         for (int i = 0; i < getMaxNationalID(); i++) {
             allPokemon[i] = getMinimalPokemonByNationalID(i + 1);
         }
@@ -193,7 +194,8 @@ public class PokemonFactory {
 
         // get the description from the description table:
         selectionArg[0] = String.valueOf(nationalID);
-        cursor = database.query(POKEMON_COMMON_INFO_TABLE, null, POKEMON_NATIONAL_ID + "=?", selectionArg, null, null, null, null);
+        cursor = database.query(POKEMON_COMMON_INFO_TABLE, null, POKEMON_NATIONAL_ID + "=?", selectionArg, null, null, null);
+        cursor.moveToFirst();
         String description = cursor.getString(cursor.getColumnIndex(DESCRIPTION));
         Log.v("Database Access:", "From nationalID " + String.valueOf(nationalID) + " the description is: " + description);
         // close the cursor

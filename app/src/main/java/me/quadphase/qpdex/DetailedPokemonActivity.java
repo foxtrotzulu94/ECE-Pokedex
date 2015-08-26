@@ -331,7 +331,7 @@ public class DetailedPokemonActivity extends FragmentActivity
         spriteIndex = 0; //Might remove in the future
 
         //Set the name
-        pkmnName.setText(String.format("  %s. %s",detailedPokemon.getNationalID(), detailedPokemon.getName()));
+        pkmnName.setText(String.format("  %s. %s",detailedPokemon.getPokemonNationalID(), detailedPokemon.getName()));
 
         //Set the Pokemon Type Badges
         setPokemonTypeInfo();
@@ -446,9 +446,9 @@ public class DetailedPokemonActivity extends FragmentActivity
     private void fillTypeComparisonInfo(){
         //TODO: Replace with real logic when the sparse type matrix is available!
         List<Type> typeList = new ArrayList<Type>(3);
-        typeList.add(new Type("Normal", ""));
-        typeList.add(new Type("Electric", ""));
-        typeList.add(new Type("Ice", ""));
+        typeList.add(new Type("Normal"));
+        typeList.add(new Type("Electric"));
+        typeList.add(new Type("Ice"));
 
         LinearLayout testy = createTypeMatchBlock("Immune",typeList);
         testy.setBackgroundResource(R.color.dex_blue_transparent);

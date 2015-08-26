@@ -1,8 +1,6 @@
 package me.quadphase.qpdex.pokedex;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,12 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-
 import me.quadphase.qpdex.R;
-import me.quadphase.qpdex.databaseAccess.PokemonFactory;
 import me.quadphase.qpdex.pokemon.MinimalPokemon;
 
 /**
@@ -72,7 +65,7 @@ public class PokedexArrayAdapter extends ArrayAdapter<MinimalPokemon> implements
                 @Override
                 public void onClick(View view) {
 //                    entryObjects[position].toggleCaught();
-                    Log.d("QPDEX",String.format("Pokemon %s has been caught",entryObjects[position].getNationalID()));
+                    Log.d("QPDEX",String.format("Pokemon %s has been caught",entryObjects[position].getPokemonNationalID()));
                 }
             });
         }
@@ -83,7 +76,7 @@ public class PokedexArrayAdapter extends ArrayAdapter<MinimalPokemon> implements
             entryString.setTextSize(fontSize);
 
         miniSprite.setImageDrawable(new BitmapDrawable(super.getContext().getResources(),
-                PokedexAssetFactory.getPokemonMinimalSprite(super.getContext(),entryObjects[position].getNationalID())));
+                PokedexAssetFactory.getPokemonMinimalSprite(super.getContext(),entryObjects[position].getPokemonNationalID())));
 
         return rowEntry;
     }

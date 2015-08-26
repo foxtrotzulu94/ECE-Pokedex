@@ -173,7 +173,7 @@ public class Pokemon {
                    int genFirstAppeared, int hatchTime, int catchRate, int genderRatioMale,
                    List<Location> locations, List<Ability> abilities, List<Move> moves,
                    List<EggGroup> eggGroups, List<Evolution> evolutions) {
-        this.pokemonNationalID = MinimalPokemon.getNationalID();
+        this.pokemonNationalID = MinimalPokemon.getPokemonNationalID();
         this.pokemonUniqueID = pokemonUniqueID;
         this.name = MinimalPokemon.getName();
         this.description = MinimalPokemon.getDescription();

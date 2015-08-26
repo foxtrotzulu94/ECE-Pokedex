@@ -46,7 +46,7 @@ public class MinimalPokemon {
         this.caught = false;
     }
 
-    public int getNationalID() {
+    public int getPokemonNationalID() {
         return nationalID;
     }
 

@@ -95,12 +95,12 @@ public class PokedexManager {
                     Arrays.asList(// abilities,
                             new Ability("Glitch Master","Can corrupt anything in its path")),
                     Arrays.asList(// moves,
-                            new Move("Water Gun","",0,0,0,"op",1,"",new Type("water","")),
-                            new Move("Water Gun","",0,0,0,"op",1,"",new Type("water","")),
-                            new Move("Sky Attack","",0,0,0,"op",1,"",new Type("Flying",""))  ),
+                            new Move("Water Gun","",0,0,0,"op",1,"",new Type("water")),
+                            new Move("Water Gun","",0,0,0,"op",1,"",new Type("water")),
+                            new Move("Sky Attack","",0,0,0,"op",1,"",new Type("Flying"))  ),
                     Arrays.asList(       //types
-                            new Type("Bird","Invalid Type"),
-                            new Type("Normal","Normal")),
+                            new Type("Bird"),
+                            new Type("Normal")),
                     Arrays.asList(new EggGroup("glitch")),                // eggGroups,
                     Arrays.asList(new Evolution("Level Up",new MissingNo().minimal()))// evolutions,
             );
@@ -109,7 +109,7 @@ public class PokedexManager {
         }
 
         public MinimalPokemon minimal(){
-            return new MinimalPokemon(getNationalID(), super.getName(), super.getDescription(), super.getTypes(), false);
+            return new MinimalPokemon(getPokemonNationalID(), super.getName(), super.getDescription(), super.getTypes(), false);
         }
 
         @Override
@@ -208,7 +208,7 @@ public class PokedexManager {
         isReady = false;
         isDetailed = false;
         currentMinimalPokemon = pokedexSelection;
-        currentPokemonNationalID = pokedexSelection.getNationalID();
+        currentPokemonNationalID = pokedexSelection.getPokemonNationalID();
 
         //Update Media Controller
         jukebox.updateInstance(currentPokemonNationalID, PokedexAssetFactory.getPokemonCry(currentContext, currentPokemonNationalID));
@@ -265,10 +265,12 @@ public class PokedexManager {
     public void updatePokedexSelection(Pokemon detailedPokemon, final Context currentContext){
         //For now, it just sets this variable. Later it should probably do more in terms of assets
         currentDetailedPokemon = detailedPokemon;
+
+        //TODO: Switch Overview sprite back to detailedPokemon when the DB Access is Complete!
         //Load Sprite
         currentOverviewSprite = new BitmapDrawable(currentContext.getResources(),
                 PokedexAssetFactory.getPokemonSpriteInGeneration(
-                        currentContext,detailedPokemon.getNationalID(),restrictUpToGeneration));
+                        currentContext,currentMinimalPokemon.getPokemonNationalID(),restrictUpToGeneration));
 
         //Load first type
         currentDetailedType1 = new BitmapDrawable(currentContext.getResources(),
@@ -290,8 +292,8 @@ public class PokedexManager {
                 cachedDisplaySprites = new LinkedList<BitmapDrawable>();
                 for (int i = restrictUpToGeneration; i >0; i--) {
                     InputStream file = PokedexAssetFactory.getPokemonSpriteInGeneration(
-                            currentContext,
-                            currentDetailedPokemon.getNationalID(),
+                            currentContext, //TODO: replace currentMinimalPokemon back with currentDetailedPokemon
+                            currentMinimalPokemon.getPokemonNationalID(),
                             i);
                     BitmapDrawable sprite = new BitmapDrawable(
                             currentContext.getResources(),

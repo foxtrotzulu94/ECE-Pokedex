@@ -43,7 +43,8 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
     //This piece of code will create a database if it’s not yet created
     public void createDataBase() {
         boolean dbExist = checkDataBase();
-        if (!dbExist) {
+        // TODO: After development, change back to "if(!dbExist)"
+        if (true) { //CHANGING FOR NOW!
             this.getReadableDatabase();
             try {
                 copyDataBase();

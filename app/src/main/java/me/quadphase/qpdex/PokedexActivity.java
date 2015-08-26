@@ -174,26 +174,26 @@ public class PokedexActivity extends AppCompatActivity {
         // TODO: remove after real list can populate the ListView
         Log.d("QPDEX", "Artifically creating objects");
         // this is a test to ensure that the database is working
-//        PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(this.getApplicationContext());
-//        MinimalPokemon[] listy = pokemonFactory.getAllPokemon();
+        PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(this.getApplicationContext());
+        MinimalPokemon[] listy = pokemonFactory.getAllMinimalPokemon();
 //        listy[2] = new MinimalPokemon(3,"Bulbasaur",
 //                "Bulbasaur can be seen napping in bright sunlight. There is a seed on its back. By soaking up the sun’s rays, the seed grows progressively larger. ",
 //                Arrays.asList(new Type("Grass",""), new Type("Poison","")), false);
 //
-//        pokemonFactory.getMinimalPokemonByNationalID(5);
+        pokemonFactory.getMinimalPokemonByNationalID(5);
 //
         int testNumber = 721;
-        MinimalPokemon[] listy = new MinimalPokemon[testNumber];
-        for(int i =0; i<testNumber; i++){
-            listy[i] = new MinimalPokemon(i,"Pokemon",
-                "The franchise began as a pair of video games for the original Game Boy, developed by Game Freak and published by Nintendo. The franchise now spans video games, trading card games, animated television shows and movies, comic books, and toys",
-                Arrays.asList(new Type("electric",""), new Type("ice","")));
-        }
-        listy[1] = new MinimalPokemon(1,"Bulbasaur",
-                "Bulbasaur can be seen napping in bright sunlight. There is a seed on its back. By soaking up the sun’s rays, the seed grows progressively larger. ",
-                Arrays.asList(new Type("Grass",""), new Type("Poison","")));
+//        MinimalPokemon[] listy = new MinimalPokemon[testNumber];
+//        for(int i =0; i<testNumber; i++){
+//            listy[i] = new MinimalPokemon(i,"Pokemon",
+//                "The franchise began as a pair of video games for the original Game Boy, developed by Game Freak and published by Nintendo. The franchise now spans video games, trading card games, animated television shows and movies, comic books, and toys",
+//                Arrays.asList(new Type("electric"), new Type("ice")));
+//        }
+//        listy[1] = new MinimalPokemon(1,"Bulbasaur",
+//                "Bulbasaur can be seen napping in bright sunlight. There is a seed on its back. By soaking up the sun’s rays, the seed grows progressively larger. ",
+//                Arrays.asList(new Type("Grass"), new Type("Poison")));
 
-        pokemonFactory.getMinimalPokemonByNationalID(5);
+//        pokemonFactory.getMinimalPokemonByNationalID(5);
         // until here
 
         //Initialize the ArrayAdapter object.
