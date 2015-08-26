@@ -14,7 +14,7 @@
             android:id="@+id/title_description"
             android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"
-            android:background="@color/dex_detail_grey3" />
+            android:background="@color/dex_detail_greylight" />
 
         <TextView
             android:layout_width="match_parent"
@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:text="Type Match"
         android:id="@+id/title_typematch"
-        android:background="@color/dex_detail_grey3"
+        android:background="@color/dex_detail_greylight"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp" />
 
@@ -63,7 +63,8 @@
                 android:text="Strengths"
                 android:id="@+id/title_strength"
                 android:layout_margin="0dp"
-                android:background="@color/dex_detail_grey3" />
+                android:background="@color/dex_detail_greylight"
+                android:gravity="center" />
 
         </LinearLayout>
 
@@ -83,7 +84,8 @@
                 android:text="Weaknesses"
                 android:id="@+id/title_weak"
                 android:layout_margin="0dp"
-                android:background="@color/dex_detail_grey3" />
+                android:background="@color/dex_detail_greylight"
+                android:gravity="center" />
 
         </LinearLayout>
 
@@ -105,7 +107,7 @@
                 android:layout_height="match_parent"
                 android:text="Abilities"
                 android:id="@+id/textView8"
-                android:background="@color/dex_detail_grey3"
+                android:background="@color/dex_detail_greylight"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp" />
 
@@ -131,7 +133,7 @@
                 android:text="Breeding Info"
                 android:id="@+id/textView"
                 android:layout_weight="0.8"
-                android:background="@color/dex_detail_grey3"
+                android:background="@color/dex_detail_greylight"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp" />
 
@@ -197,7 +199,7 @@
         android:layout_height="wrap_content"
         android:text="Move Set"
         android:id="@+id/textView6"
-        android:background="@color/dex_detail_grey3"
+        android:background="@color/dex_detail_greylight"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp" />
 
@@ -212,10 +214,4 @@
 
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="700dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large area for more text below"
-        android:id="@+id/textView23" />
 </LinearLayout>

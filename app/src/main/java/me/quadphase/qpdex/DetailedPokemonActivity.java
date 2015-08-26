@@ -2,7 +2,6 @@ package me.quadphase.qpdex;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.FragmentActivity;
@@ -18,14 +17,12 @@ import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.Button;
 import android.widget.GridLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,6 +39,10 @@ import me.quadphase.qpdex.pokemon.Type;
 public class DetailedPokemonActivity extends FragmentActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
+    /**
+     * Worker Thread in charge of filling up the progress bar
+     * Stops updating the UI when Interrupted
+     */
     private class statsUpdaterWorkerThread extends Thread{
         final private String textViewPrefix="text_";
         final private String progressBarPrefix="pbar_";
@@ -81,14 +82,18 @@ public class DetailedPokemonActivity extends FragmentActivity
                     }
                 }
             } catch (InterruptedException e) {
-                Log.d("QPDEX_thread","STAT BAR INTERRUPTED");
+                if(BuildConfig.DEBUG)
+                    Log.d(this.getName(),"Thread Interrupted, stopping UI Update");
                 updateUI = false;
-                e.printStackTrace();
             }
         }
 
     }
 
+    /**
+     * Master Thread to update the Stats progress bars.
+     * Keeps a list of all workers until the created Thread object is deleted
+     */
     private class statsUpdaterMasterThread extends Thread{
         List<Thread> workers;
         @Override
@@ -136,13 +141,34 @@ public class DetailedPokemonActivity extends FragmentActivity
      */
     private CharSequence mTitle;
 
+    /**
+     * Instance of the Central Pokedex Manager
+     */
     private PokedexManager contextMaster;
+    /**
+     * Instances of the Master stats updater Thread.
+     */
     private statsUpdaterMasterThread statsBarController;
 
+
+    /**
+     * Currently detailed Pokemon.
+     */
     private Pokemon detailedPokemon;
 
+
+    /**
+     * String array used to identify the suffix for UI elements that display staff
+     * DO NOT CHANGE UNLESS corresponding "activity_detailed_pokemon.xml" IS CHANGED!
+     */
     private String[] statIdentifiers = {"hp","attack","defense","spatk","spdef","speed"};
+    /**
+     * Boolean to check if activity was created completely at least once.
+     */
     private boolean createdActivity=false;
+    /**
+     * Current index for Sprite Carousel
+     */
     private int spriteIndex;
 
     private TextView pkmnName;
@@ -162,6 +188,11 @@ public class DetailedPokemonActivity extends FragmentActivity
     private TextView evolutionTab;
     private TextView alternatesTab;
 
+    /**
+     * This method retrieves all necessary elements from "activity_detailed_pokemon.xml"
+     * It is used both to avoid retrieving elements within functions and keeping track of what
+     * information is being displayed at any given iteration on a pokemon
+     */
     private void retrieveInterfaceElements(){
         pkmnName = (TextView) findViewById(R.id.textview_pkmnname_detail);
         pkmnSprite = (ImageView) findViewById(R.id.imgbutton_pkmnsprite_detail);
@@ -181,6 +212,13 @@ public class DetailedPokemonActivity extends FragmentActivity
         alternatesTab = (TextView) findViewById(R.id.title_altforms);
     }
 
+    /**
+     * Creates a View element based on "custom_typematch_block" and does all the necessary screen
+     * screen calculations for correct grid alignment. Primarily used with {@see fillTypeComparisonInfo()}
+     * @param quantifier How detailedPokemon is affected by the Types being passed (i.e. Immune, etc)
+     * @param types The list of types that correspond to the Identifier
+     * @return A LinearLayout that can be directly set as a child of any LayoutView
+     */
     private LinearLayout createTypeMatchBlock(String quantifier, List<Type> types){
         LinearLayout typeMatchBlock = (LinearLayout) getLayoutInflater().inflate(R.layout.custom_typematch_block, null);
         GridLayout frame=(GridLayout) typeMatchBlock.findViewById(R.id.gridlay_types);
@@ -219,6 +257,12 @@ public class DetailedPokemonActivity extends FragmentActivity
         return typeMatchBlock;
     }
 
+    /**
+     * Creates a "row" to display a move within a LayoutView, based on "custom_movebox.xml"
+     * @param condition The condition string of the Move (should be "TM##" or "Lv##", for "##" a number)
+     * @param move The move object in question, from which the type is obtained
+     * @return A LinearLayout that can be directly set as a child of any LayoutView
+     */
     private LinearLayout createMovesSubBox(String condition, Move move){
         LinearLayout moveBox = (LinearLayout) getLayoutInflater().inflate(R.layout.custom_movebox,null);
         ((TextView)moveBox.findViewById(R.id.textview_movecondition)).setText(condition);
@@ -230,6 +274,13 @@ public class DetailedPokemonActivity extends FragmentActivity
         return moveBox;
     }
 
+    /**
+     * Creates a small view object, based on "custom_pkmnbox.xml", which holds a mini pokemon sprite
+     * and the name of such Pokemon
+     * @param evoName The name, to be displayed as a subtitle
+     * @param evoSprite The BitmapDrawable resource of the Pokemon
+     * @return A LinearLayout that can be directly set as a child of any LayoutView
+     */
     private LinearLayout createCustomPokemonBox(String evoName, BitmapDrawable evoSprite){
         LinearLayout evoBox = (LinearLayout) getLayoutInflater().inflate(R.layout.custom_pkmnbox, null);
 
@@ -242,8 +293,11 @@ public class DetailedPokemonActivity extends FragmentActivity
         return evoBox;
     }
 
-    //Call when change is needed on all things (New Pokemon in Focus)
-    private void refreshAllDetails(){
+    /**
+     * Method which fetches and resets the entire view. This should be called after a new Pokemon
+     * object has been placed a detailedPokemon in the {@see PokedexManager} instance
+     */
+    private void refreshAllDetails(){ //Call when change is needed on all things (New Pokemon in Focus)
 
         if(createdActivity){
             if(contextMaster.getSelectionOverviewSprite()!=null) {
@@ -267,10 +321,11 @@ public class DetailedPokemonActivity extends FragmentActivity
             evolutionChain.removeAllViews();
         }
 
+        detailedPokemon = contextMaster.getCurrentDetailedPokemon();
+
         if(detailedPokemon==null){
             //Default to the fail-safe Pokemon
             contextMaster.updatePokedexSelection(contextMaster.missingNo,this);
-            detailedPokemon = contextMaster.getCurrentDetailedPokemon();
         }
 
         spriteIndex = 0; //Might remove in the future
@@ -288,8 +343,10 @@ public class DetailedPokemonActivity extends FragmentActivity
         //Place Description
         pkmnDescription.setText(detailedPokemon.getDescription());
 
-        //Put the Evolution Chain
-        buildEvolutionChain();
+        //Show the Evolution Chain by default
+        // This is done to avoid calling "buildEvolutionChain and thus establishing a default option
+        // for the tabs.
+        showEvolutionChain();
 
         //Populate Types
         fillTypeComparisonInfo();
@@ -304,6 +361,9 @@ public class DetailedPokemonActivity extends FragmentActivity
         populateMoveInfo();
     }
 
+    /**
+     * Sets the Sprites for the detailedPokemon sprite badges by consulting {@see PokedexManager}
+     */
     private void setPokemonTypeInfo(){
         if (contextMaster.getCurrentDetailedType1()!=null) {
             pkmnType1.setImageDrawable(contextMaster.getCurrentDetailedType1());
@@ -314,12 +374,17 @@ public class DetailedPokemonActivity extends FragmentActivity
         }
     }
 
+    /**
+     * Fills the LinearLayout related to the Evolution Chain
+     */
     private void buildEvolutionChain(){
         if(detailedPokemon.getEvolutions()!=null && !detailedPokemon.getEvolutions().isEmpty()){
             //TODO: Fix Evolution class to detect MegaEvolutions and check for those sprites.
             for (int i = 0; i < detailedPokemon.getEvolutions().size(); i++) {
 
-                MinimalPokemon miniEvoPokemon = detailedPokemon.getEvolutions().get(i).getEvolvesInto();
+                //TODO: Fix this modeling! Since Evolutions might be Mega, we should get a Pokemon!
+                // NOT a minimal!
+                final MinimalPokemon miniEvoPokemon = detailedPokemon.getEvolutions().get(i).getEvolvesInto();
 
                 LinearLayout evolutionBox = createCustomPokemonBox(
                         miniEvoPokemon.getName(),
@@ -328,7 +393,8 @@ public class DetailedPokemonActivity extends FragmentActivity
                 evolutionBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.d("QPDEX", v.toString());
+                        contextMaster.updatePokedexSelection(miniEvoPokemon,getBaseContext());
+                        refreshAllDetails();
                     }
                 });
                 evolutionBox.setLayoutParams(new LinearLayout.LayoutParams(
@@ -346,7 +412,9 @@ public class DetailedPokemonActivity extends FragmentActivity
             evolutionChain.addView(notApplicable);
         }
     }
-
+    /**
+     * Fills the LinearLayout related to the Evolution Chain to display all Alternate Forms
+     */
     private void buildAlternateForms(){
         //TODO: Fill in Alternates
         //This requires a refactoring of the Pokemon Class to include an Alternate Form attribute
@@ -356,6 +424,13 @@ public class DetailedPokemonActivity extends FragmentActivity
 
         LinearLayout altForm = createCustomPokemonBox("3TrainerPoke$",
                 new BitmapDrawable(getResources(), PokedexAssetFactory.getPokemonMinimalSprite(this, 0)));
+        altForm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                contextMaster.updatePokedexSelection(contextMaster.missingNo,getBaseContext());
+                refreshAllDetails();
+            }
+        });
         altForm.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -365,6 +440,9 @@ public class DetailedPokemonActivity extends FragmentActivity
 
     }
 
+    /**
+     * Fills in how the different types affect the detailedPokemon.
+     */
     private void fillTypeComparisonInfo(){
         //TODO: Replace with real logic when the sparse type matrix is available!
         List<Type> typeList = new ArrayList<Type>(3);
@@ -383,6 +461,10 @@ public class DetailedPokemonActivity extends FragmentActivity
         typeWeak.addView(testy3);
     }
 
+    /**
+     * Fills all information related to the detailedPokemon's abilities and sets the onClickListener
+     * to open up a modal for more info on a particular ability.
+     */
     private void populateAbilitiesInfo(){
         if(detailedPokemon.getAbilities()!=null && !detailedPokemon.getAbilities().isEmpty()) {
             final List<Ability> allAbilities = detailedPokemon.getAbilities();
@@ -407,6 +489,9 @@ public class DetailedPokemonActivity extends FragmentActivity
         }
     }
 
+    /**
+     * Writes the EggGroups the pokemon is in.
+     */
     private void fillEggGroupInfo(){
         if(detailedPokemon.getEggGroups()!=null && !detailedPokemon.getEggGroups().isEmpty()) {
             for (int i = 0; i < detailedPokemon.getEggGroups().size(); i++) {
@@ -420,6 +505,9 @@ public class DetailedPokemonActivity extends FragmentActivity
         eggGroupSteps.setText(String.format("%s\n Steps",detailedPokemon.getHatchTime()));
     }
 
+    /**
+     * Fills the list of Moves the Pokemon learns, whether through Level-Up or TM/HM
+     */
     private void populateMoveInfo(){
         TextView firstNote = new TextView(this);
         firstNote.setText("Moves Learnt By Level Up");
@@ -568,22 +656,33 @@ public class DetailedPokemonActivity extends FragmentActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Informs the instance that an update is needed and refreshes the UI accordingly
+     */
     public void notifyUpdate(){
         refreshAllDetails();
     }
 
+    /**
+     * Shows the Evolution Chain of detailedPokemon and handles the false tabbing system in
+     * "activity_detailed_pokemon.xml"
+     */
     public void showEvolutionChain(){
         evolutionChain.removeAllViews();
         buildEvolutionChain();
-        evolutionTab.setBackgroundColor(getResources().getColor(R.color.dex_detail_grey3));
-        alternatesTab.setBackgroundColor(getResources().getColor(R.color.dex_detail_grey2));
+        evolutionTab.setBackgroundColor(getResources().getColor(R.color.dex_detail_greylight));
+        alternatesTab.setBackgroundColor(getResources().getColor(R.color.dex_detail_greydarkened));
     }
 
+    /**
+     * Shows the alternate forms of detailedPokemon and handles the false tabbing system in
+     * "activity_detailed_pokemon.xml"
+     */
     public void showAlternateForms(){
         evolutionChain.removeAllViews();
         buildAlternateForms();
-        evolutionTab.setBackgroundColor(getResources().getColor(R.color.dex_detail_grey2));
-        alternatesTab.setBackgroundColor(getResources().getColor(R.color.dex_detail_grey3));
+        evolutionTab.setBackgroundColor(getResources().getColor(R.color.dex_detail_greydarkened));
+        alternatesTab.setBackgroundColor(getResources().getColor(R.color.dex_detail_greylight));
     }
 
     /**

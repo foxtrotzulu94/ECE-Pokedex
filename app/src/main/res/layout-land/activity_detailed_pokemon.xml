@@ -66,7 +66,7 @@
                         android:text="Evolution Chain"
                         android:id="@+id/title_evolutions"
                         android:layout_weight="0.8"
-                        android:background="@color/dex_detail_grey3"
+                        android:background="@color/dex_detail_greylight"
                         android:layout_marginLeft="5dp"
                         android:layout_marginTop="5dp" />
 
@@ -76,7 +76,7 @@
                         android:text="Alternate Forms"
                         android:id="@+id/title_altforms"
                         android:layout_weight="0.8"
-                        android:background="@color/dex_detail_grey2"
+                        android:background="@color/dex_detail_greydarkened"
                         android:layout_marginLeft="5dp"
                         android:layout_marginTop="5dp"
                         android:autoText="false" />
@@ -106,7 +106,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.7"
-                    android:background="@color/dex_detail_grey3">
+                    android:background="@color/dex_detail_greydarkened">
 
 
                     <TextView
@@ -180,7 +180,7 @@
                                     android:text="Base Stats"
                                     android:id="@+id/title_stats_base"
                                     android:layout_weight="0.1"
-                                    android:background="@color/dex_detail_grey3" />
+                                    android:background="@color/dex_detail_greylight" />
 
                                 <TableLayout
                                     android:layout_width="match_parent"

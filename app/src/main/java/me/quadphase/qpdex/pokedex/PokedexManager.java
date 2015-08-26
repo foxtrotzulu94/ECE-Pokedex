@@ -67,7 +67,7 @@ public class PokedexManager {
 
     }
 
-    private class M00 extends Pokemon{
+    private class M00 extends Pokemon{ //Secret Class for UI testing.
         Random rng;
         public M00(){
             super(
@@ -122,7 +122,6 @@ public class PokedexManager {
     //Entity variables that describe inner state and function
     private static PokedexManager instance=null;
     private static CentralAudioPlayer jukebox=null;
-    private static TTSController roboVoice;
     private boolean isReady=false;
     private boolean isDetailed=false;
 
@@ -136,6 +135,8 @@ public class PokedexManager {
      * Instance of the fail-safe class
      */
     public final MissingNo missingNo;
+
+    private final M00 TrainerPoke$;
 
     private int maxPokemonNationalID = 721;
 
@@ -179,10 +180,11 @@ public class PokedexManager {
     //Singleton Constructor
     protected PokedexManager(){
         jukebox = CentralAudioPlayer.getInstance();
-        //roboVoice = TTSController.getInstance();
         missingNo = new MissingNo();
-        //TODO: REMOVE! testing ONLY!
-        currentDetailedPokemon = new M00();
+
+        //TODO: REMOVE when DB access complete! UI testing ONLY!
+        TrainerPoke$ = new M00();
+        currentDetailedPokemon = TrainerPoke$;
     }
 
     /**
@@ -193,13 +195,6 @@ public class PokedexManager {
             instance = new PokedexManager();
         }
         return instance;
-    }
-
-    //TODO: Implement!
-    private void updateDetailedPokemon(){
-
-        //Finally, say we're done.
-        isDetailed = true;
     }
 
     /**
@@ -235,29 +230,9 @@ public class PokedexManager {
             currentMinimalType2 = new BitmapDrawable(currentContext.getResources(),
                     PokedexAssetFactory.getTypeBadge(currentContext,"empty"));
         }
-        //Set the description to be heard
-        //roboVoice.setText(pokedexSelection.getDescription());
 
-        //Spawn a thread to collect overview sprites
-        Thread bitmapRetrieve = new Thread(){
-            @Override
-            public void run(){
-                cachedDisplaySprites = new LinkedList<BitmapDrawable>();
-                for (int i = restrictUpToGeneration; i >0; i--) {
-                    InputStream file = PokedexAssetFactory.getPokemonSpriteInGeneration(
-                            currentContext,
-                            currentMinimalPokemon.getNationalID(),
-                            i);
-                    BitmapDrawable sprite = new BitmapDrawable(
-                            currentContext.getResources(),
-                            file
-                            );
-                    if(file!=null)
-                        cachedDisplaySprites.add(sprite);
-                }
-            }
-        };
-        bitmapRetrieve.start();
+        //The description to be heard is generally set on PokedexManager
+        // The reason for this is to avoid leaking/misusing the TTSController resources.
 
         //TODO: (THIS SHOULD BE ITS OWN TASK!)
         // We are spawning off a thread to build the detailed Pokemon, however, for now we rely on
@@ -272,12 +247,11 @@ public class PokedexManager {
         Thread buildInDetail = new Thread(){
             @Override
             public void run(){
-                updatePokedexSelection(currentDetailedPokemon,currentContext);
+                updatePokedexSelection(TrainerPoke$,currentContext);
                 Log.d("QPDEX","Full detailed pokemon completed "+System.nanoTime());
             }
         };
         buildInDetail.start();
-//        currentDetailedPokemon = this.missingNo;
 
         isReady = true;
     }
@@ -288,12 +262,13 @@ public class PokedexManager {
      * @param detailedPokemon The fully detailed pokemon. Should be given from a Pokemon's evolution list
      * @param currentContext The context in which the update occurs (usually, "this" within an Activity)
      */
-    public void updatePokedexSelection(Pokemon detailedPokemon, Context currentContext){
+    public void updatePokedexSelection(Pokemon detailedPokemon, final Context currentContext){
         //For now, it just sets this variable. Later it should probably do more in terms of assets
         currentDetailedPokemon = detailedPokemon;
         //Load Sprite
         currentOverviewSprite = new BitmapDrawable(currentContext.getResources(),
-                PokedexAssetFactory.getPokemonSpriteInGeneration(currentContext,currentPokemonNationalID,restrictUpToGeneration));
+                PokedexAssetFactory.getPokemonSpriteInGeneration(
+                        currentContext,detailedPokemon.getNationalID(),restrictUpToGeneration));
 
         //Load first type
         currentDetailedType1 = new BitmapDrawable(currentContext.getResources(),
@@ -307,6 +282,27 @@ public class PokedexManager {
             currentDetailedType2 = new BitmapDrawable(currentContext.getResources(),
                     PokedexAssetFactory.getTypeBadge(currentContext,"empty"));
         }
+
+        //Spawn a thread to collect overview sprites
+        Thread bitmapRetrieve = new Thread(){
+            @Override
+            public void run(){
+                cachedDisplaySprites = new LinkedList<BitmapDrawable>();
+                for (int i = restrictUpToGeneration; i >0; i--) {
+                    InputStream file = PokedexAssetFactory.getPokemonSpriteInGeneration(
+                            currentContext,
+                            currentDetailedPokemon.getNationalID(),
+                            i);
+                    BitmapDrawable sprite = new BitmapDrawable(
+                            currentContext.getResources(),
+                            file
+                    );
+                    if(file!=null)
+                        cachedDisplaySprites.add(sprite);
+                }
+            }
+        };
+        bitmapRetrieve.start();
 
         //TODO: Load form specific overview sprite (if any)
 
