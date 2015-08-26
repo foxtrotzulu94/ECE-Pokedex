@@ -18,7 +18,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:background="#bc3a3a3a"
-            android:layout_weight="0.8"
+            android:layout_weight="0.75"
             android:focusableInTouchMode="true"
             android:focusable="true"
             android:clickable="true">
@@ -64,7 +64,7 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.2"
+            android:layout_weight="0.3"
             android:focusableInTouchMode="true"
             android:clickable="true"
             android:focusable="true">
@@ -79,24 +79,11 @@
                 android:focusable="true"
                 android:clickable="true">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="@string/pokedex_init_description"
-                    android:id="@+id/textview_pkmndescript"
-                    android:background="#fff1f1f1"
-                    android:layout_weight="0.4"
-                    android:gravity="start|center_horizontal"
-                    android:layout_margin="5dp"
-                    android:clickable="true"
-                    android:onClick="saySomething"
-                    android:padding="5dp" />
-
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.8"
+                    android:layout_weight="0.99"
                     android:gravity="center">
 
                     <ImageView
@@ -117,45 +104,75 @@
                         android:scaleType="fitXY" />
                 </LinearLayout>
 
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="See Data"
-                    android:id="@+id/button_pkmndata"
-                    android:layout_margin="5dp"
-                    android:onClick="switchToPokemonData" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:gravity="center">
-
-                <ImageButton
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/imgbutton_pkmnsprite"
-                    android:layout_weight="0.1"
-                    android:src="@drawable/sprite_unknown"
-                    android:scaleType="fitCenter"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:onClick="switchToPokemonData"
-                    android:background="#D6D7D7" />
+                    android:text="@string/pokedex_init_description"
+                    android:id="@+id/textview_pkmndescript"
+                    android:background="#fff1f1f1"
+                    android:layout_weight="0.2"
+                    android:gravity="start|center_horizontal"
+                    android:layout_margin="5dp"
+                    android:clickable="true"
+                    android:onClick="saySomething"
+                    android:padding="5dp"
+                    android:ellipsize="end"/>
 
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="PKMN Cry"
-                    android:id="@+id/button_pkmncry"
-                    android:layout_weight="0.4"
-                    android:layout_gravity="top|center"
-                    android:layout_marginBottom="5dp"
-                    android:textSize="10sp"
-                    android:nestedScrollingEnabled="false" />
+
+
+
             </LinearLayout>
+
+
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/imgbutton_pkmnsprite"
+                android:layout_weight="0.5"
+                android:src="@drawable/sprite_unknown"
+                android:scaleType="fitCenter"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:onClick="switchToPokemonData"
+                android:background="#D6D7D7" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.75"
+            android:gravity="center">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DATA"
+                android:id="@+id/button_pkmndata"
+                android:layout_marginRight="15dp"
+                android:onClick="switchToPokemonData"
+                android:textSize="10sp"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AREA"
+                android:id="@+id/button_pkmnlocation"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:textSize="10sp"
+                android:onClick="showConstructionActivity" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Cry"
+                android:id="@+id/button_pkmncry"
+                android:layout_marginLeft="15dp"
+                android:nestedScrollingEnabled="false"
+                android:textSize="10sp"/>
         </LinearLayout>
 
     </LinearLayout>
@@ -189,7 +206,8 @@
             android:clickable="true"
             android:headerDividersEnabled="false"
             android:listSelector="@drawable/pokedexrow_selector"
-            android:choiceMode="singleChoice" />
+            android:choiceMode="singleChoice"
+            android:longClickable="true" />
     </LinearLayout>
 
 </LinearLayout>

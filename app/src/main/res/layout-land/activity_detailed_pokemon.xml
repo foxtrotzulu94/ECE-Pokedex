@@ -24,24 +24,24 @@
                 android:layout_weight="0.5" >
 
                 <!--<LinearLayout-->
-                    <!--android:orientation="horizontal"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_weight="0.8"-->
-                    <!--android:gravity="center"-->
-                    <!--android:layout_margin="0dp"-->
-                    <!--android:layout_marginLeft="5dp"-->
-                    <!--android:layout_marginRight="5dp"-->
-                    <!--android:background="#bc3a3a3a">-->
+                <!--android:orientation="horizontal"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_weight="0.8"-->
+                <!--android:gravity="center"-->
+                <!--android:layout_margin="0dp"-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:layout_marginRight="5dp"-->
+                <!--android:background="@color/dex_detail_grey3">-->
 
-                    <!--<TextView-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:text="Pokemon Data Summary"-->
-                        <!--android:id="@+id/title"-->
-                        <!--android:layout_weight="0.99"-->
-                        <!--android:gravity="center|center_horizontal"-->
-                        <!--android:textSize="20sp" />-->
+                <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:text="Pokemon Data Summary"-->
+                <!--android:id="@+id/title"-->
+                <!--android:layout_weight="0.99"-->
+                <!--android:gravity="center|center_horizontal"-->
+                <!--android:textSize="20sp" />-->
 
 
                 <!--</LinearLayout>-->
@@ -51,25 +51,43 @@
                     android:layout_height="match_parent"
                     android:id="@+id/imgbutton_pkmnsprite_detail"
                     android:layout_weight="0.3"
-                    android:src="@drawable/spritetest"
+                    android:src="@drawable/sprite_unknown"
                     android:scaleType="fitCenter" />
 
-                <TextView
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="Evolution Chain"
-                    android:id="@+id/title_evolutions"
-                    android:layout_weight="0.8"
-                    android:background="#bc3a3a3a"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="5dp" />
+                    android:layout_weight="0.8">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="Evolution Chain"
+                        android:id="@+id/title_evolutions"
+                        android:layout_weight="0.8"
+                        android:background="@color/dex_detail_greylight"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="Alternate Forms"
+                        android:id="@+id/title_altforms"
+                        android:layout_weight="0.8"
+                        android:background="@color/dex_detail_greydarkened"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:autoText="false" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.65"
-                    android:background="#c89b9b9b"
+                    android:background="@color/dex_detail_greyback"
                     android:layout_marginLeft="5dp"
                     android:layout_marginBottom="5dp"
                     android:id="@+id/linlayout_evolutions_detail"></LinearLayout>
@@ -80,15 +98,15 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.5"
+                android:layout_weight="0.35"
                 android:layout_marginLeft="5dp">
 
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.99"
-                    android:background="#bc3a3a3a">
+                    android:layout_weight="0.7"
+                    android:background="@color/dex_detail_greydarkened">
 
 
                     <TextView
@@ -103,9 +121,9 @@
 
                     <LinearLayout
                         android:orientation="vertical"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.7">
+                        android:layout_weight="0.9">
 
                         <ImageView
                             android:layout_width="match_parent"
@@ -126,302 +144,297 @@
 
                 </LinearLayout>
 
-                <!-- TODO: Wrap this up in a scroll view for better viewing in other devices-->
-
-                <LinearLayout
-                    android:orientation="vertical"
+                <ScrollView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.9" >
+                    android:layout_weight="0.1">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Description"
-                        android:id="@+id/title_descript_detail"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginLeft="5dp"
-                        android:background="#bc3a3a3a"
-                        android:layout_marginTop="5dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="@string/pokedex_placeholder_description"
-                        android:id="@+id/textview_pkdexentry_detail"
-                        android:layout_weight="0.95"
-                        android:layout_gravity="center"
-                        android:background="#c89b9b9b"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp" />
-                </LinearLayout>
-
-                <!-- Note that the below linear layout might have some weirdness when rendering -->
-                <!-- Test in different resolution devices -->
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.4"
-                    android:gravity="center" >
 
                     <LinearLayout
-                        android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.5"
-                        android:layout_margin="5dp"
-                        android:background="#c89b9b9b" >
+                        android:orientation="vertical"
+                        android:layout_weight="0.1">
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="Base Stats"
-                            android:id="@+id/title_stats_base"
-                            android:layout_weight="0.1"
-                            android:background="#bc3a3a3a" />
-
-                        <TableLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="0dp"
-                            android:orientation="horizontal"
-                            android:gravity="center_horizontal"
-                            android:dividerPadding="5dp"
-                            android:divider="#ff0a0a0a"
-                            android:layout_weight="0.9"
-                            android:measureWithLargestChild="false">
-
-                            <TableRow
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:gravity="center"
-                                android:measureWithLargestChild="false"
-                                android:id="@+id/tr_hp"
-                                android:layout_marginLeft="5dp">
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:id="@+id/stat_hp"
-                                    android:layout_weight="0.5"
-                                    android:text="@string/hp"
-                                    android:layout_gravity="right" />
-
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:text="128"
-                                    android:id="@+id/textview_hpval"
-                                    android:layout_weight="0.4" />
-
-                                <ProgressBar
-                                    style="?android:attr/progressBarStyleHorizontal"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    android:id="@+id/progbar_hpval"
-                                    android:layout_weight="0.5"
-                                    android:progress="128"
-                                    android:max="255" />
-                            </TableRow>
-
-                            <TableRow
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:gravity="center"
-                                android:measureWithLargestChild="false"
-                                android:id="@+id/tr_attack"
-                                android:layout_marginLeft="5dp">
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:id="@+id/stat_attack"
-                                    android:layout_weight="0.5"
-                                    android:text="@string/attack"
-                                    android:layout_gravity="right" />
-
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:text="128"
-                                    android:id="@+id/textview_attackval"
-                                    android:layout_weight="0.4" />
-
-                                <ProgressBar
-                                    style="?android:attr/progressBarStyleHorizontal"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    android:id="@+id/progbar_attackval"
-                                    android:layout_weight="0.5"
-                                    android:progress="128"
-                                    android:max="255" />
-                            </TableRow>
-
-                            <TableRow
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:gravity="center"
-                                android:measureWithLargestChild="false"
-                                android:id="@+id/tr_defense"
-                                android:layout_marginLeft="5dp">
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:id="@+id/stat_defense"
-                                    android:layout_weight="0.5"
-                                    android:text="@string/defense"
-                                    android:layout_gravity="right" />
-
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:text="128"
-                                    android:id="@+id/textView4"
-                                    android:layout_weight="0.4" />
-
-                                <ProgressBar
-                                    style="?android:attr/progressBarStyleHorizontal"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    android:id="@+id/progressBar7"
-                                    android:layout_weight="0.5"
-                                    android:progress="128"
-                                    android:max="255" />
-                            </TableRow>
-
-                            <TableRow
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:gravity="center"
-                                android:measureWithLargestChild="false"
-                                android:id="@+id/tr_spattack"
-                                android:layout_marginLeft="5dp">
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:id="@+id/textView5"
-                                    android:layout_weight="0.5"
-                                    android:text="@string/spattack"
-                                    android:layout_gravity="right" />
-
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:text="128"
-                                    android:id="@+id/textView9"
-                                    android:layout_weight="0.4" />
-
-                                <ProgressBar
-                                    style="?android:attr/progressBarStyleHorizontal"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    android:id="@+id/progressBar8"
-                                    android:layout_weight="0.5"
-                                    android:progress="128"
-                                    android:max="255" />
-                            </TableRow>
-
-                            <TableRow
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:gravity="center"
-                                android:measureWithLargestChild="false"
-                                android:id="@+id/tr_spdefense"
-                                android:layout_marginLeft="5dp">
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:id="@+id/textView10"
-                                    android:layout_weight="0.5"
-                                    android:text="@string/spdefense"
-                                    android:layout_gravity="right" />
-
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:text="128"
-                                    android:id="@+id/textView20"
-                                    android:layout_weight="0.4" />
-
-                                <ProgressBar
-                                    style="?android:attr/progressBarStyleHorizontal"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    android:id="@+id/progressBar9"
-                                    android:layout_weight="0.5"
-                                    android:progress="128"
-                                    android:max="255" />
-                            </TableRow>
-
-                            <TableRow
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:gravity="center"
-                                android:measureWithLargestChild="false"
-                                android:id="@+id/tr_speed"
-                                android:layout_marginLeft="5dp">
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:id="@+id/textView21"
-                                    android:layout_weight="0.5"
-                                    android:text="@string/speed"
-                                    android:layout_gravity="right" />
-
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:text="128"
-                                    android:id="@+id/textView22"
-                                    android:layout_weight="0.4" />
-
-                                <ProgressBar
-                                    style="?android:attr/progressBarStyleHorizontal"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    android:id="@+id/progressBar10"
-                                    android:layout_weight="0.5"
-                                    android:progress="128"
-                                    android:max="255" />
-                            </TableRow>
-
-                        </TableLayout>
-
+                        <!-- Note that the below linear layout might have some weirdness when rendering -->
+                        <!-- Test in different resolution devices -->
                         <LinearLayout
                             android:orientation="horizontal"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.1"
-                            android:gravity="top" >
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.4"
+                            android:gravity="center" >
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="18sp"
-                                android:text="Total Stats Sum"
-                                android:id="@+id/title_sum"
-                                android:layout_margin="5dp" />
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.5"
+                                android:layout_margin="5dp"
+                                android:background="@color/dex_detail_greyback" >
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="300"
-                                android:textSize="20sp"
-                                android:id="@+id/textview_statstotalsum"
-                                android:layout_margin="5dp" />
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="?android:attr/textAppearanceMedium"
+                                    android:text="Base Stats"
+                                    android:id="@+id/title_stats_base"
+                                    android:layout_weight="0.1"
+                                    android:background="@color/dex_detail_greylight" />
+
+                                <TableLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="0dp"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_horizontal"
+                                    android:dividerPadding="5dp"
+                                    android:divider="#ff0a0a0a"
+                                    android:layout_weight="0.9"
+                                    android:measureWithLargestChild="false">
+
+                                    <TableRow
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:gravity="center"
+                                        android:measureWithLargestChild="false"
+                                        android:id="@+id/tr_hp"
+                                        android:layout_marginLeft="5dp">
+
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:id="@+id/text_hp"
+                                            android:layout_weight="0.1"
+                                            android:text="@string/hp"
+                                            android:layout_gravity="right"
+                                            android:layout_marginLeft="10dp" />
+
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:text="128"
+                                            android:id="@+id/text_hpval"
+                                            android:layout_weight="0.1" />
+
+                                        <ProgressBar
+                                            style="?android:attr/progressBarStyleHorizontal"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:id="@+id/pbar_hpval"
+                                            android:layout_weight="1"
+                                            android:progress="128"
+                                            android:max="255" />
+                                    </TableRow>
+
+                                    <TableRow
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:gravity="center"
+                                        android:measureWithLargestChild="false"
+                                        android:id="@+id/tr_attack"
+                                        android:layout_marginLeft="5dp">
+
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:id="@+id/text_attack"
+                                            android:layout_weight="0.1"
+                                            android:text="@string/attack"
+                                            android:layout_gravity="right"
+                                            android:layout_marginLeft="10dp" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="match_parent"
+                                            android:text="128"
+                                            android:id="@+id/text_attackval"
+                                            android:layout_weight="0.1" />
+
+                                        <ProgressBar
+                                            style="?android:attr/progressBarStyleHorizontal"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:id="@+id/pbar_attackval"
+                                            android:layout_weight="1"
+                                            android:progress="128"
+                                            android:max="255" />
+                                    </TableRow>
+
+                                    <TableRow
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:gravity="center"
+                                        android:measureWithLargestChild="false"
+                                        android:id="@+id/tr_defense"
+                                        android:layout_marginLeft="5dp">
+
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:id="@+id/text_defense"
+                                            android:layout_weight="0.1"
+                                            android:text="@string/defense"
+                                            android:layout_gravity="right"
+                                            android:layout_marginLeft="10dp" />
+
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:text="128"
+                                            android:id="@+id/text_defenseval"
+                                            android:layout_weight="0.1" />
+
+                                        <ProgressBar
+                                            style="?android:attr/progressBarStyleHorizontal"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:id="@+id/pbar_defenseval"
+                                            android:layout_weight="1"
+                                            android:progress="128"
+                                            android:max="255" />
+                                    </TableRow>
+
+                                    <TableRow
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:gravity="center"
+                                        android:measureWithLargestChild="false"
+                                        android:id="@+id/tr_spattack"
+                                        android:layout_marginLeft="5dp">
+
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:id="@+id/text_spattack"
+                                            android:layout_weight="0.1"
+                                            android:text="@string/spattack"
+                                            android:layout_gravity="right"
+                                            android:layout_marginLeft="10dp" />
+
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:text="128"
+                                            android:id="@+id/text_spatkval"
+                                            android:layout_weight="0.1" />
+
+                                        <ProgressBar
+                                            style="?android:attr/progressBarStyleHorizontal"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:id="@+id/pbar_spatkval"
+                                            android:layout_weight="1"
+                                            android:progress="128"
+                                            android:max="255" />
+                                    </TableRow>
+
+                                    <TableRow
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:gravity="center"
+                                        android:measureWithLargestChild="false"
+                                        android:id="@+id/tr_spdefense"
+                                        android:layout_marginLeft="5dp">
+
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:id="@+id/text_spdefense"
+                                            android:layout_weight="0.1"
+                                            android:text="@string/spdefense"
+                                            android:layout_gravity="right"
+                                            android:layout_marginLeft="10dp" />
+
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:text="128"
+                                            android:id="@+id/text_spdefval"
+                                            android:layout_weight="0.1" />
+
+                                        <ProgressBar
+                                            style="?android:attr/progressBarStyleHorizontal"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="match_parent"
+                                            android:id="@+id/pbar_spdefval"
+                                            android:layout_weight="1"
+                                            android:progress="128"
+                                            android:max="255" />
+                                    </TableRow>
+
+                                    <TableRow
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:gravity="center"
+                                        android:measureWithLargestChild="false"
+                                        android:id="@+id/tr_speed"
+                                        android:layout_marginLeft="5dp">
+
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:id="@+id/text_speed"
+                                            android:layout_weight="0.1"
+                                            android:text="@string/speed"
+                                            android:layout_gravity="right"
+                                            android:layout_marginLeft="10dp" />
+
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:text="128"
+                                            android:id="@+id/text_speedval"
+                                            android:layout_weight="0.1" />
+
+                                        <ProgressBar
+                                            style="?android:attr/progressBarStyleHorizontal"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:id="@+id/pbar_speedval"
+                                            android:layout_weight="1"
+                                            android:progress="128"
+                                            android:max="255" />
+                                    </TableRow>
+
+                                </TableLayout>
+
+                                <LinearLayout
+                                    android:orientation="horizontal"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.1"
+                                    android:gravity="top" >
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textSize="18sp"
+                                        android:text="Total Stats Sum"
+                                        android:id="@+id/title_sum"
+                                        android:layout_margin="5dp" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="300"
+                                        android:textSize="20sp"
+                                        android:id="@+id/textview_statstotalval"
+                                        android:layout_margin="5dp" />
+                                </LinearLayout>
+
+                            </LinearLayout>
+
                         </LinearLayout>
 
+                        <include
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            layout="@layout/scroll_details" />
+
                     </LinearLayout>
-
-                </LinearLayout>
+                </ScrollView>
             </LinearLayout>
-
         </LinearLayout>
 
     </FrameLayout>

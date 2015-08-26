@@ -89,11 +89,13 @@ while i <= CURRENT_NUMBER_OF_POKEMON_IN_SEREBII:
             indices = [i for i, x in enumerate(simplepokemonlist) if pokemonIDCouple[1] == x]
 
     print(indices)
-    # go through the indiceswhich correspond to a pokemon id, and map to nationalID found in pokemonIDCouple[0]
+    # go through the indices which correspond to a pokemon id, and map to nationalID found in pokemonIDCouple[0]
+    # nationalID = pokemonIDCouple[0]
+    # pokemonID = incrementedpokeID
     for pokemonID in indices:
         #need to increment
         incrementedpokeID = pokemonID + 1
-        c.execute("INSERT INTO pokemon_nationalID VALUES (?,?,?)", (pokemonIDCouple[0], incrementedpokeID, None))
+        c.execute("INSERT INTO pokemon_nationalID VALUES (?,?)", (incrementedpokeID, pokemonIDCouple[0]))
 
 conn.commit()
 
