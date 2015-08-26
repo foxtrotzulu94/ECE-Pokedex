@@ -300,6 +300,10 @@ public class Pokemon {
         caught = !caught;
     }
 
+    @Override
+    public String toString(){
+        return String.format("%s. %s (unique:%s)",pokemonNationalID,name,pokemonUniqueID);
+    }
 
     public int retrieveStatFromString(String specific){
         int statVal = 0;

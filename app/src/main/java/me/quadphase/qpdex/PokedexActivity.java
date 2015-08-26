@@ -30,6 +30,7 @@ import me.quadphase.qpdex.pokedex.PokedexAssetFactory;
 import me.quadphase.qpdex.pokedex.PokedexManager;
 import me.quadphase.qpdex.pokedex.TTSController;
 import me.quadphase.qpdex.pokemon.MinimalPokemon;
+import me.quadphase.qpdex.pokemon.Pokemon;
 import me.quadphase.qpdex.pokemon.Type;
 
 
@@ -176,25 +177,10 @@ public class PokedexActivity extends AppCompatActivity {
         // this is a test to ensure that the database is working
         PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(this.getApplicationContext());
         MinimalPokemon[] listy = pokemonFactory.getAllMinimalPokemon();
-//        listy[2] = new MinimalPokemon(3,"Bulbasaur",
-//                "Bulbasaur can be seen napping in bright sunlight. There is a seed on its back. By soaking up the sun’s rays, the seed grows progressively larger. ",
-//                Arrays.asList(new Type("Grass",""), new Type("Poison","")), false);
-//
-        pokemonFactory.getMinimalPokemonByNationalID(5);
-//
-        int testNumber = 721;
-//        MinimalPokemon[] listy = new MinimalPokemon[testNumber];
-//        for(int i =0; i<testNumber; i++){
-//            listy[i] = new MinimalPokemon(i,"Pokemon",
-//                "The franchise began as a pair of video games for the original Game Boy, developed by Game Freak and published by Nintendo. The franchise now spans video games, trading card games, animated television shows and movies, comic books, and toys",
-//                Arrays.asList(new Type("electric"), new Type("ice")));
-//        }
-//        listy[1] = new MinimalPokemon(1,"Bulbasaur",
-//                "Bulbasaur can be seen napping in bright sunlight. There is a seed on its back. By soaking up the sun’s rays, the seed grows progressively larger. ",
-//                Arrays.asList(new Type("Grass"), new Type("Poison")));
 
-//        pokemonFactory.getMinimalPokemonByNationalID(5);
-        // until here
+        pokemonFactory.getMinimalPokemonByNationalID(5);
+        Pokemon aTesty = pokemonFactory.getPokemonByPokemonID(1);
+        Log.d("QPDEX",aTesty.toString());
 
         //Initialize the ArrayAdapter object.
         pokedexEntries = new PokedexArrayAdapter(this,listy);
