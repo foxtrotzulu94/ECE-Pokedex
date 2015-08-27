@@ -218,7 +218,6 @@ public class PokedexManager {
             pkmnBuild = PokemonFactory.getPokemonFactory(currentContext);
         }
 
-        Log.d("QPDex","Beginning minimal build "+System.nanoTime());
         isDetailed = false;
         currentMinimalPokemon = pokedexSelection;
         currentPokemonNationalID = pokedexSelection.getPokemonNationalID();
@@ -247,16 +246,10 @@ public class PokedexManager {
         //The description to be heard is generally set on PokedexManager
         // The reason for this is to avoid leaking/misusing the TTSController resources.
 
-        //TODO: (THIS SHOULD BE ITS OWN TASK!)
-        // We are spawning off a thread to build the detailed Pokemon, however, for now we rely on
-        // our test subject: 'M (00). This is to ensure that the UI works as intended.
-        // When the time comes to actually use this, remove "currentDetailedPokemon" as the argument
-        // and pass the correct detailedPokemon that maps to the National ID.
-        // You will also want to
-        // (A) make the Thread below non-anonymous, such that we can manage having several of these in construction
-        // (B) altogether eliminate this code segment and prebuild a massive list of detailed pokemon
-        //      That would be executed, as a Thread, some time after building the minimalPokemon list
-        //      and some time before the first execution of DetailedPokemonActivity.
+        //TODO: Spawning off a thread may delay critical functionality to prioritize pre-fetching
+        //  this method is called, primarily, from PokedexActivty. Setting the fully detailed pokemon
+        //  should probably be delayed until the intent to open up the DetailedPokemonActivity has been
+        //  fired.
         Thread buildInDetail = new Thread(){
             @Override
             public void run(){
@@ -274,7 +267,6 @@ public class PokedexManager {
                     // so that the User knows what to expect.
                     updatePokedexSelection(missingNo, currentContext);
                 }
-                Log.d("QPDEX","Full detailed pokemon completed "+System.nanoTime());
             }
         };
         buildInDetail.start();
@@ -395,7 +387,7 @@ public class PokedexManager {
         return cachedDisplaySprites;
     }
 
-    public void setupWithPokedexFactory(final PokemonFactory builderInstance){
+    public void beginCachingRoutines(final PokemonFactory builderInstance){
         //First ask for the instance
         pkmnBuild = builderInstance;
 
@@ -410,6 +402,8 @@ public class PokedexManager {
                 pkmnBuild.getAllDetailedPokemon();
 
                 //Signals full completion
+                Log.d("QPDEX_Manager","All Detailed Pokemon Objects Created");
+                Log.d("QPDEX_Manager","PokedexManager is now Ready");
                 isReady = true;
             }
         };
@@ -422,6 +416,7 @@ public class PokedexManager {
                 isMinimalReady=true;
                 // After this is done, spawn off initFull to finish the setup
                 initFull.start();
+                Log.d("QPDEX_Manager","All Minimal Pokemon Objects Created");
             }
         };
 

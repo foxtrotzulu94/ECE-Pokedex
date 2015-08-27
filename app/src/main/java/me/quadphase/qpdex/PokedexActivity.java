@@ -3,7 +3,6 @@ package me.quadphase.qpdex;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -23,8 +22,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.Arrays;
-
 import me.quadphase.qpdex.databaseAccess.PokemonFactory;
 import me.quadphase.qpdex.pokedex.CentralAudioPlayer;
 import me.quadphase.qpdex.pokedex.PokedexArrayAdapter;
@@ -32,8 +29,6 @@ import me.quadphase.qpdex.pokedex.PokedexAssetFactory;
 import me.quadphase.qpdex.pokedex.PokedexManager;
 import me.quadphase.qpdex.pokedex.TTSController;
 import me.quadphase.qpdex.pokemon.MinimalPokemon;
-import me.quadphase.qpdex.pokemon.Pokemon;
-import me.quadphase.qpdex.pokemon.Type;
 
 
 public class PokedexActivity extends AppCompatActivity {
@@ -287,7 +282,7 @@ public class PokedexActivity extends AppCompatActivity {
         final PokemonFactory pkmnBuild = PokemonFactory.getPokemonFactory(this);
         final int selectedNationalID = contextMaster.getCurrentMinimalPokemon().getPokemonNationalID();
 
-        if(!pkmnBuild.isDetailedNationaIDBuiltAndReady(selectedNationalID)){
+        if(!pkmnBuild.isDetailedNationalIDBuiltAndReady(selectedNationalID)){
             final ProgressDialog dialog = ProgressDialog.show(PokedexActivity.this, "", "Loading. Please wait...", true);
             Thread modalHandler = new Thread(){
                 @Override
@@ -302,7 +297,7 @@ public class PokedexActivity extends AppCompatActivity {
                     });
 
                     //Wait for a while
-                    while(!pkmnBuild.isDetailedNationaIDBuiltAndReady(selectedNationalID)){
+                    while(!pkmnBuild.isDetailedNationalIDBuiltAndReady(selectedNationalID)){
                         try {
                             Thread.sleep(10);
                         } catch (InterruptedException e) {
@@ -321,7 +316,7 @@ public class PokedexActivity extends AppCompatActivity {
                     });
                 }
             };
-
+            modalHandler.setPriority(Thread.MAX_PRIORITY);
             modalHandler.start();
 
         }

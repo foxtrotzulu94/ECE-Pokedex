@@ -1,36 +1,24 @@
 package me.quadphase.qpdex;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.LinearLayout;
-import android.content.res.Configuration;
 import android.widget.TextView;
 
 import java.util.Date;
 import java.util.Formatter;
 import java.util.Locale;
 
-import me.quadphase.qpdex.BuildConfig;
-import me.quadphase.qpdex.PokedexActivity;
-import me.quadphase.qpdex.R;
-import me.quadphase.qpdex.WIPActivity;
 import me.quadphase.qpdex.databaseAccess.PokemonFactory;
 import me.quadphase.qpdex.pokedex.PokedexManager;
-import me.quadphase.qpdex.pokemon.Pokemon;
 
 public class IntroActivity extends AppCompatActivity {
 
@@ -45,7 +33,7 @@ public class IntroActivity extends AppCompatActivity {
 
         //Tell the PokedexManager to begin caching operations with the PokedexFactory
         //This takes care of any steps related to pre-fetching objects and building them together.
-        contextMaster.setupWithPokedexFactory(PokemonFactory.getPokemonFactory(this));
+        contextMaster.beginCachingRoutines(PokemonFactory.getPokemonFactory(this));
 
 //
 //        //Create the minimal pokemon objects
@@ -158,7 +146,7 @@ public class IntroActivity extends AppCompatActivity {
                     });
                 }
             };
-
+            modalHandler.setPriority(Thread.MAX_PRIORITY);
             modalHandler.start();
 
         }

@@ -33,6 +33,7 @@ import me.quadphase.qpdex.pokemon.Type;
  */
 public class PokemonFactory {
 
+    //TODO: Fix and retest!
     private class DetailedListBuilder extends Thread{
         int startIndex;
         int endIndex;
@@ -49,6 +50,7 @@ public class PokemonFactory {
 
     }
 
+    //TODO: Fix and retest!
     private class DetailedListMaster extends Thread{
 
         //Best arbitrary number I could choose...
@@ -218,6 +220,14 @@ public class PokemonFactory {
         ExternalDbOpenHelper dbOpenHelper = new ExternalDbOpenHelper(context, DB_NAME);
         database = dbOpenHelper.openDataBase();
 
+        setupLargeCacheLists();
+
+        types = new HashMap<>();
+
+        loadAllTypes();
+    }
+
+    private void setupLargeCacheLists(){
         //Create new short list (matches minimalPokemon with a corresponding Pokemon)
         detailedPokemonShortList = new Pokemon[getMaxNationalID()+1];
 
@@ -227,11 +237,6 @@ public class PokemonFactory {
         //Set the fail-safe
         allDetailedPokemon[0] = PokedexManager.getInstance().missingNo;
         detailedPokemonShortList[0] = allDetailedPokemon[0];
-
-
-        types = new HashMap<>();
-
-        loadAllTypes();
     }
 
     /**
@@ -269,28 +274,29 @@ public class PokemonFactory {
         return allMinimalPokemon;
     }
 
-    public Pokemon[] getAllDetailedPokemon(){
-        //TODO: we have to be a bit smarter to avoid crashing the application
-        // Though the DFS is pretty good, the way we're building right now leaks memory massively.
-        // We should have a large cached list of these objects, such that we can refer to it before
-        // Building an evolution within the DFS loop.
+    public void getAllDetailedPokemon(){
+        //TODO: Perform aggressive optimizations when possible
 
-        if (allDetailedPokemon!=null && detailedPokemonShortList!=null) {
+        if (allDetailedPokemon==null || detailedPokemonShortList==null) {
+            setupLargeCacheLists();
+        }
 
-            for (int i = 1; i <= getMaxNationalID(); i++) {
-                //If the entry is null
-                if(detailedPokemonShortList[i]==null){
-                    //Check the mapping to the long list if it's there by any chance
-                    if(allDetailedPokemon[checkUniqueIDFromNationalID(i)]!=null){
-                        detailedPokemonShortList[i] = allDetailedPokemon[checkUniqueIDFromNationalID(i)];
-                    }
-                    //Or build it from scratch
-                    else {
-                        detailedPokemonShortList[i] = getPokemonByNationalID(i);
-                    }
+        for (int i = 1; i <= getMaxNationalID(); i++) {
+
+            //If the entry is null
+            if(detailedPokemonShortList[i]==null){
+                //Check the mapping to the long list if it's there by any chance
+                if(allDetailedPokemon[checkUniqueIDFromNationalID(i)]!=null){
+                    detailedPokemonShortList[i] = allDetailedPokemon[checkUniqueIDFromNationalID(i)];
                 }
-                if(PRINT_DEBUG)
-                    Log.d("QPDEX",String.format("Building %s",i));
+                //Or build it from scratch
+                else {
+                    detailedPokemonShortList[i] = getPokemonByNationalID(i);
+                }
+            }
+
+            if(PRINT_DEBUG)
+                Log.d("QPDEX",String.format("Building %s",i));
 //                //We have to slow down the loop intentionally...
 //                try {
 //                    Thread.sleep(10);
@@ -298,10 +304,8 @@ public class PokemonFactory {
 //                catch(InterruptedException e){
 //
 //                }
-            }
         }
 
-        return allDetailedPokemon;
     }
 
     public void getAllDetailedPokemonInParallel(){
@@ -630,6 +634,7 @@ public class PokemonFactory {
      * @return the list of types that the pokemon is
      */
     private List<Type> getTypes(int pokemonID) {
+
         List<Type> types = new LinkedList<>();
         // move the cursor to the pokemon types mapping table
         String[] selectionArg = {String.valueOf(pokemonID)};
@@ -723,6 +728,7 @@ public class PokemonFactory {
      */
     private Type getType(int typeID) {
         Type type = types.get(typeID);
+
         if(PRINT_DEBUG)
             Log.v("Database Access", "From typeID " + String.valueOf(typeID) + " type obtained was " + type.getName());
 
@@ -1077,11 +1083,8 @@ public class PokemonFactory {
         return moveID;
     }
 
-    public boolean isDetailedNationaIDBuiltAndReady(int nationalID){
-        if(detailedPokemonShortList!=null){
-            return detailedPokemonShortList[nationalID] != null;
-        }
-        return false;
+    public boolean isDetailedNationalIDBuiltAndReady(int nationalID){
+        return detailedPokemonShortList!=null && detailedPokemonShortList[nationalID]!=null;
     }
 
 }
