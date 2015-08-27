@@ -12,6 +12,11 @@
     <item name="dex_blue" type="color">#53b9fb</item>
     <item name="dex_grey" type="color">#f1f1f1</item>
 
+    <item name="dex_detail_greydarkened" type="color">#bc3a3a3a</item>
+    <item name="dex_detail_greylight" type="color">#bc7f7f7f</item>
+    <item name="dex_detail_greyback" type="color">#c8b4b4b4</item>
+
+
     <item name="darken" type="color">#be2c2c2c</item>
     <item name="transparent" type="color">#00ffffff</item>
 </resources>

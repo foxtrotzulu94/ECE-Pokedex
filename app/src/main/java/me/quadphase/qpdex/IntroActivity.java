@@ -1,6 +1,7 @@
 package me.quadphase.qpdex;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.graphics.Bitmap;
@@ -27,15 +28,44 @@ import me.quadphase.qpdex.BuildConfig;
 import me.quadphase.qpdex.PokedexActivity;
 import me.quadphase.qpdex.R;
 import me.quadphase.qpdex.WIPActivity;
+import me.quadphase.qpdex.databaseAccess.PokemonFactory;
+import me.quadphase.qpdex.pokedex.PokedexManager;
+import me.quadphase.qpdex.pokemon.Pokemon;
 
 public class IntroActivity extends AppCompatActivity {
+
+    private PokedexManager contextMaster;
+
+    private void setupAndLoad(){
+        //Register with the ExceptionHandler
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+
+        //Initialize the PokedexManager class
+         contextMaster = PokedexManager.getInstance();
+
+        //Tell the PokedexManager to begin caching operations with the PokedexFactory
+        //This takes care of any steps related to pre-fetching objects and building them together.
+        contextMaster.setupWithPokedexFactory(PokemonFactory.getPokemonFactory(this));
+
+//
+//        //Create the minimal pokemon objects
+//        final long minBuild = System.nanoTime();
+//        Thread fullBuilder = new Thread(){
+//            @Override
+//            public void run(){
+//                Pokemon[] fullListy = PokemonFactory.getPokemonFactory(getApplicationContext()).getAllDetailedPokemon();
+//                Log.d("QPDEX",String.format("All Pokemon objects done in: %s ns",System.nanoTime()-minBuild));
+//            }
+//        };
+//        fullBuilder.start();
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
-//        Window ourWin = getWindow();
-//        ourWin.setFormat(PixelFormat.R);
+
         //Set the background by manually calling the bitmap decoder.
         BitmapFactory.Options op = new BitmapFactory.Options();
         op.inPreferredConfig = Bitmap.Config.RGB_565;
@@ -59,8 +89,8 @@ public class IntroActivity extends AppCompatActivity {
             buildField.setText(formatter.toString());
         }
 
-        //Register with the ExceptionHandler
-        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+        //Signal a prefetch.
+        setupAndLoad();
 
         //Signal for collection if needed
         Runtime.getRuntime().gc();
@@ -90,8 +120,51 @@ public class IntroActivity extends AppCompatActivity {
     }
 
     public void switchToPokedex(View view){
-        Intent intent = new Intent(this,PokedexActivity.class);
-        startActivity(intent);
+        final Intent intent = new Intent(this,PokedexActivity.class);
+
+        //We might need to signal the PokedexManager to see if the activity can load.
+        final PokemonFactory pkmnBuild = PokemonFactory.getPokemonFactory(this);
+
+        if(!contextMaster.isMinimalReady()){
+            final ProgressDialog dialog = ProgressDialog.show(IntroActivity.this, "", "Loading. Please wait...", true);
+            Thread modalHandler = new Thread(){
+                @Override
+                public void run(){
+
+                    //Show loading
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            dialog.setCancelable(true);
+                        }
+                    });
+
+                    //Wait for a while
+                    while(!contextMaster.isMinimalReady()){
+                        try {
+                            Thread.sleep(10);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    //Dismiss the loading and proceed.
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            dialog.dismiss();
+                            startActivity(intent);
+                        }
+                    });
+                }
+            };
+
+            modalHandler.start();
+
+        }
+        else {
+            startActivity(intent);
+        }
     }
 
     public void showConstructionActivity(View view){

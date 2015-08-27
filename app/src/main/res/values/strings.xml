@@ -12,8 +12,9 @@
     <!-- IntroActivity String End-->
 
     <!-- PokedexActivity String End-->
-    <!--<string name="pokedex_init_description">Welcome, Click on any element on the list to start seeing Pokemon!</string>-->
-    <string name="pokedex_init_description">Sometimes, on a dark night, your shadow thrown by a streetlight will suddenly and startlingly overtake you. It is actually a Gengar running past you, pretending to be your shadow. </string>
+    <string name="pokedex_init_description">Welcome, Click on any element on the list to start seeing Pokemon!\n
+        After choosing one, double click/long click or press on the image for more detailed info</string>
+    <!--<string name="pokedex_init_description">Sometimes, on a dark night, your shadow thrown by a streetlight will suddenly and startlingly overtake you. It is actually a Gengar running past you, pretending to be your shadow. </string>-->
     <string name="pokedex_init_title">Click here to search</string>
     <string name="pokedex_placeholder_description">[ENTER POKEDEX ENTRY]</string>
     <string name="pokedex_placeholder_title">[POKEMON NAME]</string>
@@ -67,5 +68,5 @@
 
     <string name="action_example">Example action</string>
     <string name="title_activity_wip">WIPActivity</string>
-    <string name="title_activity_exception_caught">Uncaught Exception Occured</string>
+    <string name="title_activity_exception_caught">Uncaught Exception Occurred</string>
 </resources>

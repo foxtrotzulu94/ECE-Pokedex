@@ -43,16 +43,18 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
     //This piece of code will create a database if it’s not yet created
     public void createDataBase() {
         boolean dbExist = checkDataBase();
-        if (!dbExist) {
+        // TODO: After development, change back to "if(!dbExist)"
+        if (true) { //CHANGING FOR NOW!
             this.getReadableDatabase();
             try {
                 copyDataBase();
+                Log.d(this.getClass().toString(),"Copying Database");
             } catch (IOException e) {
                 Log.e(this.getClass().toString(), "Copying error");
                 throw new Error("Error copying database!");
             }
         } else {
-            Log.i(this.getClass().toString(), "Database already exists");
+            Log.d(this.getClass().toString(), "Database already exists");
         }
     }
 

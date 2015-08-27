@@ -1,7 +1,9 @@
 package me.quadphase.qpdex;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -30,10 +32,80 @@ import me.quadphase.qpdex.pokedex.PokedexAssetFactory;
 import me.quadphase.qpdex.pokedex.PokedexManager;
 import me.quadphase.qpdex.pokedex.TTSController;
 import me.quadphase.qpdex.pokemon.MinimalPokemon;
+import me.quadphase.qpdex.pokemon.Pokemon;
 import me.quadphase.qpdex.pokemon.Type;
 
 
 public class PokedexActivity extends AppCompatActivity {
+
+    private class PokedexSingleClickListener implements AdapterView.OnItemClickListener{
+        private int selectedItemIndex=0;
+        private long doubleClickTime=0;
+        private long doubleClickDelay=500;
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Log.d("QPDex", "List view touched");
+            Log.d("QPDEX", String.format("%s %s", pokedexListView.getSelectedItemPosition(), pokedexListView.getCheckedItemPosition()));
+            PokedexActivity.this.inputSearch.setHint(parent.getItemAtPosition(position).toString());
+            PokedexActivity.this.inputSearch.clearFocus();
+
+            //We can now get the minimal Object and do things from here
+            MinimalPokemon retrieved = (MinimalPokemon) parent.getItemAtPosition(position);
+            contextMaster.updatePokedexSelection(retrieved, getApplicationContext());
+            dexVoice.setText(retrieved.getDescription());
+            refreshPokedexOverviewPanel();
+
+            if(selectedItemIndex == pokedexListView.getCheckedItemPosition()){
+                if(System.currentTimeMillis() <= doubleClickDelay+doubleClickTime){
+                    Log.d("QPDex", "List view double click fired.");
+                    switchToPokemonData(view);
+                }
+            }
+
+            selectedItemIndex = pokedexListView.getCheckedItemPosition();
+            doubleClickTime = System.currentTimeMillis();
+
+        }
+    }
+
+    private class PokedexLongClickListener implements AdapterView.OnItemLongClickListener{
+        @Override
+        public boolean onItemLongClick(AdapterView<?> arg0, View v,int pos, long id) {
+            pokedexListView.performItemClick(v,pos,id);
+            switchToPokemonData(v);
+            return true;
+        }
+    }
+
+    private class PokedexSearchBarWatch implements TextWatcher{
+        @Override
+        public void onTextChanged(CharSequence a, int b, int c, int d) {
+            if(a.toString().isEmpty()){
+                pokedexEntries.getFilter().filter(a, new Filter.FilterListener() {
+                    @Override
+                    public void onFilterComplete(int count) {
+                        Log.d("QPDEX", "Resetting" + Integer.toString(pokedexListView.getSelectedItemPosition()));
+                        //Set a new selection here if necessary
+                    }
+                });
+            }
+            else{
+                pokedexEntries.getFilter().filter(a);
+            }
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence a, int b, int c, int d) {
+            //No Override
+        }
+
+        @Override
+        public void afterTextChanged(Editable e) {
+            //No Override
+        }
+    }
+
 
     //Application global references
     private CentralAudioPlayer audioPlayer;
@@ -48,16 +120,16 @@ public class PokedexActivity extends AppCompatActivity {
     ImageView overviewType1;
     ImageView overviewType2;
 
-    //Assitant Containers
-    ArrayAdapter<MinimalPokemon> pokedexEntries;
 
-    //Remove in future iterations when ListView is completely populated by PokedexManager
-    MinimalPokemon testy;
+    //Assistant Containers
+    ArrayAdapter<MinimalPokemon> pokedexEntries;
 
     private void refreshPokedexOverviewPanel(){
         overviewDescription.setText(contextMaster.getCurrentMinimalPokemon().getDescription());
-        overviewType1.setImageDrawable(contextMaster.getCurrentType1());
-        overviewType2.setImageDrawable(contextMaster.getCurrentType2());
+        overviewType1.setImageDrawable(contextMaster.getCurrentMinimalType1());
+        overviewType1.setScaleType(ImageView.ScaleType.FIT_XY);
+        overviewType2.setImageDrawable(contextMaster.getCurrentMinimalType2());
+        overviewType2.setScaleType(ImageView.ScaleType.FIT_XY);
         overviewImage.setImageDrawable(contextMaster.getSelectionOverviewSprite());
     }
 
@@ -69,6 +141,7 @@ public class PokedexActivity extends AppCompatActivity {
         overviewType2 = (ImageView) findViewById(R.id.imgview_pkmntype2);
         inputSearch = (EditText) findViewById(R.id.edittext_pkmnname);
         pokedexListView = (ListView) findViewById(R.id.listv_pkdexentries);
+
     }
 
 
@@ -87,13 +160,6 @@ public class PokedexActivity extends AppCompatActivity {
         contextMaster = PokedexManager.getInstance();
         dexVoice = TTSController.getOrSetInstance(this);
         audioPlayer = CentralAudioPlayer.getInstance();
-        testy = contextMaster.missingNo.minimal();
-//        if (contextMaster.isReady()) {
-//            refreshPokedexOverviewPanel();
-//        }
-//        else{
-//            contextMaster.updatePokedexSelection(testy, this);
-//        }
         audioPlayer.updateInstance(0, PokedexAssetFactory.getPokemonCry(this, 0));
         dexVoice.setText(overviewDescription.getText().toString());
 
@@ -103,32 +169,28 @@ public class PokedexActivity extends AppCompatActivity {
             cryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                playPokemonCry();
+                playPokemonCry(view);
             }
         });
         }
 
-
-        //This is a test, remove after real list can populate the ListView
-        Log.d("QPDEX", testy.toString());
-//        MinimalPokemon[] listy = new MinimalPokemon[11];
-//        Arrays.fill(listy, 0, 11, testy);
-
+        //TODO: Move to PokedexManager.
         // this is a test to ensure that the database is working
-        PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(this.getApplicationContext());
+        final PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(this.getApplicationContext());
+
+        long startTime = System.nanoTime();
         MinimalPokemon[] listy = pokemonFactory.getAllMinimalPokemon();
-        listy[2] = new MinimalPokemon(3,"Bulbasaur",
-                "Bulbasaur can be seen napping in bright sunlight. There is a seed on its back. By soaking up the sun’s rays, the seed grows progressively larger. ",
-                Arrays.asList(new Type("Grass"), new Type("Poison")), false);
+        final long minBuild = System.nanoTime();
+        Log.d("QPDEX", String.format("All MinimalPokemon done in: %s ns", minBuild - startTime));
 
-        pokemonFactory.getMinimalPokemonByNationalID(5);
-        // until here
+        //Initialize the ArrayAdapter object.
+        pokedexEntries = new PokedexArrayAdapter(this,listy);
 
-        pokedexEntries = new PokedexArrayAdapter(
-                this,
-//                R.layout.pokedexrow,
-//                R.id.textview_pkmn_list_entry,
-                listy);
+        //Setup the pokedexListView object
+        pokedexListView.setAdapter(pokedexEntries);
+        pokedexListView.setOnItemClickListener(new PokedexSingleClickListener());
+        pokedexListView.setLongClickable(true);
+        pokedexListView.setOnItemLongClickListener(new PokedexLongClickListener());
 
         //Set up Search Bar (EditText)
         if(!inputSearch.hasOnClickListeners()){
@@ -136,9 +198,8 @@ public class PokedexActivity extends AppCompatActivity {
             inputSearch.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Clear the Pokemon Name immediately.
-                    //TODO: Make sure the selection in the list always follows the pokemon in the list view
-//                    inputSearch.setText("");
+                    //Clear the Pokemon Name immediately (?)
+                    //No overrided behaviour for now. Just used to make "hasOnClickListeners" as true.
                 }
             });
 
@@ -147,68 +208,20 @@ public class PokedexActivity extends AppCompatActivity {
                 public void onFocusChange(View v, boolean hasFocus) {
                     if (!hasFocus) {
                         //Take the keyboard away
-                        //TODO: Has a lot of refinement to be done!
                         InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                     }
                 }
             });
         }
-
-        pokedexListView.setAdapter(pokedexEntries);
-        pokedexListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("QPDex", "List view touched");
-                Log.d("QPDEX", String.format("%s %s", pokedexListView.getSelectedItemPosition(), pokedexListView.getCheckedItemPosition()));
-                PokedexActivity.this.inputSearch.setHint(parent.getItemAtPosition(position).toString());
-                PokedexActivity.this.inputSearch.clearFocus();
-
-                //We can now get the minimal Object and do things from here
-                MinimalPokemon retrieved = (MinimalPokemon) parent.getItemAtPosition(position);
-                contextMaster.updatePokedexSelection(retrieved, getApplicationContext());
-                dexVoice.setText(retrieved.getDescription());
-                refreshPokedexOverviewPanel();
-            }
-        });
-
-
         //Setup the filter
-        this.inputSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence a, int b, int c, int d) {
-                if(a.toString().isEmpty()){
-                    //TODO: extract these methods to avoid ugly, anonymous methods
-                    pokedexEntries.getFilter().filter(a, new Filter.FilterListener() {
-                        @Override
-                        public void onFilterComplete(int count) {
-                            Log.d("QPDEX", "Resetting" + Integer.toString(pokedexListView.getSelectedItemPosition()));
-                            pokedexListView.setSelection(pokedexListView.getCount()-1); //TODO: Set the offset here
-                        }
-                    });
-                }
-                else{
-                    pokedexEntries.getFilter().filter(a);
-                }
-
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence a, int b, int c, int d) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable e) {
-
-            }
-        });
+        this.inputSearch.addTextChangedListener(new PokedexSearchBarWatch());
     }
 
     @Override
     protected void onResume(){
         super.onResume();
-        if(contextMaster.isReady())
+        if (contextMaster.isReady())
             refreshPokedexOverviewPanel();
     }
 
@@ -267,12 +280,57 @@ public class PokedexActivity extends AppCompatActivity {
     }
 
     public void switchToPokemonData(View view){
+
+        final Intent intent = new Intent(this,DetailedPokemonActivity.class);
+
         //We might need to signal the PokedexManager to see if the activity can load.
-        Intent intent = new Intent(this,DetailedPokemonActivity.class);
-        startActivity(intent);
+        final PokemonFactory pkmnBuild = PokemonFactory.getPokemonFactory(this);
+        final int selectedNationalID = contextMaster.getCurrentMinimalPokemon().getPokemonNationalID();
+
+        if(!pkmnBuild.isDetailedNationaIDBuiltAndReady(selectedNationalID)){
+            final ProgressDialog dialog = ProgressDialog.show(PokedexActivity.this, "", "Loading. Please wait...", true);
+            Thread modalHandler = new Thread(){
+                @Override
+                public void run(){
+
+                    //Show loading
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            dialog.setCancelable(true);
+                        }
+                    });
+
+                    //Wait for a while
+                    while(!pkmnBuild.isDetailedNationaIDBuiltAndReady(selectedNationalID)){
+                        try {
+                            Thread.sleep(10);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    //Dismiss the loading, reassert selection and proceed.
+                    contextMaster.updatePokedexSelection(contextMaster.getCurrentMinimalPokemon(), getApplicationContext());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            dialog.dismiss();
+                            startActivity(intent);
+                        }
+                    });
+                }
+            };
+
+            modalHandler.start();
+
+        }
+        else {
+            startActivity(intent);
+        }
     }
 
-    public void playPokemonCry(){
+    public void playPokemonCry(View view){
         Log.w("QPDEX","Playing Sound");
         audioPlayer.playSound();
     }
@@ -280,5 +338,10 @@ public class PokedexActivity extends AppCompatActivity {
     public void saySomething(View view){
         inputSearch.clearFocus();
         dexVoice.speak();
+    }
+
+    public void showConstructionActivity(View view){
+        Intent intent = new Intent(this,WIPActivity.class);
+        startActivity(intent);
     }
 }

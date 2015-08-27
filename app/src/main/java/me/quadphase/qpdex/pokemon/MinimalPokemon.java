@@ -38,7 +38,15 @@ public class MinimalPokemon {
         this.caught = caught;
     }
 
-    public int getNationalID() {
+    public MinimalPokemon(int nationalID, String name, String description, List<Type> types) {
+        this.nationalID = nationalID;
+        this.name = name;
+        this.description = description;
+        this.types = types;
+        this.caught = false;
+    }
+
+    public int getPokemonNationalID() {
         return nationalID;
     }
 
@@ -66,7 +74,7 @@ public class MinimalPokemon {
         this.caught = !this.caught;
         // toggle in the database:
         PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(null);
-        pokemonFactory.toggleCaught(this.nationalID);
+        pokemonFactory.setCaught(this.nationalID,this.caught);
     }
 
     @Override
