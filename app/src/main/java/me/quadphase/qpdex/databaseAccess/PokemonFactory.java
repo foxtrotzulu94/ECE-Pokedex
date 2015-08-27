@@ -78,35 +78,42 @@ public class PokemonFactory {
 
                 Log.d("QPDEX_PkmnBuilder",String.format("Optimal Workers: %s",optimalWorkerNumber));
 
-                for (int i = 1; i <= optimalWorkerNumber/2; i++) {
-                    Thread worker1;
-                    Thread worker2;
+                for (int i = 1; i <= optimalWorkerNumber; i++) {
+                    Thread worker;
+//                    Thread worker1;
+//                    Thread worker2;
 
                     //Build the list from the opposite ends
                     // We do this because the user is VERY likely to touch either the first couple
                     // of entries OR the last couple, rather than anything smack in the middle
 
-                    if(i==1){
-                        worker1 = new DetailedListBuilder(currentIndex, subdivisionSize * i);
-                        worker2 = new DetailedListBuilder(subdivisionSize*(optimalWorkerNumber-1), (subdivisionSize*optimalWorkerNumber)+remainder);
+//                    if(i==1){
+//                        worker1 = new DetailedListBuilder(currentIndex, subdivisionSize * i);
+//                        worker2 = new DetailedListBuilder(subdivisionSize*(optimalWorkerNumber-1), (subdivisionSize*optimalWorkerNumber)+remainder);
+//                    }
+//                    else{
+//                        worker1 = new DetailedListBuilder(currentIndex, subdivisionSize * i);
+//                        worker2 = new DetailedListBuilder(subdivisionSize*(optimalWorkerNumber-i), subdivisionSize * (optimalWorkerNumber-i));
+//                    }
+//
+
+                    if(i<optimalWorkerNumber) {
+                        worker = new DetailedListBuilder(currentIndex, subdivisionSize * i);
                     }
-                    else{
-                        worker1 = new DetailedListBuilder(currentIndex, subdivisionSize * i);
-                        worker2 = new DetailedListBuilder(subdivisionSize*(optimalWorkerNumber-i), subdivisionSize * (optimalWorkerNumber-i));
+                    else {
+                        worker = new DetailedListBuilder(currentIndex, (subdivisionSize*i)+remainder);
                     }
 
+                    Log.d("QPDEX",String.format("Current index built %s",currentIndex));
 
-//                    if(i<optimalWorkerNumber) {
-//                        worker = new DetailedListBuilder(currentIndex, subdivisionSize * i);
-//                    }
-//                    else {
-//                        worker = new DetailedListBuilder(currentIndex, (subdivisionSize*i)+remainder);
-//                    }
                     currentIndex = currentIndex+subdivisionSize-1;
-                    worker1.start();
-                    worker2.start();
-                    workerList.add(worker1);
-                    workerList.add(worker2);
+                    worker.start();
+                    workerList.add(worker);
+
+//                    worker1.start();
+//                    worker2.start();
+//                    workerList.add(worker1);
+//                    workerList.add(worker2);
 
                 }
 
@@ -211,6 +218,17 @@ public class PokemonFactory {
         ExternalDbOpenHelper dbOpenHelper = new ExternalDbOpenHelper(context, DB_NAME);
         database = dbOpenHelper.openDataBase();
 
+        //Create new short list (matches minimalPokemon with a corresponding Pokemon)
+        detailedPokemonShortList = new Pokemon[getMaxNationalID()+1];
+
+        //Create a new Large Pokemon List
+        allDetailedPokemon = new Pokemon[getMaxUniqueID()+1];
+
+        //Set the fail-safe
+        allDetailedPokemon[0] = PokedexManager.getInstance().missingNo;
+        detailedPokemonShortList[0] = allDetailedPokemon[0];
+
+
         types = new HashMap<>();
 
         loadAllTypes();
@@ -257,16 +275,7 @@ public class PokemonFactory {
         // We should have a large cached list of these objects, such that we can refer to it before
         // Building an evolution within the DFS loop.
 
-        if (allDetailedPokemon==null && detailedPokemonShortList==null) {
-            //Create new short list (matches minimalPokemon with a corresponding Pokemon)
-            detailedPokemonShortList = new Pokemon[getMaxNationalID()+1];
-
-            //Create a new Large Pokemon List
-            allDetailedPokemon = new Pokemon[getMaxUniqueID()+1];
-
-            //Set the fail-safe
-            allDetailedPokemon[0] = PokedexManager.getInstance().missingNo;
-            detailedPokemonShortList[0] = allDetailedPokemon[0];
+        if (allDetailedPokemon!=null && detailedPokemonShortList!=null) {
 
             for (int i = 1; i <= getMaxNationalID(); i++) {
                 //If the entry is null
@@ -396,7 +405,7 @@ public class PokemonFactory {
      *          move(s) and ability(ies)
      */
     public Pokemon getPokemonByPokemonID(int pokemonID) {
-        if (allDetailedPokemon!=null && allDetailedPokemon[pokemonID]!=null) {
+        if (allDetailedPokemon[pokemonID]!=null) {
             return allDetailedPokemon[pokemonID];
         } else {
             // move the cursor to the correct entry of the pokemon table
@@ -462,7 +471,7 @@ public class PokemonFactory {
      * @return the complete pokemon object including all of its information such as type(s),
      *          move(s) and ability(ies)
      */
-    public Pokemon getPokemonByNationalID(int nationalID) { // TODO: return list of all
+    public Pokemon getPokemonByNationalID(int nationalID) {
         return getPokemonByPokemonID(checkUniqueIDFromNationalID(nationalID));
     }
 

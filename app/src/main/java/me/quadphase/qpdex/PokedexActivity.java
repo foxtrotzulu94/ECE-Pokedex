@@ -38,43 +38,6 @@ import me.quadphase.qpdex.pokemon.Type;
 
 public class PokedexActivity extends AppCompatActivity {
 
-    public class detailedCheckerTask extends AsyncTask<Void, Void, Void> {
-
-        Intent intent;
-
-        public detailedCheckerTask(Intent intent){
-            super();
-            this.intent = intent;
-        }
-
-        ProgressDialog dialog = new ProgressDialog(PokedexActivity.this);
-        @Override
-        protected void onPreExecute() {
-            dialog.show();
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            dialog.dismiss();
-            contextMaster.updatePokedexSelection(contextMaster.getCurrentMinimalPokemon(),getApplicationContext());
-            startActivity(intent);
-            super.onPostExecute(result);
-        }
-
-    };
-
-
     private class PokedexSingleClickListener implements AdapterView.OnItemClickListener{
         private int selectedItemIndex=0;
         private long doubleClickTime=0;
@@ -348,11 +311,11 @@ public class PokedexActivity extends AppCompatActivity {
                     }
 
                     //Dismiss the loading, reassert selection and proceed.
+                    contextMaster.updatePokedexSelection(contextMaster.getCurrentMinimalPokemon(), getApplicationContext());
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             dialog.dismiss();
-                            contextMaster.updatePokedexSelection(contextMaster.getCurrentMinimalPokemon(),getApplicationContext());
                             startActivity(intent);
                         }
                     });

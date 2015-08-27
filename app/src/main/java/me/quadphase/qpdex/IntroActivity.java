@@ -1,6 +1,7 @@
 package me.quadphase.qpdex;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.graphics.Bitmap;
@@ -33,12 +34,14 @@ import me.quadphase.qpdex.pokemon.Pokemon;
 
 public class IntroActivity extends AppCompatActivity {
 
+    private PokedexManager contextMaster;
+
     private void setupAndLoad(){
         //Register with the ExceptionHandler
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
 
         //Initialize the PokedexManager class
-        PokedexManager contextMaster = PokedexManager.getInstance();
+         contextMaster = PokedexManager.getInstance();
 
         //Tell the PokedexManager to begin caching operations with the PokedexFactory
         //This takes care of any steps related to pre-fetching objects and building them together.
@@ -117,8 +120,51 @@ public class IntroActivity extends AppCompatActivity {
     }
 
     public void switchToPokedex(View view){
-        Intent intent = new Intent(this,PokedexActivity.class);
-        startActivity(intent);
+        final Intent intent = new Intent(this,PokedexActivity.class);
+
+        //We might need to signal the PokedexManager to see if the activity can load.
+        final PokemonFactory pkmnBuild = PokemonFactory.getPokemonFactory(this);
+
+        if(!contextMaster.isMinimalReady()){
+            final ProgressDialog dialog = ProgressDialog.show(IntroActivity.this, "", "Loading. Please wait...", true);
+            Thread modalHandler = new Thread(){
+                @Override
+                public void run(){
+
+                    //Show loading
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            dialog.setCancelable(true);
+                        }
+                    });
+
+                    //Wait for a while
+                    while(!contextMaster.isMinimalReady()){
+                        try {
+                            Thread.sleep(10);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    //Dismiss the loading and proceed.
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            dialog.dismiss();
+                            startActivity(intent);
+                        }
+                    });
+                }
+            };
+
+            modalHandler.start();
+
+        }
+        else {
+            startActivity(intent);
+        }
     }
 
     public void showConstructionActivity(View view){

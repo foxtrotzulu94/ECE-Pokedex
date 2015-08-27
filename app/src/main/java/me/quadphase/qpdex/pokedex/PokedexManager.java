@@ -125,6 +125,7 @@ public class PokedexManager {
     private static PokedexManager instance=null;
     private static CentralAudioPlayer jukebox=null;
     private static PokemonFactory pkmnBuild=null;
+    private boolean isMinimalReady=false;
     private boolean isReady=false;
     private boolean isDetailed=false;
 
@@ -258,11 +259,10 @@ public class PokedexManager {
             @Override
             public void run(){
                 int nationalID= currentMinimalPokemon.getPokemonNationalID();
-                if (nationalID>0 && (isReady || pkmnBuild.isDetailedNationaIDBuiltAndReady(nationalID))){
+                if (nationalID>0){
                         updatePokedexSelection(
                                 pkmnBuild.getPokemonByNationalID(nationalID),
                                 currentContext);
-
                 }
                 else{ //If the Manager isn't ready or we had an unexpected ID, then display MissingNo!!!
                     //TODO: Fix/Hide exceptional behaviour
@@ -340,6 +340,10 @@ public class PokedexManager {
         return isReady;
     }
 
+    public boolean isMinimalReady(){
+        return isMinimalReady;
+    }
+
     /**
      * Retrieve a reference to the MinimalPokemon currently loaded
      */
@@ -401,7 +405,7 @@ public class PokedexManager {
             public void run(){
                 // This builds all the Detailed Pokemon, even though we might not want to store it!
                 //TODO: Paralelize and optimize for speed
-                pkmnBuild.getAllDetailedPokemonInParallel();
+                pkmnBuild.getAllDetailedPokemon();
 
                 //Signals full completion
                 isReady = true;
@@ -413,7 +417,7 @@ public class PokedexManager {
             @Override
             public void run(){
                 allMinimalPokemon = pkmnBuild.getAllMinimalPokemon();
-
+                isMinimalReady=true;
                 // After this is done, spawn off initFull to finish the setup
                 initFull.start();
             }
