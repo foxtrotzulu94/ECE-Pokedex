@@ -22,12 +22,12 @@ public class Evolution {
     /**
      * pokemon that the current pokemon evolves into
      */
-    private Pokemon evolvesInto;
+    private MinimalPokemon evolvesInto;
 
     /**
      * Constructor
      */
-    public Evolution(String condition, Pokemon evolvesInto) {
+    public Evolution(String condition, MinimalPokemon evolvesInto) {
         this.condition = condition;
         this.evolvesInto = evolvesInto;
     }
@@ -39,7 +39,7 @@ public class Evolution {
         return condition;
     }
 
-    public Pokemon getEvolvesInto() {
+    public MinimalPokemon getEvolvesInto() {
         return evolvesInto;
     }
 }

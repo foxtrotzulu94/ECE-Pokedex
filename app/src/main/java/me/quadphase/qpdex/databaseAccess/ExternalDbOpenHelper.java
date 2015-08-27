@@ -117,5 +117,13 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {}
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (newVersion > oldVersion) {
+            try {
+                copyDataBase();
+            } catch (Exception e) {
+                // do something
+            }
+        }
+    }
 }

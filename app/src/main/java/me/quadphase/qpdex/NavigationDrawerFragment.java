@@ -1,5 +1,6 @@
 package me.quadphase.qpdex;
 
+import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.app.Activity;
@@ -23,12 +24,33 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.Arrays;
+
+import me.quadphase.qpdex.pokedex.PokedexArrayAdapter;
+import me.quadphase.qpdex.pokedex.PokedexManager;
+import me.quadphase.qpdex.pokemon.MinimalPokemon;
+import me.quadphase.qpdex.pokemon.Type;
+
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
 public class NavigationDrawerFragment extends Fragment {
+
+    private class PokedexDrawerClickListener implements AdapterView.OnItemClickListener{
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+            //Simply update the Pokedex Manager and advise the parent activity to update
+            MinimalPokemon retrieved = (MinimalPokemon) parent.getItemAtPosition(position);
+            PokedexManager.getInstance().updatePokedexSelection(retrieved, getActivity());
+            DetailedPokemonActivity parentActivity = (DetailedPokemonActivity)getActivity();
+            if(parentActivity!=null){
+                parentActivity.notifyUpdate();
+            }
+            selectItem(position);
+        }
+    }
 
     /**
      * Remember the position of the selected item.
@@ -90,24 +112,29 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mDrawerListView = (ListView) inflater.inflate(
-                R.layout.fragment_navigation_drawer, container, false);
-        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectItem(position);
-            }
-        });
-        mDrawerListView.setAdapter(new ArrayAdapter<String>(
+        mDrawerListView = (ListView) inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
+
+        mDrawerListView.setOnItemClickListener(new PokedexDrawerClickListener());
+
+        //TODO: CLEANUP when this list is available in the PokedexManager
+        int testNumber = 721;
+        MinimalPokemon[] listy = new MinimalPokemon[testNumber];
+        for(int i =0; i<testNumber; i++){
+            listy[i] = new MinimalPokemon(i,"Pokemon",
+                    "The franchise began as a pair of video games for the original Game Boy, developed by Game Freak and published by Nintendo. The franchise now spans video games, trading card games, animated television shows and movies, comic books, and toys",
+                    Arrays.asList(new Type("electric", ""), new Type("ice", "")));
+        }
+        listy[1] = new MinimalPokemon(1,"Bulbasaur",
+                "Bulbasaur can be seen napping in bright sunlight. There is a seed on its back. By soaking up the sun’s rays, the seed grows progressively larger. ",
+                Arrays.asList(new Type("Grass",""), new Type("Poison","")));
+
+        PokedexArrayAdapter pokedexEntries = new PokedexArrayAdapter(
                 getActivity(),
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
-                new String[]{
-                        getString(R.string.title_section1),
-                        getString(R.string.title_section2),
-                        getString(R.string.title_section3),
-                }));
-//        mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+                listy);
+        pokedexEntries.setFontSize(10.0f);
+        mDrawerListView.setAdapter(pokedexEntries);
+        //TODO: Set selection here according to Pokemon in focus from PokedexManager.
+
         return mDrawerListView;
     }
 
@@ -192,6 +219,7 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
+    //NOTE: Not deleting for now in case we might want to default back to the previous behaviour.
     private void selectItem(int position) {
         mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {
