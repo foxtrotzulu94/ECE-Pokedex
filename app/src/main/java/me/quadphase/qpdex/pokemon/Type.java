@@ -12,6 +12,8 @@ package me.quadphase.qpdex.pokemon;
 //
 
 
+import me.quadphase.qpdex.databaseAccess.PokemonFactory;
+
 /** */
 public class Type {
     /**
@@ -54,4 +56,25 @@ public class Type {
         return name;
     }
 
+    /**
+     * Determine the attacking effectiveness of this type against a defending one.
+     *
+     * @param defendingType type that this type is defending against
+     * @return the attacking effectiveness against the defendingType
+     */
+    public short getAttackingEffectivenessAgainst (Type defendingType) {
+        PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(null);
+        return pokemonFactory.getTypeEffectivenessTable()[pokemonFactory.getTypeID(this)][pokemonFactory.getTypeID(defendingType)];
+    }
+
+    /**
+     * Determine the defending effectiveness of this type against an attacking one.
+     *
+     * @param attackingType type that this type is attacking
+     * @return the defensive effectiveness against the attackingType
+     */
+    public short getDefendingEffectivenessAgainst (Type attackingType) {
+        PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(null);
+        return pokemonFactory.getTypeEffectivenessTable()[pokemonFactory.getTypeID(attackingType)][pokemonFactory.getTypeID(this)];
+    }
 }
