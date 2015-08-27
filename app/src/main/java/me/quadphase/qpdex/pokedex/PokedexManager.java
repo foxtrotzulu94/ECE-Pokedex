@@ -38,7 +38,9 @@ public class PokedexManager {
                     -1,                  // pokemonUniqueID,
                     0,                   // pokemonNationalID,
                     "MissingNo.",        // name,
-                    "Ketsuban",// description,
+                    "It is arguably the best known glitch Pokémon, closely followed by 'M (00) and it is the easiest glitch Pokémon to find in the localizations. It has five distinct forms, but the most frequent forms (that being the Red/Blue and Yellow normal forms) share 36 index numbers each.\n" +
+                            "\n" +
+                            "In later generations, other glitch Pokémon are sometimes referred to as \"a Missingno.\", such as ??????????, ?, and -----. Despite this, the name \"Missingno.\" is a misnomer in this case; they have little relation to the one found in Pokémon Red and Blue or Yellow. ",// description,
                     3.3,                 // height in Meters,
                     1590.8,              // weight in Kilograms,
                     136,                 // attack,
