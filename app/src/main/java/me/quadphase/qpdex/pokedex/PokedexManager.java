@@ -1,6 +1,5 @@
 package me.quadphase.qpdex.pokedex;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
@@ -251,6 +250,7 @@ public class PokedexManager {
         //  should probably be delayed until the intent to open up the DetailedPokemonActivity has been
         //  fired.
         if (prefetch) {
+            Log.d("QPDEX_Manager",String.format("Updating to %s",currentPokemonNationalID));
             Thread buildInDetail = new Thread(){
                 @Override
                 public void run(){
@@ -261,16 +261,11 @@ public class PokedexManager {
                                     currentContext);
                     }
                     else{ //If the Manager isn't ready or we had an unexpected ID, then display MissingNo!!!
-                        //TODO: Fix/Hide exceptional behaviour
-                        // The manager not being ready can be a combination of factors. Most likely, the
-                        // threads are running late and we hit a Race Condition.
-                        // In this case, the UI should show this clearly and display a loading modal
-                        // so that the User knows what to expect.
                         updatePokedexSelection(missingNo, currentContext);
                     }
                 }
             };
-            buildInDetail.start();
+            buildInDetail.run();
         }
     }
 
@@ -283,6 +278,8 @@ public class PokedexManager {
     public void updatePokedexSelection(Pokemon detailedPokemon, final Context currentContext){
         //For now, it just sets this variable. Later it should probably do more in terms of assets
         currentDetailedPokemon = detailedPokemon;
+
+        Log.d("QPDEX_Manager",String.format("Updating detail to %s",detailedPokemon.getPokemonNationalID()));
 
         //Load Sprite
         currentOverviewSprite = new BitmapDrawable(currentContext.getResources(),
