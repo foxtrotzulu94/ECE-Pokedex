@@ -281,10 +281,11 @@ public class PokedexActivity extends AppCompatActivity {
         //We might need to signal the PokedexManager to see if the activity can load.
         final PokemonFactory pkmnBuild = PokemonFactory.getPokemonFactory(this);
         final int selectedNationalID = contextMaster.getCurrentMinimalPokemon().getPokemonNationalID();
+        contextMaster.updatePokedexSelection(contextMaster.getCurrentMinimalPokemon(), getApplicationContext(), true);
+        Log.d("QPDEX",String.format("Switching to %s",selectedNationalID));
 
         if(!pkmnBuild.isDetailedNationalIDBuiltAndReady(selectedNationalID)){
             final ProgressDialog dialog = ProgressDialog.show(PokedexActivity.this, "", "Loading. Please wait...", true);
-            contextMaster.updatePokedexSelection(contextMaster.getCurrentMinimalPokemon(), getApplicationContext(), true);
             Thread modalHandler = new Thread(){
                 @Override
                 public void run(){

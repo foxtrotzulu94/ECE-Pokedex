@@ -477,9 +477,13 @@ public class PokemonFactory {
      *          move(s) and ability(ies)
      */
     public Pokemon getPokemonByNationalID(int nationalID) {
-        Pokemon returnObject = getPokemonByPokemonID(checkUniqueIDFromNationalID(nationalID));
-        detailedPokemonShortList[nationalID] = returnObject;
-        return returnObject;
+        if (!isDetailedNationalIDBuiltAndReady(nationalID)) {
+            Pokemon returnObject = getPokemonByPokemonID(checkUniqueIDFromNationalID(nationalID));
+            detailedPokemonShortList[nationalID] = returnObject;
+            return returnObject;
+        } else {
+            return detailedPokemonShortList[nationalID];
+        }
     }
 
     public int checkUniqueIDFromNationalID(int nationalID){

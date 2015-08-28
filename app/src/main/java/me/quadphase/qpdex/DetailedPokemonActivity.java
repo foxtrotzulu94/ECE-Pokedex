@@ -327,7 +327,7 @@ public class DetailedPokemonActivity extends FragmentActivity
             //Default to the fail-safe Pokemon
             contextMaster.updatePokedexSelection(contextMaster.missingNo,this);
         }
-
+        Log.d("QPDEX",String.format("Detailing to %s",detailedPokemon.getPokemonNationalID()));
         spriteIndex = 0; //Might remove in the future
 
         //Set the name
