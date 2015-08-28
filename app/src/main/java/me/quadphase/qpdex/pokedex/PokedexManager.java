@@ -212,7 +212,7 @@ public class PokedexManager {
      * @param pokedexSelection The minimal pokemon, preferrably from the {@link PokedexArrayAdapter}
      * @param currentContext The context in which the update occurs (usually, "this" within an Activity)
      */
-    public void updatePokedexSelection(MinimalPokemon pokedexSelection, final Context currentContext){
+    public void updatePokedexSelection(MinimalPokemon pokedexSelection, final Context currentContext, boolean prefetch){
 
         if(pkmnBuild==null){
             pkmnBuild = PokemonFactory.getPokemonFactory(currentContext);
@@ -250,26 +250,28 @@ public class PokedexManager {
         //  this method is called, primarily, from PokedexActivty. Setting the fully detailed pokemon
         //  should probably be delayed until the intent to open up the DetailedPokemonActivity has been
         //  fired.
-        Thread buildInDetail = new Thread(){
-            @Override
-            public void run(){
-                int nationalID= currentMinimalPokemon.getPokemonNationalID();
-                if (nationalID>0){
-                        updatePokedexSelection(
-                                pkmnBuild.getPokemonByNationalID(nationalID),
-                                currentContext);
+        if (prefetch) {
+            Thread buildInDetail = new Thread(){
+                @Override
+                public void run(){
+                    int nationalID= currentMinimalPokemon.getPokemonNationalID();
+                    if (nationalID>0){
+                            updatePokedexSelection(
+                                    pkmnBuild.getPokemonByNationalID(nationalID),
+                                    currentContext);
+                    }
+                    else{ //If the Manager isn't ready or we had an unexpected ID, then display MissingNo!!!
+                        //TODO: Fix/Hide exceptional behaviour
+                        // The manager not being ready can be a combination of factors. Most likely, the
+                        // threads are running late and we hit a Race Condition.
+                        // In this case, the UI should show this clearly and display a loading modal
+                        // so that the User knows what to expect.
+                        updatePokedexSelection(missingNo, currentContext);
+                    }
                 }
-                else{ //If the Manager isn't ready or we had an unexpected ID, then display MissingNo!!!
-                    //TODO: Fix/Hide exceptional behaviour
-                    // The manager not being ready can be a combination of factors. Most likely, the
-                    // threads are running late and we hit a Race Condition.
-                    // In this case, the UI should show this clearly and display a loading modal
-                    // so that the User knows what to expect.
-                    updatePokedexSelection(missingNo, currentContext);
-                }
-            }
-        };
-        buildInDetail.start();
+            };
+            buildInDetail.start();
+        }
     }
 
     /**
@@ -282,7 +284,6 @@ public class PokedexManager {
         //For now, it just sets this variable. Later it should probably do more in terms of assets
         currentDetailedPokemon = detailedPokemon;
 
-        //TODO: Switch Overview sprite back to detailedPokemon when the DB Access is Complete!
         //Load Sprite
         currentOverviewSprite = new BitmapDrawable(currentContext.getResources(),
                 PokedexAssetFactory.getPokemonSpriteInGeneration(
@@ -308,7 +309,7 @@ public class PokedexManager {
                 cachedDisplaySprites = new LinkedList<BitmapDrawable>();
                 for (int i = restrictUpToGeneration; i >0; i--) {
                     InputStream file = PokedexAssetFactory.getPokemonSpriteInGeneration(
-                            currentContext, //TODO: replace currentMinimalPokemon back with currentDetailedPokemon
+                            currentContext,
                             currentDetailedPokemon.getPokemonNationalID(),
                             i);
                     BitmapDrawable sprite = new BitmapDrawable(
@@ -415,14 +416,14 @@ public class PokedexManager {
                 allMinimalPokemon = pkmnBuild.getAllMinimalPokemon();
                 isMinimalReady=true;
                 // After this is done, spawn off initFull to finish the setup
-                initFull.start();
+//                initFull.start(); //TODO: Uncomment after optimizing
                 Log.d("QPDEX_Manager","All Minimal Pokemon Objects Created");
             }
         };
 
         // Start with the initMin thread and it will call initFull afterwards.
         initMin.start();
-
+        initMin.setPriority(Thread.MAX_PRIORITY);
 
 
     }

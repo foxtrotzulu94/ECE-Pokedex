@@ -259,6 +259,7 @@ public class PokemonFactory {
      * @return List of all main (no suffix) minimalPokemon in the database
      */
     public MinimalPokemon[] getAllMinimalPokemon() {
+        //TODO: Perform aggressive optimizations when possible
 
         if (allMinimalPokemon==null) {
             allMinimalPokemon = new MinimalPokemon[getMaxNationalID()+1];
@@ -308,6 +309,7 @@ public class PokemonFactory {
 
     }
 
+    //TODO: FIX thread classes before calling again.
     public void getAllDetailedPokemonInParallel(){
         Thread masterBuilder = new DetailedListMaster();
         masterBuilder.start();
@@ -476,7 +478,9 @@ public class PokemonFactory {
      *          move(s) and ability(ies)
      */
     public Pokemon getPokemonByNationalID(int nationalID) {
-        return getPokemonByPokemonID(checkUniqueIDFromNationalID(nationalID));
+        Pokemon returnObject = getPokemonByPokemonID(checkUniqueIDFromNationalID(nationalID));
+        detailedPokemonShortList[nationalID] = returnObject;
+        return returnObject;
     }
 
     public int checkUniqueIDFromNationalID(int nationalID){

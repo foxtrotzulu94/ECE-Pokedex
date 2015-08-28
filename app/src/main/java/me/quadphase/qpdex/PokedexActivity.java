@@ -47,7 +47,7 @@ public class PokedexActivity extends AppCompatActivity {
 
             //We can now get the minimal Object and do things from here
             MinimalPokemon retrieved = (MinimalPokemon) parent.getItemAtPosition(position);
-            contextMaster.updatePokedexSelection(retrieved, getApplicationContext());
+            contextMaster.updatePokedexSelection(retrieved, getApplicationContext(), false);
             dexVoice.setText(retrieved.getDescription());
             refreshPokedexOverviewPanel();
 
@@ -284,6 +284,7 @@ public class PokedexActivity extends AppCompatActivity {
 
         if(!pkmnBuild.isDetailedNationalIDBuiltAndReady(selectedNationalID)){
             final ProgressDialog dialog = ProgressDialog.show(PokedexActivity.this, "", "Loading. Please wait...", true);
+            contextMaster.updatePokedexSelection(contextMaster.getCurrentMinimalPokemon(), getApplicationContext(), true);
             Thread modalHandler = new Thread(){
                 @Override
                 public void run(){
@@ -299,14 +300,13 @@ public class PokedexActivity extends AppCompatActivity {
                     //Wait for a while
                     while(!pkmnBuild.isDetailedNationalIDBuiltAndReady(selectedNationalID)){
                         try {
-                            Thread.sleep(10);
+                            Thread.sleep(1);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
 
-                    //Dismiss the loading, reassert selection and proceed.
-                    contextMaster.updatePokedexSelection(contextMaster.getCurrentMinimalPokemon(), getApplicationContext());
+                    //Dismiss the loading and proceed.
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

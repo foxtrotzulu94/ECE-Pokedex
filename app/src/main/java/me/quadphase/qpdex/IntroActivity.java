@@ -130,7 +130,7 @@ public class IntroActivity extends AppCompatActivity {
                     //Wait for a while
                     while(!contextMaster.isMinimalReady()){
                         try {
-                            Thread.sleep(10);
+                            Thread.sleep(1);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
