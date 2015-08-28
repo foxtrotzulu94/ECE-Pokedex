@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import me.quadphase.qpdex.DetailedPokemonActivity;
 import me.quadphase.qpdex.exceptions.PartyFullException;
 import me.quadphase.qpdex.pokedex.PokedexManager;
 import me.quadphase.qpdex.pokemon.Ability;
@@ -33,7 +32,6 @@ import me.quadphase.qpdex.pokemon.Type;
  */
 public class PokemonFactory {
 
-    //TODO: Fix and retest!
     private class DetailedListBuilder extends Thread{
         int startIndex;
         int endIndex;
@@ -50,7 +48,6 @@ public class PokemonFactory {
 
     }
 
-    //TODO: Fix and retest!
     private class DetailedListMaster extends Thread{
 
         //Best arbitrary number I could choose...
@@ -208,6 +205,12 @@ public class PokemonFactory {
     private HashMap<Integer,Type> types;
 
     /**
+     * Type effectiveness sparse matrix.
+     * [attacking type][defending type]
+     */
+    private final short[][] typeEffectiveness;
+
+    /**
      * SQLite database handle
      */
     private SQLiteDatabase database;
@@ -220,14 +223,6 @@ public class PokemonFactory {
         ExternalDbOpenHelper dbOpenHelper = new ExternalDbOpenHelper(context, DB_NAME);
         database = dbOpenHelper.openDataBase();
 
-        setupLargeCacheLists();
-
-        types = new HashMap<>();
-
-        loadAllTypes();
-    }
-
-    private void setupLargeCacheLists(){
         //Create new short list (matches minimalPokemon with a corresponding Pokemon)
         detailedPokemonShortList = new Pokemon[getMaxNationalID()+1];
 
@@ -237,6 +232,13 @@ public class PokemonFactory {
         //Set the fail-safe
         allDetailedPokemon[0] = PokedexManager.getInstance().missingNo;
         detailedPokemonShortList[0] = allDetailedPokemon[0];
+
+        // Load all type objects:
+        types = new HashMap<>();
+        loadAllTypes();
+
+        // Load the type effectiveness sparse matrix:
+        typeEffectiveness = buildTypeEffectivenessTable();
     }
 
     /**
@@ -275,29 +277,28 @@ public class PokemonFactory {
         return allMinimalPokemon;
     }
 
-    public void getAllDetailedPokemon(){
-        //TODO: Perform aggressive optimizations when possible
+    public Pokemon[] getAllDetailedPokemon(){
+        //TODO: we have to be a bit smarter to avoid crashing the application
+        // Though the DFS is pretty good, the way we're building right now leaks memory massively.
+        // We should have a large cached list of these objects, such that we can refer to it before
+        // Building an evolution within the DFS loop.
 
-        if (allDetailedPokemon==null || detailedPokemonShortList==null) {
-            setupLargeCacheLists();
-        }
+        if (allDetailedPokemon!=null && detailedPokemonShortList!=null) {
 
-        for (int i = 1; i <= getMaxNationalID(); i++) {
-
-            //If the entry is null
-            if(detailedPokemonShortList[i]==null){
-                //Check the mapping to the long list if it's there by any chance
-                if(allDetailedPokemon[checkUniqueIDFromNationalID(i)]!=null){
-                    detailedPokemonShortList[i] = allDetailedPokemon[checkUniqueIDFromNationalID(i)];
+            for (int i = 1; i <= getMaxNationalID(); i++) {
+                //If the entry is null
+                if(detailedPokemonShortList[i]==null){
+                    //Check the mapping to the long list if it's there by any chance
+                    if(allDetailedPokemon[checkUniqueIDFromNationalID(i)]!=null){
+                        detailedPokemonShortList[i] = allDetailedPokemon[checkUniqueIDFromNationalID(i)];
+                    }
+                    //Or build it from scratch
+                    else {
+                        detailedPokemonShortList[i] = getPokemonByNationalID(i);
+                    }
                 }
-                //Or build it from scratch
-                else {
-                    detailedPokemonShortList[i] = getPokemonByNationalID(i);
-                }
-            }
-
-            if(PRINT_DEBUG)
-                Log.d("QPDEX",String.format("Building %s",i));
+                if(PRINT_DEBUG)
+                    Log.d("QPDEX",String.format("Building %s",i));
 //                //We have to slow down the loop intentionally...
 //                try {
 //                    Thread.sleep(10);
@@ -305,8 +306,10 @@ public class PokemonFactory {
 //                catch(InterruptedException e){
 //
 //                }
+            }
         }
 
+        return allDetailedPokemon;
     }
 
     //TODO: FIX thread classes before calling again.
@@ -483,6 +486,15 @@ public class PokemonFactory {
         return returnObject;
     }
 
+    /**
+     * Finds the uniqueID associated with the main pokemon corresponding to the nationalID given.
+     *
+     * NOTE: This method assumes that the first pokemon in the pokemon_nationalID mapping table is
+     *       the original pokemon that we want to fetch.
+     *
+     * @param nationalID nationalID of the pokemon that we are searching the uniqueID of
+     * @return uniqueID of the original pokemon with the given nationalID
+     */
     public int checkUniqueIDFromNationalID(int nationalID){
         // find the pokemonID from the nationalID using the pokemon_nationalID mapping table
         String[] selectionArg = {String.valueOf(nationalID)};
@@ -638,7 +650,6 @@ public class PokemonFactory {
      * @return the list of types that the pokemon is
      */
     private List<Type> getTypes(int pokemonID) {
-
         List<Type> types = new LinkedList<>();
         // move the cursor to the pokemon types mapping table
         String[] selectionArg = {String.valueOf(pokemonID)};
@@ -732,7 +743,6 @@ public class PokemonFactory {
      */
     private Type getType(int typeID) {
         Type type = types.get(typeID);
-
         if(PRINT_DEBUG)
             Log.v("Database Access", "From typeID " + String.valueOf(typeID) + " type obtained was " + type.getName());
 
@@ -828,6 +838,12 @@ public class PokemonFactory {
         database.endTransaction();
     }
 
+    /**
+     * Sets the value of caught to caught or not in the database.
+     *
+     * @param nationalID nationalID of the pokemon that is caught
+     * @param value true if changing to caught, false if changing to not caught
+     */
     public void setCaught(int nationalID, boolean value){
         int caught = value? 1 : 0;
         // create new row content
@@ -847,10 +863,6 @@ public class PokemonFactory {
      * @return current generation
      */
     public int getCurrentGeneration() {
-        /*
-        TODO: test this method, and the getMaxNationalID, to make sure that this selection command
-                 works to get the max. If not, let @Nicole know :)
-        */
         Cursor cursor = database.query(GAMES_TABLE, null, null, null, null, null, null);
         cursor.moveToLast();
 
@@ -1087,8 +1099,64 @@ public class PokemonFactory {
         return moveID;
     }
 
-    public boolean isDetailedNationalIDBuiltAndReady(int nationalID){
+    /**
+     * Verifies if the pokemon object with the given nationalID is built and ready.
+     *
+     * @param nationalID nationalID of the pokemon to verify
+     * @return true if the pokemon is built and ready, false if it is not
+     */
+    public boolean isDetailedNationaIDBuiltAndReady(int nationalID){
         return detailedPokemonShortList!=null && detailedPokemonShortList[nationalID]!=null;
+    }
+
+    /**
+     * Constructs a sparse matrix of the type effectivenesses.
+     *
+     * This should be done on initiation of the {@link PokemonFactory}
+     *
+     * @return sparse matrix of the types effectiveness against each other
+     */
+    private short[][] buildTypeEffectivenessTable() {
+        int maxTypeID = getMaxTypeID();
+        short[][] typeEffectiveness = new short[maxTypeID][maxTypeID];
+
+        for (int i = 0; i < maxTypeID; i++) {
+            for (int j = 0; j < maxTypeID; j++) {
+                String[] selectionArg = {String.valueOf(i + 1), String.valueOf(j + 1)};
+                Cursor cursor = database.query(TYPE_EFFECTIVENESS_TABLE, null, FROM_TYPE_ID + "=?"
+                        + " AND " + TO_TYPE_ID + "=?", selectionArg, null, null, null);
+                cursor.moveToFirst();
+                typeEffectiveness[i][j] = (short) cursor.getInt(cursor.getColumnIndex(EFFECTIVE_LEVEL));
+                // close the cursor
+                cursor.close();
+            }
+        }
+
+        return typeEffectiveness;
+    }
+
+    /**
+     * Getter for typeEffectiveness sparse matrix.
+     *
+     * @return sparse matrix of the types effectiveness against each other
+     */
+    public short[][] getTypeEffectivenessTable() {
+        return typeEffectiveness;
+    }
+
+    /**
+     * Determines the typeID associated with the given type
+     * @param type the type to verify
+     * @return the typeID of the type
+     */
+    public int getTypeID (Type type) {
+        for (int i = 0; i < getMaxTypeID(); i++) {
+            if (types.get(i + 1) == type) {
+                return i + 1;
+            }
+        }
+        // this should not happen
+        return 0;
     }
 
 }
