@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import me.quadphase.qpdex.DetailedPokemonActivity;
 import me.quadphase.qpdex.exceptions.PartyFullException;
 import me.quadphase.qpdex.pokedex.PokedexManager;
 import me.quadphase.qpdex.pokemon.Ability;
@@ -832,6 +831,12 @@ public class PokemonFactory {
         database.endTransaction();
     }
 
+    /**
+     * Sets the value of caught to caught or not in the database.
+     *
+     * @param nationalID nationalID of the pokemon that is caught
+     * @param value true if changing to caught, false if changing to not caught
+     */
     public void setCaught(int nationalID, boolean value){
         int caught = value? 1 : 0;
         // create new row content
