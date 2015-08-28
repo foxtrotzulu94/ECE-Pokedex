@@ -2,8 +2,11 @@ package me.quadphase.qpdex;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 
 public class PokemonResources extends ActionBarActivity {
@@ -12,7 +15,17 @@ public class PokemonResources extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pokemon_resources);
-    }
+
+//        An array of all the websites used. Make sure the strings match the textview ID used
+        String[] websitearray = {"pokemonvideogames", "bulbapedia", "serebii", "smogon", "pldh",
+                "veekun"};
+        for (int i = 0; i < websitearray.length; i++){
+            int websiteID = getResources().getIdentifier(String.format("%s",websitearray[i]),"id",getPackageName());
+            TextView testy = (TextView) findViewById(websiteID);
+            testy.setText(Html.fromHtml(testy.getText().toString()));
+            testy.setMovementMethod(LinkMovementMethod.getInstance());
+        }
+        }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
