@@ -14,8 +14,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.AbstractList;
+import java.util.Arrays;
+import java.util.List;
+
 import me.quadphase.qpdex.R;
 import me.quadphase.qpdex.pokemon.MinimalPokemon;
+import me.quadphase.qpdex.pokemon.Type;
 
 /**
  * Created by Javier Fajardo on 8/5/2015.
@@ -23,27 +30,85 @@ import me.quadphase.qpdex.pokemon.MinimalPokemon;
 //TODO: Document with JavaDocs
 public class PokedexArrayAdapter extends ArrayAdapter<MinimalPokemon> implements Filterable {
 
-    private final MinimalPokemon[] entryObjects;
+    private  MinimalPokemon[] entryObjects;
+    private  MinimalPokemon[] originalObjects;
+    private ArrayList<MinimalPokemon> filteredArray;
     private float fontSize=0.0f;
+    protected Filter minimalFilter;
 
-    private Filter customFilter = new Filter() {
+
+    @Override
+    public Filter getFilter(){
+        if(minimalFilter == null)
+            minimalFilter = new customFilter();
+        return minimalFilter;
+
+    }
+
+    private class customFilter extends Filter {
         //see http://www.survivingwithandroid.com/2012/10/android-listview-custom-filter-and.html
 
+        /**
+         * Implements the simple filters on minimal pokemon list
+         *
+         * @param constraint is the character sequence corresponding to pokemon name or national ID
+         * @return the minimal pokemon objects that fit the constrait critera
+         */
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            return null;
+            FilterResults results = new FilterResults();
+
+            // If no constraint specified, no filtering needed
+            if (constraint == null || constraint.length() == 0){
+                results.values = originalObjects;
+                results.count = originalObjects.length;
+            }
+            else {
+                ArrayList<MinimalPokemon> nMinimalPokemonList = new ArrayList<MinimalPokemon>();
+
+                for (MinimalPokemon p : entryObjects) {
+                    if (p.getName().toUpperCase().startsWith(constraint.toString().toUpperCase())){
+                        nMinimalPokemonList.add(p);
+                    }
+                }
+                results.values = nMinimalPokemonList;
+                results.count = nMinimalPokemonList.size();
+
+            }
+
+            return results;
+
         }
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
 
+            filteredArray.addAll((List<MinimalPokemon>)results.values);
+            if (results.count == 0){
+                notifyDataSetInvalidated();
+            }
+            else{
+                // set the ArrayAdaptor to 0
+                notifyDataSetChanged();
+
+                clear();
+                //Rebuild what's shown in the ArrayAdaptor
+
+                for(int i=0; i< results.count; i++){
+                    add((MinimalPokemon)filteredArray.get(i));
+                }
+                notifyDataSetChanged();
+            }
         }
     };
 
     public PokedexArrayAdapter(Context context, MinimalPokemon[] values){
         super(context, R.layout.pokedexrow,R.id.textview_pkmn_list_entry,values);
         entryObjects = values;
+        originalObjects =  entryObjects;
+        filteredArray = new ArrayList();
     }
+
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent){
@@ -68,10 +133,12 @@ public class PokedexArrayAdapter extends ArrayAdapter<MinimalPokemon> implements
                 @Override
                 public void onClick(View view) {
                     entryObjects[position].toggleCaught();
-                    Log.d("QPDEX", String.format("Pokemon %s has been caught", entryObjects[position].getPokemonNationalID()));
+
                     if (entryObjects[position].isCaught()) {
+                        Log.d("QPDEX", String.format("Pokemon %s has been caught", entryObjects[position].getPokemonNationalID()));
                         caught.setAlpha(1.0f);
                     } else {
+                        Log.d("QPDEX", String.format("Pokemon %s has been removed from caught list", entryObjects[position].getPokemonNationalID()));
                         caught.setAlpha(0.2f);
                     }
                 }
@@ -93,8 +160,4 @@ public class PokedexArrayAdapter extends ArrayAdapter<MinimalPokemon> implements
         fontSize = size;
     }
 
-//    @Override
-    public Filter getFiler(){
-        return super.getFilter();
-    }
 }
