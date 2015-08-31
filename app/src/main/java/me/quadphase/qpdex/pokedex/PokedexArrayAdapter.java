@@ -14,15 +14,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.sql.Array;
-import java.util.ArrayList;
-import java.util.AbstractList;
-import java.util.Arrays;
-import java.util.List;
-
 import me.quadphase.qpdex.R;
 import me.quadphase.qpdex.pokemon.MinimalPokemon;
-import me.quadphase.qpdex.pokemon.Type;
 
 /**
  * Created by Javier Fajardo on 8/5/2015.
@@ -30,85 +23,54 @@ import me.quadphase.qpdex.pokemon.Type;
 //TODO: Document with JavaDocs
 public class PokedexArrayAdapter extends ArrayAdapter<MinimalPokemon> implements Filterable {
 
-    private  MinimalPokemon[] entryObjects;
-    private  MinimalPokemon[] originalObjects;
-    private ArrayList<MinimalPokemon> filteredArray;
-    private float fontSize=0.0f;
-    protected Filter minimalFilter;
+    /**
+     *  Class to take the MinimalPokemon object and toggle its corresponding caught icon
+     */
+    private class RowCaughtOnClickListener implements View.OnClickListener{
 
+        MinimalPokemon RowPokemon;
+        ImageButton Caught;
 
-    @Override
-    public Filter getFilter(){
-        if(minimalFilter == null)
-            minimalFilter = new customFilter();
-        return minimalFilter;
+        public RowCaughtOnClickListener(MinimalPokemon apokemon,ImageButton sprite){
+
+            RowPokemon = apokemon;
+            Caught = sprite;
+        }
+
+        @Override
+        public void onClick(View view) {
+            RowPokemon.toggleCaught();
+            Log.d("QPDEX", String.format("Pokemon %s has been caught", RowPokemon.getPokemonNationalID()));
+            if (RowPokemon.isCaught()) {
+                Caught.setAlpha(1.0f);
+            } else {
+                Caught.setAlpha(0.2f);
+            }
+        }
 
     }
 
-    private class customFilter extends Filter {
-        //see http://www.survivingwithandroid.com/2012/10/android-listview-custom-filter-and.html
+    private float fontSize=0.0f;
 
-        /**
-         * Implements the simple filters on minimal pokemon list
-         *
-         * @param constraint is the character sequence corresponding to pokemon name or national ID
-         * @return the minimal pokemon objects that fit the constrait critera
-         */
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            FilterResults results = new FilterResults();
+    /// Commented out unused Custom filter code
 
-            // If no constraint specified, no filtering needed
-            if (constraint == null || constraint.length() == 0){
-                results.values = originalObjects;
-                results.count = originalObjects.length;
-            }
-            else {
-                ArrayList<MinimalPokemon> nMinimalPokemonList = new ArrayList<MinimalPokemon>();
-
-                for (MinimalPokemon p : entryObjects) {
-                    if (p.getName().toUpperCase().startsWith(constraint.toString().toUpperCase())){
-                        nMinimalPokemonList.add(p);
-                    }
-                }
-                results.values = nMinimalPokemonList;
-                results.count = nMinimalPokemonList.size();
-
-            }
-
-            return results;
-
-        }
-
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-
-            filteredArray.addAll((List<MinimalPokemon>)results.values);
-            if (results.count == 0){
-                notifyDataSetInvalidated();
-            }
-            else{
-                // set the ArrayAdaptor to 0
-                notifyDataSetChanged();
-
-                clear();
-                //Rebuild what's shown in the ArrayAdaptor
-
-                for(int i=0; i< results.count; i++){
-                    add((MinimalPokemon)filteredArray.get(i));
-                }
-                notifyDataSetChanged();
-            }
-        }
-    };
+//    private Filter customFilter = new Filter() {
+//        //see http://www.survivingwithandroid.com/2012/10/android-listview-custom-filter-and.html
+//
+//        @Override
+//        protected FilterResults performFiltering(CharSequence constraint) {
+//            return null;
+//        }
+//
+//        @Override
+//        protected void publishResults(CharSequence constraint, FilterResults results) {
+//
+//        }
+//    };
 
     public PokedexArrayAdapter(Context context, MinimalPokemon[] values){
         super(context, R.layout.pokedexrow,R.id.textview_pkmn_list_entry,values);
-        entryObjects = values;
-        originalObjects =  entryObjects;
-        filteredArray = new ArrayList();
     }
-
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent){
@@ -121,7 +83,7 @@ public class PokedexArrayAdapter extends ArrayAdapter<MinimalPokemon> implements
         ImageView miniSprite = (ImageView) rowEntry.findViewById(R.id.img_pkmnmini);
         final ImageButton caught = (ImageButton) rowEntry.findViewById(R.id.imgbutton_caught);
 
-        if(entryObjects[position].isCaught()){
+        if(super.getItem(position).isCaught()){
             caught.setAlpha(1.0f);
         }
         else{
@@ -129,29 +91,16 @@ public class PokedexArrayAdapter extends ArrayAdapter<MinimalPokemon> implements
         }
 
         if (!caught.hasOnClickListeners()) {
-            caught.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    entryObjects[position].toggleCaught();
-
-                    if (entryObjects[position].isCaught()) {
-                        Log.d("QPDEX", String.format("Pokemon %s has been caught", entryObjects[position].getPokemonNationalID()));
-                        caught.setAlpha(1.0f);
-                    } else {
-                        Log.d("QPDEX", String.format("Pokemon %s has been removed from caught list", entryObjects[position].getPokemonNationalID()));
-                        caught.setAlpha(0.2f);
-                    }
-                }
-            });
+            caught.setOnClickListener(new RowCaughtOnClickListener(super.getItem(position), caught));
         }
 
-        entryString.setText(entryObjects[position].toString());
+        entryString.setText(super.getItem(position).toString());
 
         if(fontSize!=0.0f)
             entryString.setTextSize(fontSize);
 
         miniSprite.setImageDrawable(new BitmapDrawable(super.getContext().getResources(),
-                PokedexAssetFactory.getPokemonMinimalSprite(super.getContext(),entryObjects[position].getPokemonNationalID())));
+                PokedexAssetFactory.getPokemonMinimalSprite(super.getContext(),super.getItem(position).getPokemonNationalID())));
 
         return rowEntry;
     }
@@ -160,4 +109,8 @@ public class PokedexArrayAdapter extends ArrayAdapter<MinimalPokemon> implements
         fontSize = size;
     }
 
+    //    @Override
+    public Filter getFiler(){
+        return super.getFilter();
+    }
 }
