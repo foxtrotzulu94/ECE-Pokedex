@@ -827,6 +827,7 @@ public class PokemonFactory {
         // replace the row with the nationalID with the new row
         database.beginTransaction();
         database.replaceOrThrow(POKEMON_CAUGHT_TABLE, null, content);
+        database.setTransactionSuccessful();
         database.endTransaction();
     }
 
@@ -846,6 +847,7 @@ public class PokemonFactory {
         // replace the row with the nationalID with the new row
         database.beginTransaction();
         database.replaceOrThrow(POKEMON_CAUGHT_TABLE, null, content);
+        database.setTransactionSuccessful();
         database.endTransaction();
     }
 
@@ -982,6 +984,7 @@ public class PokemonFactory {
         database.delete(PARTY_TABLE, PARTY_ID + "=?", selectionArg);
         // delete the pokemon's moves from the moveSet table
         database.delete(PARTY_MOVESET_TABLE, PARTY_ID + "=?", selectionArg);
+        database.setTransactionSuccessful();
         database.endTransaction();
     }
 
@@ -1023,6 +1026,7 @@ public class PokemonFactory {
             for (int i = 0; i < numberOfMoves; i++) {
                 database.insertOrThrow(PARTY_MOVESET_TABLE, null, moveContent[i]);
             }
+            database.setTransactionSuccessful();
             database.endTransaction();
         } catch (Exception e) {
             throw new Exception("Database Error: Pokemon not successfully added to party.");
@@ -1046,6 +1050,7 @@ public class PokemonFactory {
         try {
             database.beginTransaction();
             database.insertOrThrow(PARTY_MOVESET_TABLE, null, moveContent);
+            database.setTransactionSuccessful();
             database.endTransaction();
         } catch (Exception e) {
             throw new Exception("Database Error: Move not added to party pokemon.");

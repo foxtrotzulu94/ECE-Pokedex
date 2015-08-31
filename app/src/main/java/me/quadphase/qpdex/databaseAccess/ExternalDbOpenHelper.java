@@ -43,8 +43,8 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
     //This piece of code will create a database if it’s not yet created
     public void createDataBase() {
         boolean dbExist = checkDataBase();
-        // TODO: After development, change back to "if(!dbExist)"
-        if (true) { //CHANGING FOR NOW!
+        // TODO: During scraper development, change to "if (true)". After development, change back to "if(!dbExist)"
+        if (!dbExist) {
             this.getReadableDatabase();
             try {
                 copyDataBase();
@@ -119,5 +119,13 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {}
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+//        if (newVersion > oldVersion) {
+//            try {
+//                copyDataBase();
+//            } catch (Exception e) {
+//                // do something
+//            }
+//        }
+    }
 }
