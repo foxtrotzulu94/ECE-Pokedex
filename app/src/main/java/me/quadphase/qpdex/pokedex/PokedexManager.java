@@ -57,8 +57,8 @@ public class PokedexManager {
                     null,                // abilities,
                     null,                // moves,
                     Arrays.asList(       //types
-                            new Type("Bird"),
-                            new Type("Normal")),
+                            new Type("Bird", 0),
+                            new Type("Normal", 13)),
                     null,                // eggGroups,
                     null                 // evolutions,
             );
@@ -98,12 +98,12 @@ public class PokedexManager {
                     Arrays.asList(// abilities,
                             new Ability("Glitch Master","Can corrupt anything in its path")),
                     Arrays.asList(// moves,
-                            new Move("Water Gun","",0,0,0,"op",1,"",new Type("water")),
-                            new Move("Water Gun","",0,0,0,"op",1,"",new Type("water")),
-                            new Move("Sky Attack","",0,0,0,"op",1,"",new Type("Flying"))  ),
+                            new Move("Water Gun","",0,0,0,"op",1,"",new Type("water", 18)),
+                            new Move("Water Gun","",0,0,0,"op",1,"",new Type("water", 18)),
+                            new Move("Sky Attack","",0,0,0,"op",1,"",new Type("Flying", 8))  ),
                     Arrays.asList(       //types
-                            new Type("Bird"),
-                            new Type("Normal")),
+                            new Type("Bird", 0),
+                            new Type("Normal", 13)),
                     Arrays.asList(new EggGroup("glitch")),                // eggGroups,
                     Arrays.asList(new Evolution("Level Up",new MissingNo()))// evolutions,
             );

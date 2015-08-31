@@ -4,17 +4,17 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -30,7 +30,6 @@ import java.util.List;
 import me.quadphase.qpdex.pokedex.PokedexAssetFactory;
 import me.quadphase.qpdex.pokedex.PokedexManager;
 import me.quadphase.qpdex.pokemon.Ability;
-import me.quadphase.qpdex.pokemon.MinimalPokemon;
 import me.quadphase.qpdex.pokemon.Move;
 import me.quadphase.qpdex.pokemon.Pokemon;
 import me.quadphase.qpdex.pokemon.Type;
@@ -447,9 +446,9 @@ public class DetailedPokemonActivity extends FragmentActivity
     private void fillTypeComparisonInfo(){
         //TODO: Replace with real logic when the sparse type matrix is available!
         List<Type> typeList = new ArrayList<Type>(3);
-        typeList.add(new Type("Normal"));
-        typeList.add(new Type("Electric"));
-        typeList.add(new Type("Ice"));
+        typeList.add(new Type("Normal", 13));
+        typeList.add(new Type("Electric", 4));
+        typeList.add(new Type("Ice", 12));
 
         LinearLayout testy = createTypeMatchBlock("Immune",typeList);
         testy.setBackgroundResource(R.color.dex_blue_transparent);
