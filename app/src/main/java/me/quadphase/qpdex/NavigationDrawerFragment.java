@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import java.util.Arrays;
 
+import me.quadphase.qpdex.databaseAccess.PokemonFactory;
 import me.quadphase.qpdex.pokedex.PokedexArrayAdapter;
 import me.quadphase.qpdex.pokedex.PokedexManager;
 import me.quadphase.qpdex.pokemon.MinimalPokemon;
@@ -41,9 +42,23 @@ public class NavigationDrawerFragment extends Fragment {
     private class PokedexDrawerClickListener implements AdapterView.OnItemClickListener{
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-            //Simply update the Pokedex Manager and advise the parent activity to update
-            MinimalPokemon retrieved = (MinimalPokemon) parent.getItemAtPosition(position);
-            PokedexManager.getInstance().updatePokedexSelection(retrieved, getActivity());
+
+            //Get the national ID of the retrieved Pokemon (though it should match with the list position)
+            // consider that a potential optimization
+            int retrievedID = ((MinimalPokemon) parent.getItemAtPosition(position)).getPokemonNationalID();
+
+
+            if (retrievedID>0) {
+                PokedexManager.getInstance().updatePokedexSelection(
+                        PokemonFactory.getPokemonFactory(getActivity()).getPokemonByNationalID(retrievedID),
+                        getActivity());
+            }
+            else{
+                PokedexManager.getInstance().updatePokedexSelection(
+                        PokedexManager.getInstance().missingNo,
+                        getActivity());
+            }
+
             DetailedPokemonActivity parentActivity = (DetailedPokemonActivity)getActivity();
             if(parentActivity!=null){
                 parentActivity.notifyUpdate();
@@ -117,17 +132,7 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerListView.setOnItemClickListener(new PokedexDrawerClickListener());
 
         //TODO: CLEANUP when this list is available in the PokedexManager
-        int testNumber = 721;
-        MinimalPokemon[] listy = new MinimalPokemon[testNumber];
-        for(int i =0; i<testNumber; i++){
-            listy[i] = new MinimalPokemon(i,"Pokemon",
-                    "The franchise began as a pair of video games for the original Game Boy, developed by Game Freak and published by Nintendo. The franchise now spans video games, trading card games, animated television shows and movies, comic books, and toys",
-                    Arrays.asList(new Type("electric", ""), new Type("ice", "")));
-        }
-        listy[1] = new MinimalPokemon(1,"Bulbasaur",
-                "Bulbasaur can be seen napping in bright sunlight. There is a seed on its back. By soaking up the sun’s rays, the seed grows progressively larger. ",
-                Arrays.asList(new Type("Grass",""), new Type("Poison","")));
-
+        MinimalPokemon[] listy = PokemonFactory.getPokemonFactory(getActivity()).getAllMinimalPokemon();
         PokedexArrayAdapter pokedexEntries = new PokedexArrayAdapter(
                 getActivity(),
                 listy);

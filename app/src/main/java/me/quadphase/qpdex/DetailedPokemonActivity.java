@@ -4,17 +4,17 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -30,7 +30,6 @@ import java.util.List;
 import me.quadphase.qpdex.pokedex.PokedexAssetFactory;
 import me.quadphase.qpdex.pokedex.PokedexManager;
 import me.quadphase.qpdex.pokemon.Ability;
-import me.quadphase.qpdex.pokemon.MinimalPokemon;
 import me.quadphase.qpdex.pokemon.Move;
 import me.quadphase.qpdex.pokemon.Pokemon;
 import me.quadphase.qpdex.pokemon.Type;
@@ -327,11 +326,11 @@ public class DetailedPokemonActivity extends FragmentActivity
             //Default to the fail-safe Pokemon
             contextMaster.updatePokedexSelection(contextMaster.missingNo,this);
         }
-
+        Log.d("QPDEX",String.format("Detailing to %s",detailedPokemon.getPokemonNationalID()));
         spriteIndex = 0; //Might remove in the future
 
         //Set the name
-        pkmnName.setText(String.format("  %s. %s",detailedPokemon.getNationalID(), detailedPokemon.getName()));
+        pkmnName.setText(String.format("  %s. %s",detailedPokemon.getPokemonNationalID(), detailedPokemon.getName()));
 
         //Set the Pokemon Type Badges
         setPokemonTypeInfo();
@@ -384,16 +383,17 @@ public class DetailedPokemonActivity extends FragmentActivity
 
                 //TODO: Fix this modeling! Since Evolutions might be Mega, we should get a Pokemon!
                 // NOT a minimal!
-                final MinimalPokemon miniEvoPokemon = detailedPokemon.getEvolutions().get(i).getEvolvesInto();
+                final Pokemon evoPokemon = detailedPokemon.getEvolutions().get(i).getEvolvesInto();
 
                 LinearLayout evolutionBox = createCustomPokemonBox(
-                        miniEvoPokemon.getName(),
-                        new BitmapDrawable(getResources(), PokedexAssetFactory.getPokemonMinimalSprite(this, i)));
+                        evoPokemon.getName(),
+                        new BitmapDrawable(getResources(),
+                                PokedexAssetFactory.getPokemonMinimalSprite(this, evoPokemon.getPokemonNationalID())));
 
                 evolutionBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        contextMaster.updatePokedexSelection(miniEvoPokemon,getBaseContext());
+                        contextMaster.updatePokedexSelection(evoPokemon,getBaseContext());
                         refreshAllDetails();
                     }
                 });
@@ -446,9 +446,9 @@ public class DetailedPokemonActivity extends FragmentActivity
     private void fillTypeComparisonInfo(){
         //TODO: Replace with real logic when the sparse type matrix is available!
         List<Type> typeList = new ArrayList<Type>(3);
-        typeList.add(new Type("Normal", ""));
-        typeList.add(new Type("Electric", ""));
-        typeList.add(new Type("Ice", ""));
+        typeList.add(new Type("Normal", 13));
+        typeList.add(new Type("Electric", 4));
+        typeList.add(new Type("Ice", 12));
 
         LinearLayout testy = createTypeMatchBlock("Immune",typeList);
         testy.setBackgroundResource(R.color.dex_blue_transparent);

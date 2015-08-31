@@ -6,11 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 import me.quadphase.qpdex.exceptions.PartyFullException;
+import me.quadphase.qpdex.pokedex.PokedexManager;
 import me.quadphase.qpdex.pokemon.Ability;
 import me.quadphase.qpdex.pokemon.EggGroup;
 import me.quadphase.qpdex.pokemon.Evolution;
@@ -31,11 +31,179 @@ import me.quadphase.qpdex.pokemon.Type;
  */
 public class PokemonFactory {
 
+    //TODO: Fix and retest!
+    private class DetailedListBuilder extends Thread{
+        int startIndex;
+        int endIndex;
+
+        DetailedListBuilder(int startingPoint,int endPoint){
+            startIndex = startingPoint;
+            endIndex = endPoint;
+        }
+
+        @Override
+        public void run(){
+            buildPartOfDetailedPokemonList(startIndex,endIndex-startIndex);
+        }
+
+    }
+
+    //TODO: Fix and retest!
+    private class DetailedListMaster extends Thread{
+
+        //Best arbitrary number I could choose...
+        int coreMultiplier = 2;
+
+        List<Thread> workerList;
+
+        @Override
+        public void run(){
+            if (allDetailedPokemon==null && detailedPokemonShortList==null) {
+                workerList = new LinkedList<>();
+
+                //Create new short list (matches minimalPokemon with a corresponding Pokemon)
+                detailedPokemonShortList = new Pokemon[getMaxNationalID()+1];
+
+                //Create a new Large Pokemon List
+                allDetailedPokemon = new Pokemon[getMaxUniqueID()+1];
+
+                //Set the fail-safe
+                allDetailedPokemon[0] = PokedexManager.getInstance().missingNo;
+                detailedPokemonShortList[0] = allDetailedPokemon[0];
+
+                int optimalWorkerNumber = Runtime.getRuntime().availableProcessors()*coreMultiplier;
+                int subdivisionSize = getMaxNationalID() / optimalWorkerNumber;
+                int remainder = getMaxNationalID() % optimalWorkerNumber;
+                int currentIndex=1;
+
+                Log.d("QPDEX_PkmnBuilder",String.format("Optimal Workers: %s",optimalWorkerNumber));
+
+                for (int i = 1; i <= optimalWorkerNumber; i++) {
+                    Thread worker;
+//                    Thread worker1;
+//                    Thread worker2;
+
+                    //Build the list from the opposite ends
+                    // We do this because the user is VERY likely to touch either the first couple
+                    // of entries OR the last couple, rather than anything smack in the middle
+
+//                    if(i==1){
+//                        worker1 = new DetailedListBuilder(currentIndex, subdivisionSize * i);
+//                        worker2 = new DetailedListBuilder(subdivisionSize*(optimalWorkerNumber-1), (subdivisionSize*optimalWorkerNumber)+remainder);
+//                    }
+//                    else{
+//                        worker1 = new DetailedListBuilder(currentIndex, subdivisionSize * i);
+//                        worker2 = new DetailedListBuilder(subdivisionSize*(optimalWorkerNumber-i), subdivisionSize * (optimalWorkerNumber-i));
+//                    }
+//
+
+                    if(i<optimalWorkerNumber) {
+                        worker = new DetailedListBuilder(currentIndex, subdivisionSize * i);
+                    }
+                    else {
+                        worker = new DetailedListBuilder(currentIndex, (subdivisionSize*i)+remainder);
+                    }
+
+                    Log.d("QPDEX",String.format("Current index built %s",currentIndex));
+
+                    currentIndex = currentIndex+subdivisionSize-1;
+                    worker.start();
+                    workerList.add(worker);
+
+//                    worker1.start();
+//                    worker2.start();
+//                    workerList.add(worker1);
+//                    workerList.add(worker2);
+
+                }
+
+                try {
+                    for (int i = 0; i < workerList.size(); i++) {
+                        workerList.get(i).join();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+    }
+
+
+    private final boolean PRINT_DEBUG = false;
+
     private static final String DB_NAME = "pokedex.db";
+
+    // database constant strings:
+    private final String ABILITIES_TABLE = "abilities";
+    private final String CATEGORY_TABLE = "category";
+    private final String EGG_GROUPS_TABLE = "eggGroups";
+    private final String GAMES_TABLE = "games";
+    private final String LOCATIONS_TABLE = "locations";
+    private final String MOVES_TABLE = "moves";
+    private final String TYPES_TABLE = "types";
+    private final String PARTY_TABLE = "party";
+    private final String PARTY_MOVESET_TABLE = "party_moveSet";
+    private final String POKEMON_COMMON_INFO_TABLE = "pokemon_common_info";
+    private final String POKEMON_UNIQUE_INFO_TABLE = "pokemon_unique_info";
+    private final String POKEMON_ABILITIES_TABLE = "pokemon_abilities";
+    private final String POKEMON_CAUGHT_TABLE = "pokemon_caught";
+    private final String POKEMON_EGG_GROUPS_TABLE = "pokemon_eggGroups";
+    private final String POKEMON_EVOLUTIONS_TABLE = "pokemon_evolutions";
+    private final String POKEMON_LOCATIONS_TABLE = "pokemon_locations";
+    private final String POKEMON_NATIONAL_ID_TO_UNIQUE_ID_TABLE = "pokemon_nationalID";
+    private final String POKEMON_SUFFIX_TABLE = "pokemon_suffix";
+    private final String POKEMON_TYPES_TABLE = "pokemon_types";
+    private final String TYPE_EFFECTIVENESS_TABLE = "types_effectiveness";
+    private final String POKEMON_MOVES_TABLE = "pokemon_moves";
+
+    private final String NAME = "name";
+    private final String DESCRIPTION = "description";
+    private final String POWER = "power";
+    private final String ACCURACY = "accuracy";
+    private final String PP = "pp";
+    private final String AFFECTS = "affects";
+    private final String GENERATION_FIRST_APPEARED = "genFirstAppeared";
+    private final String HEIGHT = "height";
+    private final String WEIGHT = "weight";
+    private final String ATTACK = "attack";
+    private final String DEFENCE = "defence";
+    private final String HP = "hp";
+    private final String SPECIAL_ATTACK = "spattack";
+    private final String SPECIAL_DEFENCE = "spdefence";
+    private final String SPEED = "speed";
+    private final String CATCH_RATE = "catchRate";
+    private final String CAUGHT = "caught";
+    private final String CONDITION = "condition";
+    private final String GENDER_RATIO_MALE = "genderRatioMale";
+    private final String HATCH_TIME = "hatchTime";
+    private final String LEARN_METHOD = "learnMethod";
+    private final String SUFFIX = "suffix";
+    private final String EFFECTIVE_LEVEL = "effectiveLevel";
+
+    private final String ABILITIY_ID = "abilityID";
+    private final String CATEGORY_ID = "categoryID";
+    private final String EGG_GROUP_ID = "eggGroupID";
+    private final String GAME_ID = "gameID";
+    private final String GENERATION_ID = "generationID";
+    private final String LOCATION_ID = "locationID";
+    private final String MOVE_ID = "moveID";
+    private final String TYPE_ID = "typeID";
+    private final String PARTY_ID = "partyID";
+    private final String POKEMON_UNIQUE_ID = "pokemonUniqueID";
+    private final String POKEMON_NATIONAL_ID = "pokemonNationalID";
+    private final String FROM_TYPE_ID = "fromTypeID";
+    private final String TO_TYPE_ID = "toTypeID";
+    private final String FROM_POKEMON_ID = "fromPokemonID";
+    private final String TO_POKEMON_ID = "toPokemonID";
+
+    private MinimalPokemon[] allMinimalPokemon;
+    private Pokemon[] detailedPokemonShortList;
+    private Pokemon[] allDetailedPokemon;
 
     private static PokemonFactory instance = null;
 
-    private HashMap<Integer,Type> types;
+    private Type[] types;
 
     /**
      * SQLite database handle
@@ -50,9 +218,23 @@ public class PokemonFactory {
         ExternalDbOpenHelper dbOpenHelper = new ExternalDbOpenHelper(context, DB_NAME);
         database = dbOpenHelper.openDataBase();
 
-        types = new HashMap<>();
+        setupLargeCacheLists();
 
-//        loadAllTypes(); //Method within Database seems to be broken.
+        types = new Type[getMaxTypeID() + 1];
+
+        loadAllTypes();
+    }
+
+    private void setupLargeCacheLists(){
+        //Create new short list (matches minimalPokemon with a corresponding Pokemon)
+        detailedPokemonShortList = new Pokemon[getMaxNationalID()+1];
+
+        //Create a new Large Pokemon List
+        allDetailedPokemon = new Pokemon[getMaxUniqueID()+1];
+
+        //Set the fail-safe
+        allDetailedPokemon[0] = PokedexManager.getInstance().missingNo;
+        detailedPokemonShortList[0] = allDetailedPokemon[0];
     }
 
     /**
@@ -74,14 +256,84 @@ public class PokemonFactory {
      *
      * @return List of all main (no suffix) minimalPokemon in the database
      */
-    public MinimalPokemon[] getAllPokemon() {
-        MinimalPokemon[] allPokemon = new MinimalPokemon[getMaxNationalID()];
+    public MinimalPokemon[] getAllMinimalPokemon() {
+        //TODO: Perform aggressive optimizations when possible
 
-        for (int i = 0; i < getMaxNationalID(); i++) {
-            allPokemon[i] = getMinimalPokemonByNationalID(i + 1);
+        if (allMinimalPokemon==null) {
+            allMinimalPokemon = new MinimalPokemon[getMaxNationalID()+1];
+
+            //Secretly added the fail-safe Pokemon...
+            allMinimalPokemon[0] = PokedexManager.getInstance().missingNo.minimal();
+
+            for (int i = 1; i <= getMaxNationalID(); i++) {
+                allMinimalPokemon[i] = getMinimalPokemonByNationalID(i);
+            }
         }
 
-        return allPokemon;
+        return allMinimalPokemon;
+    }
+
+    public void getAllDetailedPokemon(){
+        //TODO: Perform aggressive optimizations when possible
+
+        if (allDetailedPokemon==null || detailedPokemonShortList==null) {
+            setupLargeCacheLists();
+        }
+
+        for (int i = 1; i <= getMaxNationalID(); i++) {
+
+            //If the entry is null
+            if(detailedPokemonShortList[i]==null){
+                //Check the mapping to the long list if it's there by any chance
+                if(allDetailedPokemon[checkUniqueIDFromNationalID(i)]!=null){
+                    detailedPokemonShortList[i] = allDetailedPokemon[checkUniqueIDFromNationalID(i)];
+                }
+                //Or build it from scratch
+                else {
+                    detailedPokemonShortList[i] = getPokemonByNationalID(i);
+                }
+            }
+
+            if(PRINT_DEBUG)
+                Log.d("QPDEX",String.format("Building %s",i));
+//                //We have to slow down the loop intentionally...
+//                try {
+//                    Thread.sleep(10);
+//                }
+//                catch(InterruptedException e){
+//
+//                }
+        }
+
+    }
+
+    //TODO: FIX thread classes before calling again.
+    public void getAllDetailedPokemonInParallel(){
+        Thread masterBuilder = new DetailedListMaster();
+        masterBuilder.start();
+        try {
+            masterBuilder.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void buildPartOfDetailedPokemonList(int start, int end){
+        for (int i = start; i < end; i++) {
+            //If the entry is null
+            if(detailedPokemonShortList[i]==null){
+                //Check the mapping to the long list if it's there by any chance
+                if(allDetailedPokemon[checkUniqueIDFromNationalID(i)]!=null){
+                    detailedPokemonShortList[i] = allDetailedPokemon[checkUniqueIDFromNationalID(i)];
+                }
+                //Or build it from scratch
+                else {
+                    detailedPokemonShortList[i] = getPokemonByNationalID(i);
+                }
+            }
+
+            Log.d("QPDEX",String.format("Building %s",i));
+        }
     }
 
     /**
@@ -92,14 +344,15 @@ public class PokemonFactory {
     public MinimalPokemon getMinimalPokemonByNationalID(int nationalID) {
         // find the pokemonID from the nationalID using the pokemon_nationalID mapping table
         String[] selectionArg = {String.valueOf(nationalID)};
-        Cursor cursor = database.query("pokemon_nationalID", null, "nationalID=?", selectionArg, null, null, null);
+        Cursor cursor = database.query(POKEMON_NATIONAL_ID_TO_UNIQUE_ID_TABLE, null, POKEMON_NATIONAL_ID + "=?", selectionArg, null, null, null);
 
         // HACK: We are assuming that the first pokemon with this nationalID is the original pokemon
         // that we want to fetch, since there are many pokemon with the same nationalID in the case
         // of mega evolutions and various types.
         cursor.moveToFirst();
-        int pokemonID = cursor.getInt(cursor.getColumnIndex("pokemonID"));
-        Log.v("Database Access:", "From nationalID " + String.valueOf(nationalID) + " the pokemonID is: " + String.valueOf(pokemonID));
+        int pokemonID = cursor.getInt(cursor.getColumnIndex(POKEMON_UNIQUE_ID));
+        if(PRINT_DEBUG)
+            Log.v("Database Access", "From nationalID " + String.valueOf(nationalID) + " the pokemonID is: " + String.valueOf(pokemonID));
         // close the cursor
         cursor.close();
 
@@ -112,33 +365,31 @@ public class PokemonFactory {
      * @return {@link MinimalPokemon} object of the pokemon in question
      */
     public MinimalPokemon getMinimalPokemonByPokemonID(int pokemonID) {
-        // move the cursor to the correct entry of the pokemon table
         String[] pokemonIDString = {String.valueOf(pokemonID)};
-        Cursor cursor = database.query("pokemon", null, "pokemonID=?", pokemonIDString, null, null, null, null);
+        Cursor cursor = database.query(POKEMON_UNIQUE_INFO_TABLE, null, POKEMON_UNIQUE_ID + "=?", pokemonIDString, null, null, null, null);
         cursor.moveToFirst();
-
-        // get all of the information stored in pokemon table:
-        String name = cursor.getString(cursor.getColumnIndex("name"));
-        Log.v("Database Access:", "From pokemonID " + String.valueOf(pokemonID) + " the name is: " + name);
-
+        // get all of the information stored in pokemon common table:
+        String name = cursor.getString(cursor.getColumnIndex(NAME));
+        if(PRINT_DEBUG)
+            Log.v("Database Access", "From pokemonID " + String.valueOf(pokemonID) + " the name is: " + name);
         cursor.close();
 
         // get the nationalID:
         String[] selectionArg = {String.valueOf(pokemonID)};
-        cursor = database.query("pokemon_nationalID", null, "pokemonID=?", selectionArg, null, null, null);
+        cursor = database.query(POKEMON_NATIONAL_ID_TO_UNIQUE_ID_TABLE, null, POKEMON_UNIQUE_ID + "=?", selectionArg, null, null, null);
         cursor.moveToFirst();
-        int nationalID = cursor.getInt(cursor.getColumnIndex("nationalID"));
-        Log.v("Database Access:", "From pokemonID " + String.valueOf(pokemonID) + " the nationalID is: " + String.valueOf(nationalID));
-
+        int nationalID = cursor.getInt(cursor.getColumnIndex(POKEMON_NATIONAL_ID));
+        if(PRINT_DEBUG)
+            Log.v("Database Access:", "From pokemonID " + String.valueOf(pokemonID) + " the nationalID is: " + String.valueOf(nationalID));
         cursor.close();
 
         // get the description from the description table:
         selectionArg[0] = String.valueOf(nationalID);
-        cursor = database.query("pokemon_description", null, "nationalID=?", selectionArg, null, null, null, null);
+        cursor = database.query(POKEMON_COMMON_INFO_TABLE, null, POKEMON_NATIONAL_ID + "=?", selectionArg, null, null, null);
         cursor.moveToFirst();
-        String description = cursor.getString(cursor.getColumnIndex("description"));
-        Log.v("Database Access:", "From nationalID " + String.valueOf(nationalID) + " the description is: " + description);
-
+        String description = cursor.getString(cursor.getColumnIndex(DESCRIPTION));
+        if(PRINT_DEBUG)
+            Log.v("Database Access:", "From nationalID " + String.valueOf(nationalID) + " the description is: " + description);
         // close the cursor
         cursor.close();
 
@@ -158,54 +409,62 @@ public class PokemonFactory {
      *          move(s) and ability(ies)
      */
     public Pokemon getPokemonByPokemonID(int pokemonID) {
-        // move the cursor to the correct entry of the pokemon table
-        Cursor cursor = database.rawQuery(String.format("SELECT * FROM pokemon WHERE pokemonID=%s", String.valueOf(pokemonID)), null);
-        cursor.moveToFirst();
+        if (allDetailedPokemon[pokemonID]!=null) {
+            return allDetailedPokemon[pokemonID];
+        } else {
+            // move the cursor to the correct entry of the pokemon table
+            Cursor cursor = database.query(POKEMON_UNIQUE_INFO_TABLE, null, POKEMON_UNIQUE_ID +"=?", new String[]{String.valueOf(pokemonID)}, null, null, null, null);
+            cursor.moveToFirst();
 
-        // get all of the information stored in pokemon table:
-        String name = cursor.getString(cursor.getColumnIndex("name"));
-        double height = cursor.getFloat(cursor.getColumnIndex("height"));
-        double weight = cursor.getFloat(cursor.getColumnIndex("weight"));
-        int attack = cursor.getInt(cursor.getColumnIndex("attack"));
-        int defence = cursor.getInt(cursor.getColumnIndex("defence"));
-        int hp = cursor.getInt(cursor.getColumnIndex("hp"));
-        int spAttack = cursor.getInt(cursor.getColumnIndex("spAttack"));
-        int spDefence = cursor.getInt(cursor.getColumnIndex("spDefence"));
-        int speed = cursor.getInt(cursor.getColumnIndex("speed"));
-        int genFirstAppeared = cursor.getInt(cursor.getColumnIndex("genFirstAppeared"));
-        int hatchTime = cursor.getInt(cursor.getColumnIndex("hatchTime"));
-        int catchRate = cursor.getInt(cursor.getColumnIndex("catchRate"));
-        int genderRatioMale = cursor.getInt(cursor.getColumnIndex("genderRatioMale"));
+            // get all of the information stored in pokemon table:
+            String name = cursor.getString(cursor.getColumnIndex(NAME));
+            double height = cursor.getFloat(cursor.getColumnIndex(HEIGHT));
+            double weight = cursor.getFloat(cursor.getColumnIndex(WEIGHT));
+            int attack = cursor.getInt(cursor.getColumnIndex(ATTACK));
+            int defence = cursor.getInt(cursor.getColumnIndex(DEFENCE));
+            int hp = cursor.getInt(cursor.getColumnIndex(HP));
+            int spAttack = cursor.getInt(cursor.getColumnIndex(SPECIAL_ATTACK));
+            int spDefence = cursor.getInt(cursor.getColumnIndex(SPECIAL_DEFENCE));
+            int speed = cursor.getInt(cursor.getColumnIndex(SPEED));
 
-        // get the nationalID:
-        String[] selectionArg = {String.valueOf(pokemonID)};
-        cursor = database.query("pokemon_nationalID", null, "pokemonID=?", selectionArg, null, null, null);
-        cursor.moveToFirst();
-        int nationalID = cursor.getInt(cursor.getColumnIndex("nationalID"));
+            // get the nationalID:
+            String[] selectionArg = {String.valueOf(pokemonID)};
+            cursor = database.query(POKEMON_NATIONAL_ID_TO_UNIQUE_ID_TABLE, null, POKEMON_UNIQUE_ID+"=?", selectionArg, null, null, null);
+            cursor.moveToFirst();
+            int nationalID = cursor.getInt(cursor.getColumnIndex(POKEMON_NATIONAL_ID));
 
-        // get the description:
-        selectionArg[0] = String.valueOf(nationalID);
-        cursor = database.query("pokemon_description", null, "national_id=?", selectionArg, null, null, null, null);
-        cursor.moveToFirst();
-        String description = cursor.getString(cursor.getColumnIndex("description"));
+            // get the description:
+            selectionArg[0] = String.valueOf(nationalID);
+            cursor = database.query(POKEMON_COMMON_INFO_TABLE, null, POKEMON_NATIONAL_ID + "=?", selectionArg, null, null, null, null);
+            cursor.moveToFirst();
+            String description = cursor.getString(cursor.getColumnIndex(DESCRIPTION));
+            int genFirstAppeared = cursor.getInt(cursor.getColumnIndex(GENERATION_FIRST_APPEARED));
+            int hatchTime = cursor.getInt(cursor.getColumnIndex(HATCH_TIME));
+            int catchRate = cursor.getInt(cursor.getColumnIndex(CATCH_RATE));
+            int genderRatioMale = cursor.getInt(cursor.getColumnIndex(GENDER_RATIO_MALE));
 
-        // close the cursor
-        cursor.close();
+            // close the cursor
+            cursor.close();
 
-        boolean caught = isCaught(nationalID);
+            boolean caught = isCaught(nationalID);
 
-        // lists to fetch:
-        List<Location> locations = getLocations(pokemonID);
-        List<Ability> abilities = getAbilities(pokemonID);
-        List<Move> moves = getMoves(pokemonID);
-        List<Type> types = getTypes(pokemonID);
-        List<EggGroup> eggGroups = getEggGroups(pokemonID);
-        List<Evolution> evolutions = getEvolutions(pokemonID);
+            // lists to fetch:
+            List<Location> locations = null;//getLocations(nationalID);
+            List<Ability> abilities = getAbilities(pokemonID);
+            List<Move> moves = null;//getMoves(nationalID);
+            List<Type> types = getTypes(pokemonID);
+            List<EggGroup> eggGroups = getEggGroups(nationalID);
+            List<Evolution> evolutions = getEvolutions(pokemonID);
 
 
-        return new Pokemon(pokemonID, nationalID, name, description, height, weight, attack, defence, hp,
-                spAttack, spDefence, speed, caught, genFirstAppeared, hatchTime, catchRate, genderRatioMale,
-                locations, abilities, moves, types, eggGroups, evolutions);
+             Pokemon newEntry = new Pokemon(pokemonID, nationalID, name, description, height, weight, attack, defence, hp,
+                    spAttack, spDefence, speed, caught, genFirstAppeared, hatchTime, catchRate, genderRatioMale,
+                    locations, abilities, moves, types, eggGroups, evolutions);
+
+            allDetailedPokemon[pokemonID] = newEntry;
+
+            return newEntry;
+        }
     }
 
     /**
@@ -216,53 +475,61 @@ public class PokemonFactory {
      * @return the complete pokemon object including all of its information such as type(s),
      *          move(s) and ability(ies)
      */
-    public Pokemon getPokemonByNationalID(int nationalID) { // TODO: return list of all
+    public Pokemon getPokemonByNationalID(int nationalID) {
+        if (!isDetailedNationalIDBuiltAndReady(nationalID)) {
+            Pokemon returnObject = getPokemonByPokemonID(checkUniqueIDFromNationalID(nationalID));
+            detailedPokemonShortList[nationalID] = returnObject;
+            return returnObject;
+        } else {
+            return detailedPokemonShortList[nationalID];
+        }
+    }
+
+    public int checkUniqueIDFromNationalID(int nationalID){
         // find the pokemonID from the nationalID using the pokemon_nationalID mapping table
         String[] selectionArg = {String.valueOf(nationalID)};
-        Cursor cursor = database.query("pokemon_nationalID", null, "nationalID=?", selectionArg, null, null, null);
+        Cursor cursor = database.query(POKEMON_NATIONAL_ID_TO_UNIQUE_ID_TABLE, null, POKEMON_NATIONAL_ID + "=?", selectionArg, null, null, null);
 
         // HACK: We are assuming that the first pokemon with this nationalID is the original pokemon
         // that we want to fetch, since there are many pokemon with the same nationalID in the case
         // of mega evolutions and various types.
         cursor.moveToFirst();
-        int pokemonID = cursor.getInt(cursor.getColumnIndex("pokemonID"));
-
-        // close the cursor
+        int retVal = cursor.getInt(cursor.getColumnIndex(POKEMON_UNIQUE_ID));
         cursor.close();
+        return retVal;
 
-        return getPokemonByPokemonID(pokemonID);
     }
 
     /**
      * Goes into the locations table to retrieve the pokemon's locations
      *
-     * @param pokemonID pokemonID in the pokemon table (not the nationalID)
+     * @param nationalID nationalID in the pokemon table
      * @return the list of locations that the pokemon is found at
      */
-    private List<Location> getLocations(int pokemonID) {
+    private List<Location> getLocations(int nationalID) {
         List<Location> locations = new LinkedList<>();
         // move the cursor to the pokemon location mapping table
-        String[] selectionArg = {String.valueOf(pokemonID)};
-        Cursor mappingCursor = database.query("pokemon_locations", null, "pokemonID=?", selectionArg, null, null, null);
+        String[] selectionArg = {String.valueOf(nationalID)};
+        Cursor mappingCursor = database.query(POKEMON_LOCATIONS_TABLE, null, POKEMON_NATIONAL_ID + "=?", selectionArg, null, null, null);
         mappingCursor.moveToFirst();
 
         // Get the cursors for the locations and games tables:
-        Cursor locationCursor = database.query("locations", null, null, null, null, null, null);
-        Cursor gameCursor = database.query("games", null, null, null, null, null, null);
+        Cursor locationCursor = database.query(LOCATIONS_TABLE, null, null, null, null, null, null);
+        Cursor gameCursor = database.query(GAMES_TABLE, null, null, null, null, null, null);
 
         while (!mappingCursor.isAfterLast()) {
-            selectionArg[0] = String.valueOf(mappingCursor.getInt(mappingCursor.getColumnIndex("locationID")));
-            locationCursor = database.query("locations", null, "locationID=?", selectionArg, null, null, null);
+            selectionArg[0] = String.valueOf(mappingCursor.getInt(mappingCursor.getColumnIndex(LOCATION_ID)));
+            locationCursor = database.query(LOCATIONS_TABLE, null, LOCATION_ID + "=?", selectionArg, null, null, null);
             locationCursor.moveToFirst();
 
-            int gameID = locationCursor.getInt(locationCursor.getColumnIndex("gameID"));
+            int gameID = locationCursor.getInt(locationCursor.getColumnIndex(GAME_ID));
 
             selectionArg[0] = String.valueOf(gameID);
-            gameCursor = database.query("games", null, "gameID=?", selectionArg, null, null, null);
+            gameCursor = database.query(GAMES_TABLE, null, GAME_ID + "=?", selectionArg, null, null, null);
             gameCursor.moveToFirst();
 
-            Game game = new Game(gameCursor.getString(gameCursor.getColumnIndex("name")), gameCursor.getInt(gameCursor.getColumnIndex("generationID")));
-            Location loc = new Location(locationCursor.getString(locationCursor.getColumnIndex("name")), game);
+            Game game = new Game(gameCursor.getString(gameCursor.getColumnIndex(NAME)), gameCursor.getInt(gameCursor.getColumnIndex(GENERATION_ID)));
+            Location loc = new Location(locationCursor.getString(locationCursor.getColumnIndex(NAME)), game);
 
             locations.add(loc);
 
@@ -287,18 +554,18 @@ public class PokemonFactory {
         List<Ability> abilities = new LinkedList<>();
         // move the cursor to the pokemon abilities mapping table
         String[] selectionArg = {String.valueOf(pokemonID)};
-        Cursor mappingCursor = database.query("pokemon_abilities", null, "pokemonID=?", selectionArg, null, null, null);
+        Cursor mappingCursor = database.query(POKEMON_ABILITIES_TABLE, null, POKEMON_UNIQUE_ID + "=?", selectionArg, null, null, null);
         mappingCursor.moveToFirst();
 
         // Get the cursor for the ability table:
-        Cursor cursor = database.query("abilities", null, null, null, null, null, null);
+        Cursor cursor = database.query(ABILITIES_TABLE, null, null, null, null, null, null);
 
         while (!mappingCursor.isAfterLast()) {
-            selectionArg[0] = String.valueOf(mappingCursor.getInt(mappingCursor.getColumnIndex("abilityID")));
-            cursor = database.query("abilities", null, "abilityID=?", selectionArg, null, null, null);
+            selectionArg[0] = String.valueOf(mappingCursor.getInt(mappingCursor.getColumnIndex(ABILITIY_ID)));
+            cursor = database.query(ABILITIES_TABLE, null, ABILITIY_ID + "=?", selectionArg, null, null, null);
             cursor.moveToFirst();
 
-            Ability ability = new Ability(cursor.getString(cursor.getColumnIndex("name")), cursor.getString(cursor.getColumnIndex("description")));
+            Ability ability = new Ability(cursor.getString(cursor.getColumnIndex(NAME)), cursor.getString(cursor.getColumnIndex(DESCRIPTION)));
 
             abilities.add(ability);
 
@@ -316,18 +583,18 @@ public class PokemonFactory {
     /**
      * Goes into the moves table to retrieve the pokemon's moves
      *
-     * @param pokemonID pokemonID in the pokemon table (not the nationalID)
+     * @param nationalID pokemonID in the pokemon table (not the nationalID)
      * @return the list of moves that the pokemon is found at
      */
-    private List<Move> getMoves(int pokemonID) {
+    private List<Move> getMoves(int nationalID) {
         List<Move> moves = new LinkedList<>();
         // move the cursor to the pokemon moves mapping table
-        String[] selectionArg = {String.valueOf(pokemonID)};
-        Cursor mappingCursor = database.query("pokemon_moves", null, "pokemonID=?", selectionArg, null, null, null);
+        String[] selectionArg = {String.valueOf(nationalID)};
+        Cursor mappingCursor = database.query(POKEMON_MOVES_TABLE, null, POKEMON_NATIONAL_ID + "=?", selectionArg, null, null, null);
         mappingCursor.moveToFirst();
 
         while (!mappingCursor.isAfterLast()) {
-            moves.add(getMove(mappingCursor.getInt(mappingCursor.getColumnIndex("moveID"))));
+            moves.add(getMove(mappingCursor.getInt(mappingCursor.getColumnIndex(MOVE_ID))));
 
             // go to the next move for this pokemonID
             mappingCursor.moveToNext();
@@ -348,18 +615,18 @@ public class PokemonFactory {
     private Move getMove(int moveID) {
         // Get the cursor for the moves tables:
         String[] selectionArg = {String.valueOf(moveID)};
-        Cursor cursor = database.query("moves", null, "moveID=?", selectionArg, null, null, null);
+        Cursor cursor = database.query(MOVES_TABLE, null, MOVE_ID + "=?", selectionArg, null, null, null);
         cursor.moveToFirst();
 
-        Move move = new Move(cursor.getString(cursor.getColumnIndex("name")),
-                cursor.getString(cursor.getColumnIndex("description")),
-                cursor.getInt(cursor.getColumnIndex("power")),
-                cursor.getInt(cursor.getColumnIndex("accuracy")),
-                cursor.getInt(cursor.getColumnIndex("pp")),
-                cursor.getString(cursor.getColumnIndex("affects")),
-                cursor.getInt(cursor.getColumnIndex("genFirstAppeared")),
-                getCategory(cursor.getInt(cursor.getColumnIndex("categoryID"))),
-                getType(cursor.getInt(cursor.getColumnIndex("typeID"))));
+        Move move = new Move(cursor.getString(cursor.getColumnIndex(NAME)),
+                cursor.getString(cursor.getColumnIndex(DESCRIPTION)),
+                cursor.getInt(cursor.getColumnIndex(POWER)),
+                cursor.getInt(cursor.getColumnIndex(ACCURACY)),
+                cursor.getInt(cursor.getColumnIndex(PP)),
+                cursor.getString(cursor.getColumnIndex(AFFECTS)),
+                cursor.getInt(cursor.getColumnIndex(GENERATION_FIRST_APPEARED)),
+                getCategory(cursor.getInt(cursor.getColumnIndex(CATEGORY_ID))),
+                getType(cursor.getInt(cursor.getColumnIndex(TYPE_ID))));
 
         cursor.close();
 
@@ -373,14 +640,15 @@ public class PokemonFactory {
      * @return the list of types that the pokemon is
      */
     private List<Type> getTypes(int pokemonID) {
+
         List<Type> types = new LinkedList<>();
         // move the cursor to the pokemon types mapping table
         String[] selectionArg = {String.valueOf(pokemonID)};
-        Cursor mappingCursor = database.query("pokemon_types", null, "pokemonID=?", selectionArg, null, null, null);
+        Cursor mappingCursor = database.query(POKEMON_TYPES_TABLE, null, POKEMON_UNIQUE_ID + "=?", selectionArg, null, null, null);
         mappingCursor.moveToFirst();
 
         while (!mappingCursor.isAfterLast()) {
-            types.add(getType(mappingCursor.getInt(mappingCursor.getColumnIndex("typeID"))));
+            types.add(getType(mappingCursor.getInt(mappingCursor.getColumnIndex(TYPE_ID))));
 
             // go to the next location for this pokemonID
             mappingCursor.moveToNext();
@@ -395,26 +663,26 @@ public class PokemonFactory {
     /**
      * Goes into the egg groups table to retrieve the pokemon's egg groups
      *
-     * @param pokemonID pokemonID in the pokemon table (not the nationalID)
+     * @param nationalID nationalID in the pokemon table
      * @return the list of egg groups that the pokemon belongs to
      */
-    private List<EggGroup> getEggGroups(int pokemonID) {
+    private List<EggGroup> getEggGroups(int nationalID) {
         List<EggGroup> eggGroups = new LinkedList<>();
 
         // move the cursor to the egg group mapping table
-        String[] selectionArg = {String.valueOf(pokemonID)};
-        Cursor mappingCursor = database.query("pokemon_eggGroups", null, "pokemonID=?", selectionArg, null, null, null);
+        String[] selectionArg = {String.valueOf(nationalID)};
+        Cursor mappingCursor = database.query(POKEMON_EGG_GROUPS_TABLE, null, POKEMON_NATIONAL_ID + "=?", selectionArg, null, null, null);
         mappingCursor.moveToFirst();
 
         // Get the cursors for the egg Groups tables:
-        Cursor cursor = database.query("eggGroups", null, null, null, null, null, null);
+        Cursor cursor = database.query(EGG_GROUPS_TABLE, null, null, null, null, null, null);
 
         while (!mappingCursor.isAfterLast()) {
-            selectionArg[0] = String.valueOf(mappingCursor.getInt(mappingCursor.getColumnIndex("eggGroupID")));
-            cursor = database.query("eggGroups", null, "eggGroupID=?", selectionArg, null, null, null);
+            selectionArg[0] = String.valueOf(mappingCursor.getInt(mappingCursor.getColumnIndex(EGG_GROUP_ID)));
+            cursor = database.query(EGG_GROUPS_TABLE, null, EGG_GROUP_ID + "=?", selectionArg, null, null, null);
             cursor.moveToFirst();
 
-            eggGroups.add(new EggGroup(cursor.getString(cursor.getColumnIndex("name"))));
+            eggGroups.add(new EggGroup(cursor.getString(cursor.getColumnIndex(NAME))));
 
             // go to the next egg group for this pokemonID
             mappingCursor.moveToNext();
@@ -438,13 +706,16 @@ public class PokemonFactory {
 
         // move the cursor to the evolutions mapping table
         String[] selectionArg = {String.valueOf(pokemonID)};
-        Cursor mappingCursor = database.query("pokemon_evolutions", null, "fromPokemonID=?", selectionArg, null, null, null);
+        Cursor mappingCursor = database.query(POKEMON_EVOLUTIONS_TABLE, null, FROM_POKEMON_ID + "=?", selectionArg, null, null, null);
         mappingCursor.moveToFirst();
 
+        //By having Evolutions point to a full Pokemon object, Building a single instance of a Pokemon
+        // will result in a DFS to build all of its evolutions. Therefore, with good reason, this
+        // should only be done once!
         while (!mappingCursor.isAfterLast()) {
-            int evolvesToPokemonID = mappingCursor.getInt(mappingCursor.getColumnIndex("toPokemonID"));
-            String condition = mappingCursor.getString(mappingCursor.getColumnIndex("condition"));
-            evolutions.add(new Evolution(condition, getMinimalPokemonByPokemonID(evolvesToPokemonID)));
+            int evolvesToPokemonID = mappingCursor.getInt(mappingCursor.getColumnIndex(TO_POKEMON_ID));
+            String condition = mappingCursor.getString(mappingCursor.getColumnIndex(CONDITION));
+            evolutions.add(new Evolution(condition, getPokemonByPokemonID(evolvesToPokemonID)));
 
             // go to the next evolution for this pokemonID
             mappingCursor.moveToNext();
@@ -462,15 +733,17 @@ public class PokemonFactory {
      * @return  {@link Type} from the database corresponding to that typeID
      */
     private Type getType(int typeID) {
-        Type type = types.get(typeID);
-        Log.v("Database Access: ", "From typeID " + String.valueOf(typeID) + " type obtained was " + type.getName());
+        Type type = types[typeID];
+
+        if(PRINT_DEBUG)
+            Log.v("Database Access", "From typeID " + String.valueOf(typeID) + " type obtained was " + type.getName());
 
         /* This loads a new Type object each time.
         String[] selectionArg = {String.valueOf(typeID)};
-        Cursor cursor = database.query("types", null, "typeID=?", selectionArg, null, null, null);
+        Cursor cursor = database.query(TYPES_TABLE, null, TYPE_ID + "=?", selectionArg, null, null, null);
         cursor.moveToFirst();
 
-        Type type = new Type(cursor.getString(cursor.getColumnIndex("name")), cursor.getString(cursor.getColumnIndex("description")));
+        Type type = new Type(cursor.getString(cursor.getColumnIndex(NAME)), cursor.getString(cursor.getColumnIndex(DESCRIPTION)));
 
         // close the cursor
         cursor.close();
@@ -486,10 +759,10 @@ public class PokemonFactory {
      */
     private String getCategory(int categoryID) {
         String[] selectionArg = {String.valueOf(categoryID)};
-        Cursor cursor = database.query("categories", null, "categoryID=?", selectionArg, null, null, null);
+        Cursor cursor = database.query(CATEGORY_TABLE, null, CATEGORY_ID + "=?", selectionArg, null, null, null);
         cursor.moveToFirst();
 
-        String name = cursor.getString(cursor.getColumnIndex("name"));
+        String name = cursor.getString(cursor.getColumnIndex(NAME));
 
         // close the cursor
         cursor.close();
@@ -506,20 +779,20 @@ public class PokemonFactory {
     private boolean isCaught(int nationalID) {
         // TODO: Implement this method with correct names when database is changed
         String[] selectionArg = {String.valueOf(nationalID)};
-        Cursor cursor = database.query("pokemon_caught", null, "nationalID=?", selectionArg, null, null, null);
+        Cursor cursor = database.query(POKEMON_CAUGHT_TABLE, null, POKEMON_NATIONAL_ID + "=?", selectionArg, null, null, null);
         cursor.moveToFirst();
 
         // assume not caught
         boolean caught = false;
         // verify if it is caught
-        //TODO: Fix the code below, had to comment it out to compile the application and make it work.
-//        if (cursor.getInt(cursor.getColumnIndex("isCaught")) == 1) {
-//            caught = true;
-//        }
+        if (cursor.getInt(cursor.getColumnIndex(CAUGHT)) == 1) {
+            caught = true;
+        }
 
         // close the cursor
         cursor.close();
-        Log.v("Database Access: ", "T/F: Pokemon with nationalID " + String.valueOf(nationalID) + " was caught: " + String.valueOf(caught));
+        if(PRINT_DEBUG)
+            Log.v("Database Access", "T/F: Pokemon with nationalID " + String.valueOf(nationalID) + " was caught: " + String.valueOf(caught));
 
         return caught;
     }
@@ -534,13 +807,13 @@ public class PokemonFactory {
     public void toggleCaught(int nationalID) {
         // TODO: Implement this method with correct names when database is changed
         String[] selectionArg = {String.valueOf(nationalID)};
-        Cursor cursor = database.query("pokemon_caught", null, "nationalID=?", selectionArg, null, null, null);
+        Cursor cursor = database.query(POKEMON_CAUGHT_TABLE, null, POKEMON_NATIONAL_ID + "=?", selectionArg, null, null, null);
         cursor.moveToFirst();
 
         // assume not caught
         int caught = 0;
         // verify if it is caught, change it to not caught.
-        if (cursor.getInt(cursor.getColumnIndex("isCaught")) == 0) {
+        if (cursor.getInt(cursor.getColumnIndex(CAUGHT)) == 0) {
             caught = 1;
         }
         // close the cursor
@@ -548,12 +821,31 @@ public class PokemonFactory {
 
         // create new row content
         ContentValues content = new ContentValues();
-        content.put("nationalID", nationalID);
-        content.put("isCaught", caught);
+        content.put(POKEMON_NATIONAL_ID, nationalID);
+        content.put(CAUGHT, caught);
 
         // replace the row with the nationalID with the new row
         database.beginTransaction();
-        database.replaceOrThrow("pokemon_caught", null, content);
+        database.replaceOrThrow(POKEMON_CAUGHT_TABLE, null, content);
+        database.endTransaction();
+    }
+
+    /**
+     * Sets the value of caught to caught or not in the database.
+     *
+     * @param nationalID nationalID of the pokemon that is caught
+     * @param value true if changing to caught, false if changing to not caught
+     */
+    public void setCaught(int nationalID, boolean value){
+        int caught = value? 1 : 0;
+        // create new row content
+        ContentValues content = new ContentValues();
+        content.put(POKEMON_NATIONAL_ID, nationalID);
+        content.put(CAUGHT, caught);
+
+        // replace the row with the nationalID with the new row
+        database.beginTransaction();
+        database.replaceOrThrow(POKEMON_CAUGHT_TABLE, null, content);
         database.endTransaction();
     }
 
@@ -567,10 +859,10 @@ public class PokemonFactory {
         TODO: test this method, and the getMaxNationalID, to make sure that this selection command
                  works to get the max. If not, let @Nicole know :)
         */
-        Cursor cursor = database.query("games", null, null, null, null, null, null);
+        Cursor cursor = database.query(GAMES_TABLE, null, null, null, null, null, null);
         cursor.moveToLast();
 
-        int generationID = cursor.getInt(cursor.getColumnIndex("generationID"));
+        int generationID = cursor.getInt(cursor.getColumnIndex(GENERATION_ID));
 
         // close the cursor:
         cursor.close();
@@ -584,10 +876,10 @@ public class PokemonFactory {
      * @return max national ID
      */
     public int getMaxNationalID() {
-        Cursor cursor = database.query("pokemon_nationalID", null, null, null, null, null, null);
+        Cursor cursor = database.query(POKEMON_NATIONAL_ID_TO_UNIQUE_ID_TABLE, null, null, null, null, null, null);
         cursor.moveToLast();
 
-        int maxNationalID = cursor.getInt(cursor.getColumnIndex("nationalID"));
+        int maxNationalID = cursor.getInt(cursor.getColumnIndex(POKEMON_NATIONAL_ID));
 
         // close the cursor:
         cursor.close();
@@ -596,21 +888,40 @@ public class PokemonFactory {
     }
 
     /**
+     * Determines the current number of pokemon by their unique ID
+     *
+     * @return max national ID
+     */
+    public int getMaxUniqueID() {
+        Cursor cursor = database.query(POKEMON_UNIQUE_INFO_TABLE, null, null, null, null, null, null);
+        cursor.moveToLast();
+
+        int maxUniqueID = cursor.getInt(cursor.getColumnIndex(POKEMON_UNIQUE_ID));
+
+        // close the cursor:
+        cursor.close();
+
+        return maxUniqueID;
+    }
+
+    /**
      * Determines the current number of types
      *
      * @return max typeID
      */
     public int getMaxTypeID() {
-        Cursor cursor = database.query("types", null, null, null, null, null, null);
+        Cursor cursor = database.query(TYPES_TABLE, null, null, null, null, null, null);
         cursor.moveToLast();
 
-        int maxTypeID = cursor.getInt(cursor.getColumnIndex("typeID"));
-        Log.d("Database Access: ", "Max typeID is: " + String.valueOf(maxTypeID));
+        int maxTypeID = cursor.getInt(cursor.getColumnIndex(TYPE_ID));
+        if(PRINT_DEBUG)
+            Log.v("Database Access", "Max typeID is: " + String.valueOf(maxTypeID));
         // close the cursor:
         cursor.close();
 
         return maxTypeID;
     }
+
 
     /**
      * Get the party including all of the {@link Pokemon} and their respective {@link MoveSet}
@@ -619,25 +930,25 @@ public class PokemonFactory {
      */
     public Party getParty() {
         // grab the whole party table
-        Cursor cursor = database.query("party", null, null, null, null, null, null);
+        Cursor cursor = database.query(PARTY_TABLE, null, null, null, null, null, null);
         cursor.moveToFirst();
 
         Party myParty = new Party();
 
-        Cursor moveCursor = database.query("party_moveSet", null, null, null, null, null, null);
+        Cursor moveCursor = database.query(PARTY_MOVESET_TABLE, null, null, null, null, null, null);
 
         // go through the party table making the pokemon and associated moveSets for each one
         while (!(cursor.isAfterLast())) {
-            int pokemonID = cursor.getInt(cursor.getColumnIndex("pokemonID"));
-            int partyID = cursor.getInt(cursor.getColumnIndex("partyID"));
+            int pokemonID = cursor.getInt(cursor.getColumnIndex(POKEMON_UNIQUE_ID));
+            int partyID = cursor.getInt(cursor.getColumnIndex(PARTY_ID));
 
             List<Move> moves = new LinkedList<>();
 
             String[] selectionArg = {String.valueOf(partyID)};
-            moveCursor = database.query("party_moveSet", null, "partyID=?", selectionArg, null, null, null);
+            moveCursor = database.query(PARTY_MOVESET_TABLE, null, PARTY_ID + "=?", selectionArg, null, null, null);
 
             while (!(moveCursor.isAfterLast())) {
-                moves.add(getMove(moveCursor.getInt(moveCursor.getColumnIndex("moveID"))));
+                moves.add(getMove(moveCursor.getInt(moveCursor.getColumnIndex(MOVE_ID))));
 
                 moveCursor.moveToNext();
             }
@@ -668,9 +979,9 @@ public class PokemonFactory {
 
         database.beginTransaction();
         // delete the pokemon from the party table
-        database.delete("party", "partyID=?", selectionArg);
+        database.delete(PARTY_TABLE, PARTY_ID + "=?", selectionArg);
         // delete the pokemon's moves from the moveSet table
-        database.delete("party_moveSet", "partyID=?", selectionArg);
+        database.delete(PARTY_MOVESET_TABLE, PARTY_ID + "=?", selectionArg);
         database.endTransaction();
     }
 
@@ -691,15 +1002,15 @@ public class PokemonFactory {
         // firstly, add the party
         // create new row content for party table
         ContentValues partyContent = new ContentValues();
-        partyContent.put("partyID", partyPokemon.getPartyID());
-        partyContent.put("pokemonID", partyPokemon.getPokemon().getUniqueID());
+        partyContent.put(PARTY_ID, partyPokemon.getPartyID());
+        partyContent.put(POKEMON_UNIQUE_ID, partyPokemon.getPokemon().getPokemonUniqueID());
 
         int numberOfMoves = partyPokemon.getMoveSet().getNumberOfMoves();
         List<Move> moves = partyPokemon.getMoveSet().getMoves();
 
         ContentValues[] moveContent = new ContentValues[numberOfMoves];
         for (int i = 0; i < numberOfMoves; i++) {
-            moveContent[i].put("moveID", getMoveID(moves.get(i)));
+            moveContent[i].put(MOVE_ID, getMoveID(moves.get(i)));
         }
 
 
@@ -707,10 +1018,10 @@ public class PokemonFactory {
         // the transaction and throw an error
         try {
             database.beginTransaction();
-            database.insertOrThrow("party", null, partyContent);
+            database.insertOrThrow(PARTY_TABLE, null, partyContent);
             // insert the moves
             for (int i = 0; i < numberOfMoves; i++) {
-                database.insertOrThrow("party_moveSet", null, moveContent[i]);
+                database.insertOrThrow(PARTY_MOVESET_TABLE, null, moveContent[i]);
             }
             database.endTransaction();
         } catch (Exception e) {
@@ -727,14 +1038,14 @@ public class PokemonFactory {
      */
     public void addMoveToPartyPokemon(int partyID, Move move) throws Exception {
         ContentValues moveContent = new ContentValues();
-        moveContent.put("partyID", partyID);
+        moveContent.put(PARTY_ID, partyID);
         // Get the cursor for the moves tables to determine the moveID associated with the move
 
-        moveContent.put("moveID", getMoveID(move));
+        moveContent.put(MOVE_ID, getMoveID(move));
 
         try {
             database.beginTransaction();
-            database.insertOrThrow("party_moveSet", null, moveContent);
+            database.insertOrThrow(PARTY_MOVESET_TABLE, null, moveContent);
             database.endTransaction();
         } catch (Exception e) {
             throw new Exception("Database Error: Move not added to party pokemon.");
@@ -748,20 +1059,22 @@ public class PokemonFactory {
      */
     public void removeMoveFromPokemonInParty(int partyID, Move move) {
         String[] selectionArgs = {String.valueOf(partyID), String.valueOf(getMoveID(move))};
-        database.delete("party_moveSet", "partyID=? AND moveID=?", selectionArgs);
+        database.delete(PARTY_MOVESET_TABLE, PARTY_ID + "=? AND " + MOVE_ID + "=?", selectionArgs);
     }
 
     /**
      * Loads all the Types into memory. Should be done at program start (during splash screen)
      */
     public void loadAllTypes() {
+        // fail safe 0th index of types:
+        types[0] = new Type("None/Bird", 0);
+        // get the real types from the database:
         for (int i = 1; i < getMaxTypeID() + 1; i++) {
             String[] selectionArg = {String.valueOf(i)};
-            Cursor cursor = database.query("types", null, "typeID=?", selectionArg, null, null, null);
+            Cursor cursor = database.query(TYPES_TABLE, null, TYPE_ID + "=?", selectionArg, null, null, null);
             cursor.moveToFirst();
 
-//            types.put(i, (new Type(cursor.getString(cursor.getColumnIndex("name")), cursor.getString(cursor.getColumnIndex("description")))));
-            types.put(i, (new Type(cursor.getString(cursor.getColumnIndex("name")), "E.ojpclycrb ru yd .yfl.")));
+            types[i] = new Type(cursor.getString(cursor.getColumnIndex(NAME)), i);
 
             // close the cursor
             cursor.close();
@@ -776,13 +1089,17 @@ public class PokemonFactory {
      */
     private int getMoveID(Move move) {
         String[] selectionArg = {move.getName()};
-        String[] columnArg = {"moveID"};
-        Cursor cursor = database.query("moves", columnArg, "name=?", selectionArg, null, null, null);
+        String[] columnArg = {MOVE_ID};
+        Cursor cursor = database.query(MOVES_TABLE, columnArg, NAME + "=?", selectionArg, null, null, null);
         cursor.moveToFirst();
-        int moveID = cursor.getInt(cursor.getColumnIndex("moveID"));
+        int moveID = cursor.getInt(cursor.getColumnIndex(MOVE_ID));
         cursor.close();
 
         return moveID;
+    }
+
+    public boolean isDetailedNationalIDBuiltAndReady(int nationalID){
+        return detailedPokemonShortList!=null && detailedPokemonShortList[nationalID]!=null;
     }
 
 }

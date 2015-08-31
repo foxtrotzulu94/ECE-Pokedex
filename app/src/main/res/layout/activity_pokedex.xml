@@ -91,7 +91,7 @@
                         android:layout_height="match_parent"
                         android:id="@+id/imgview_pkmntype1"
                         android:layout_weight="0.5"
-                        android:src="@drawable/typenone"
+                        android:src="@drawable/typeempty"
                         android:scaleType="fitXY" />
 
                     <ImageView
@@ -100,7 +100,7 @@
                         android:id="@+id/imgview_pkmntype2"
                         android:layout_weight="0.5"
                         android:focusableInTouchMode="false"
-                        android:src="@drawable/typenone"
+                        android:src="@drawable/typeempty"
                         android:scaleType="fitXY" />
                 </LinearLayout>
 

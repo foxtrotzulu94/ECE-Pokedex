@@ -1,6 +1,10 @@
 package me.quadphase.qpdex.pokemon;
 
+import android.content.Context;
+
 import java.util.List;
+
+import me.quadphase.qpdex.databaseAccess.PokemonFactory;
 
 //
 //
@@ -173,7 +177,7 @@ public class Pokemon {
                    int genFirstAppeared, int hatchTime, int catchRate, int genderRatioMale,
                    List<Location> locations, List<Ability> abilities, List<Move> moves,
                    List<EggGroup> eggGroups, List<Evolution> evolutions) {
-        this.pokemonNationalID = MinimalPokemon.getNationalID();
+        this.pokemonNationalID = MinimalPokemon.getPokemonNationalID();
         this.pokemonUniqueID = pokemonUniqueID;
         this.name = MinimalPokemon.getName();
         this.description = MinimalPokemon.getDescription();
@@ -205,11 +209,11 @@ public class Pokemon {
         return abilities;
     }
 
-    public int getUniqueID() {
+    public int getPokemonUniqueID() {
         return pokemonUniqueID;
     }
 
-    public int getNationalID() {
+    public int getPokemonNationalID() {
         return pokemonNationalID;
     }
 
@@ -296,10 +300,15 @@ public class Pokemon {
     /**
      * toggles whether or not a pokemon has been caught
      */
-    public void toggleCaught() {
+    public void toggleCaught(Context currentContext) {
         caught = !caught;
+        PokemonFactory.getPokemonFactory(currentContext).setCaught(this.pokemonNationalID,this.caught);
     }
 
+    @Override
+    public String toString(){
+        return String.format("%s. %s (unique:%s)",pokemonNationalID,name,pokemonUniqueID);
+    }
 
     public int retrieveStatFromString(String specific){
         int statVal = 0;

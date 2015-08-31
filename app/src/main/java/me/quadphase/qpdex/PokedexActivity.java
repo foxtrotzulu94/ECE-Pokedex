@@ -1,5 +1,6 @@
 package me.quadphase.qpdex;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,15 +22,13 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.Arrays;
-
+import me.quadphase.qpdex.databaseAccess.PokemonFactory;
 import me.quadphase.qpdex.pokedex.CentralAudioPlayer;
 import me.quadphase.qpdex.pokedex.PokedexArrayAdapter;
 import me.quadphase.qpdex.pokedex.PokedexAssetFactory;
 import me.quadphase.qpdex.pokedex.PokedexManager;
 import me.quadphase.qpdex.pokedex.TTSController;
 import me.quadphase.qpdex.pokemon.MinimalPokemon;
-import me.quadphase.qpdex.pokemon.Type;
 
 
 public class PokedexActivity extends AppCompatActivity {
@@ -48,7 +47,7 @@ public class PokedexActivity extends AppCompatActivity {
 
             //We can now get the minimal Object and do things from here
             MinimalPokemon retrieved = (MinimalPokemon) parent.getItemAtPosition(position);
-            contextMaster.updatePokedexSelection(retrieved, getApplicationContext());
+            contextMaster.updatePokedexSelection(retrieved, getApplicationContext(), false);
             dexVoice.setText(retrieved.getDescription());
             refreshPokedexOverviewPanel();
 
@@ -68,8 +67,8 @@ public class PokedexActivity extends AppCompatActivity {
     private class PokedexLongClickListener implements AdapterView.OnItemLongClickListener{
         @Override
         public boolean onItemLongClick(AdapterView<?> arg0, View v,int pos, long id) {
-            switchToPokemonData(v);
             pokedexListView.performItemClick(v,pos,id);
+            switchToPokemonData(v);
             return true;
         }
     }
@@ -116,6 +115,7 @@ public class PokedexActivity extends AppCompatActivity {
     ImageView overviewType1;
     ImageView overviewType2;
 
+
     //Assistant Containers
     ArrayAdapter<MinimalPokemon> pokedexEntries;
 
@@ -136,6 +136,7 @@ public class PokedexActivity extends AppCompatActivity {
         overviewType2 = (ImageView) findViewById(R.id.imgview_pkmntype2);
         inputSearch = (EditText) findViewById(R.id.edittext_pkmnname);
         pokedexListView = (ListView) findViewById(R.id.listv_pkdexentries);
+
     }
 
 
@@ -168,30 +169,14 @@ public class PokedexActivity extends AppCompatActivity {
         });
         }
 
-
-        //This is a test,
-        // TODO: remove after real list can populate the ListView
-        Log.d("QPDEX", "Artifically creating objects");
+        //TODO: Move to PokedexManager.
         // this is a test to ensure that the database is working
-//        PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(this.getApplicationContext());
-//        MinimalPokemon[] listy = pokemonFactory.getAllPokemon();
-//        listy[2] = new MinimalPokemon(3,"Bulbasaur",
-//                "Bulbasaur can be seen napping in bright sunlight. There is a seed on its back. By soaking up the sun’s rays, the seed grows progressively larger. ",
-//                Arrays.asList(new Type("Grass",""), new Type("Poison","")), false);
-//
-//        pokemonFactory.getMinimalPokemonByNationalID(5);
-//
-        int testNumber = 721;
-        MinimalPokemon[] listy = new MinimalPokemon[testNumber];
-        for(int i =0; i<testNumber; i++){
-            listy[i] = new MinimalPokemon(i,"Pokemon",
-                "The franchise began as a pair of video games for the original Game Boy, developed by Game Freak and published by Nintendo. The franchise now spans video games, trading card games, animated television shows and movies, comic books, and toys",
-                Arrays.asList(new Type("electric",""), new Type("ice","")));
-        }
-        listy[1] = new MinimalPokemon(1,"Bulbasaur",
-                "Bulbasaur can be seen napping in bright sunlight. There is a seed on its back. By soaking up the sun’s rays, the seed grows progressively larger. ",
-                Arrays.asList(new Type("Grass",""), new Type("Poison","")));
+        final PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(this.getApplicationContext());
 
+        long startTime = System.nanoTime();
+        MinimalPokemon[] listy = pokemonFactory.getAllMinimalPokemon();
+        final long minBuild = System.nanoTime();
+        Log.d("QPDEX", String.format("All MinimalPokemon done in: %s ns", minBuild - startTime));
 
         //Initialize the ArrayAdapter object.
         pokedexEntries = new PokedexArrayAdapter(this,listy);
@@ -290,9 +275,55 @@ public class PokedexActivity extends AppCompatActivity {
     }
 
     public void switchToPokemonData(View view){
+
+        final Intent intent = new Intent(this,DetailedPokemonActivity.class);
+
         //We might need to signal the PokedexManager to see if the activity can load.
-        Intent intent = new Intent(this,DetailedPokemonActivity.class);
-        startActivity(intent);
+        final PokemonFactory pkmnBuild = PokemonFactory.getPokemonFactory(this);
+        final int selectedNationalID = contextMaster.getCurrentMinimalPokemon().getPokemonNationalID();
+        contextMaster.updatePokedexSelection(contextMaster.getCurrentMinimalPokemon(), getApplicationContext(), true);
+        Log.d("QPDEX",String.format("Switching to %s",selectedNationalID));
+
+        if(!pkmnBuild.isDetailedNationalIDBuiltAndReady(selectedNationalID)){
+            final ProgressDialog dialog = ProgressDialog.show(PokedexActivity.this, "", "Loading. Please wait...", true);
+            Thread modalHandler = new Thread(){
+                @Override
+                public void run(){
+
+                    //Show loading
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            dialog.setCancelable(true);
+                        }
+                    });
+
+                    //Wait for a while
+                    while(!pkmnBuild.isDetailedNationalIDBuiltAndReady(selectedNationalID)){
+                        try {
+                            Thread.sleep(1);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    //Dismiss the loading and proceed.
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            dialog.dismiss();
+                            startActivity(intent);
+                        }
+                    });
+                }
+            };
+            modalHandler.setPriority(Thread.MAX_PRIORITY);
+            modalHandler.start();
+
+        }
+        else {
+            startActivity(intent);
+        }
     }
 
     public void playPokemonCry(View view){

@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import me.quadphase.qpdex.databaseAccess.PokemonFactory;
 import me.quadphase.qpdex.pokemon.Ability;
 import me.quadphase.qpdex.pokemon.EggGroup;
 import me.quadphase.qpdex.pokemon.Evolution;
@@ -36,7 +37,9 @@ public class PokedexManager {
                     -1,                  // pokemonUniqueID,
                     0,                   // pokemonNationalID,
                     "MissingNo.",        // name,
-                    "Ketsuban",// description,
+                    "It is arguably the best known glitch Pokémon, closely followed by 'M (00) and it is the easiest glitch Pokémon to find in the localizations. It has five distinct forms, but the most frequent forms (that being the Red/Blue and Yellow normal forms) share 36 index numbers each.\n" +
+                            "\n" +
+                            "In later generations, other glitch Pokémon are sometimes referred to as \"a Missingno.\", such as ??????????, ?, and -----. Despite this, the name \"Missingno.\" is a misnomer in this case; they have little relation to the one found in Pokémon Red and Blue or Yellow. ",// description,
                     3.3,                 // height in Meters,
                     1590.8,              // weight in Kilograms,
                     136,                 // attack,
@@ -54,15 +57,15 @@ public class PokedexManager {
                     null,                // abilities,
                     null,                // moves,
                     Arrays.asList(       //types
-                            new Type("Bird","Invalid Type"),
-                            new Type("Normal","Normal")),
+                            new Type("Bird", 0),
+                            new Type("Normal", 13)),
                     null,                // eggGroups,
                     null                 // evolutions,
             );
         }
 
         public MinimalPokemon minimal(){
-            return new MinimalPokemon(getNationalID(), super.getName(), super.getDescription(), super.getTypes(), false);
+            return new MinimalPokemon(getPokemonNationalID(), super.getName(), super.getDescription(), super.getTypes(), false);
         }
 
     }
@@ -95,21 +98,21 @@ public class PokedexManager {
                     Arrays.asList(// abilities,
                             new Ability("Glitch Master","Can corrupt anything in its path")),
                     Arrays.asList(// moves,
-                            new Move("Water Gun","",0,0,0,"op",1,"",new Type("water","")),
-                            new Move("Water Gun","",0,0,0,"op",1,"",new Type("water","")),
-                            new Move("Sky Attack","",0,0,0,"op",1,"",new Type("Flying",""))  ),
+                            new Move("Water Gun","",0,0,0,"op",1,"",new Type("water", 18)),
+                            new Move("Water Gun","",0,0,0,"op",1,"",new Type("water", 18)),
+                            new Move("Sky Attack","",0,0,0,"op",1,"",new Type("Flying", 8))  ),
                     Arrays.asList(       //types
-                            new Type("Bird","Invalid Type"),
-                            new Type("Normal","Normal")),
+                            new Type("Bird", 0),
+                            new Type("Normal", 13)),
                     Arrays.asList(new EggGroup("glitch")),                // eggGroups,
-                    Arrays.asList(new Evolution("Level Up",new MissingNo().minimal()))// evolutions,
+                    Arrays.asList(new Evolution("Level Up",new MissingNo()))// evolutions,
             );
             rng = new Random();
             rng.setSeed(System.nanoTime());
         }
 
         public MinimalPokemon minimal(){
-            return new MinimalPokemon(getNationalID(), super.getName(), super.getDescription(), super.getTypes(), false);
+            return new MinimalPokemon(getPokemonNationalID(), super.getName(), super.getDescription(), super.getTypes(), false);
         }
 
         @Override
@@ -122,6 +125,8 @@ public class PokedexManager {
     //Entity variables that describe inner state and function
     private static PokedexManager instance=null;
     private static CentralAudioPlayer jukebox=null;
+    private static PokemonFactory pkmnBuild=null;
+    private boolean isMinimalReady=false;
     private boolean isReady=false;
     private boolean isDetailed=false;
 
@@ -180,10 +185,13 @@ public class PokedexManager {
     //Singleton Constructor
     protected PokedexManager(){
         jukebox = CentralAudioPlayer.getInstance();
-        missingNo = new MissingNo();
 
-        //TODO: REMOVE when DB access complete! UI testing ONLY!
+        missingNo = new MissingNo();
         TrainerPoke$ = new M00();
+
+        isReady = false;
+
+        currentMinimalPokemon = missingNo.minimal();
         currentDetailedPokemon = TrainerPoke$;
     }
 
@@ -203,12 +211,15 @@ public class PokedexManager {
      * @param pokedexSelection The minimal pokemon, preferrably from the {@link PokedexArrayAdapter}
      * @param currentContext The context in which the update occurs (usually, "this" within an Activity)
      */
-    public void updatePokedexSelection(MinimalPokemon pokedexSelection, final Context currentContext){
-        Log.d("QPDex","Beginning minimal build "+System.nanoTime());
-        isReady = false;
+    public void updatePokedexSelection(MinimalPokemon pokedexSelection, final Context currentContext, boolean prefetch){
+
+        if(pkmnBuild==null){
+            pkmnBuild = PokemonFactory.getPokemonFactory(currentContext);
+        }
+
         isDetailed = false;
         currentMinimalPokemon = pokedexSelection;
-        currentPokemonNationalID = pokedexSelection.getNationalID();
+        currentPokemonNationalID = pokedexSelection.getPokemonNationalID();
 
         //Update Media Controller
         jukebox.updateInstance(currentPokemonNationalID, PokedexAssetFactory.getPokemonCry(currentContext, currentPokemonNationalID));
@@ -234,26 +245,28 @@ public class PokedexManager {
         //The description to be heard is generally set on PokedexManager
         // The reason for this is to avoid leaking/misusing the TTSController resources.
 
-        //TODO: (THIS SHOULD BE ITS OWN TASK!)
-        // We are spawning off a thread to build the detailed Pokemon, however, for now we rely on
-        // our test subject: 'M (00). This is to ensure that the UI works as intended.
-        // When the time comes to actually use this, remove "currentDetailedPokemon" as the argument
-        // and pass the correct detailedPokemon that maps to the National ID.
-        // You will also want to
-        // (A) make the Thread below non-anonymous, such that we can manage having several of these in construction
-        // (B) altogether eliminate this code segment and prebuild a massive list of detailed pokemon
-        //      That would be executed, as a Thread, some time after building the minimalPokemon list
-        //      and some time before the first execution of DetailedPokemonActivity.
-        Thread buildInDetail = new Thread(){
-            @Override
-            public void run(){
-                updatePokedexSelection(TrainerPoke$,currentContext);
-                Log.d("QPDEX","Full detailed pokemon completed "+System.nanoTime());
-            }
-        };
-        buildInDetail.start();
-
-        isReady = true;
+        //TODO: Spawning off a thread may delay critical functionality to prioritize pre-fetching
+        //  this method is called, primarily, from PokedexActivty. Setting the fully detailed pokemon
+        //  should probably be delayed until the intent to open up the DetailedPokemonActivity has been
+        //  fired.
+        if (prefetch) {
+            Log.d("QPDEX_Manager",String.format("Updating to %s",currentPokemonNationalID));
+            Thread buildInDetail = new Thread(){
+                @Override
+                public void run(){
+                    int nationalID= currentMinimalPokemon.getPokemonNationalID();
+                    if (nationalID>0){
+                            updatePokedexSelection(
+                                    pkmnBuild.getPokemonByNationalID(nationalID),
+                                    currentContext);
+                    }
+                    else{ //If the Manager isn't ready or we had an unexpected ID, then display MissingNo!!!
+                        updatePokedexSelection(missingNo, currentContext);
+                    }
+                }
+            };
+            buildInDetail.run();
+        }
     }
 
     /**
@@ -265,10 +278,13 @@ public class PokedexManager {
     public void updatePokedexSelection(Pokemon detailedPokemon, final Context currentContext){
         //For now, it just sets this variable. Later it should probably do more in terms of assets
         currentDetailedPokemon = detailedPokemon;
+
+        Log.d("QPDEX_Manager",String.format("Updating detail to %s",detailedPokemon.getPokemonNationalID()));
+
         //Load Sprite
         currentOverviewSprite = new BitmapDrawable(currentContext.getResources(),
                 PokedexAssetFactory.getPokemonSpriteInGeneration(
-                        currentContext,detailedPokemon.getNationalID(),restrictUpToGeneration));
+                        currentContext,currentDetailedPokemon.getPokemonNationalID(),restrictUpToGeneration));
 
         //Load first type
         currentDetailedType1 = new BitmapDrawable(currentContext.getResources(),
@@ -291,7 +307,7 @@ public class PokedexManager {
                 for (int i = restrictUpToGeneration; i >0; i--) {
                     InputStream file = PokedexAssetFactory.getPokemonSpriteInGeneration(
                             currentContext,
-                            currentDetailedPokemon.getNationalID(),
+                            currentDetailedPokemon.getPokemonNationalID(),
                             i);
                     BitmapDrawable sprite = new BitmapDrawable(
                             currentContext.getResources(),
@@ -314,6 +330,10 @@ public class PokedexManager {
      */
     public boolean isReady() {
         return isReady;
+    }
+
+    public boolean isMinimalReady(){
+        return isMinimalReady;
     }
 
     /**
@@ -363,6 +383,46 @@ public class PokedexManager {
      */
     public List<BitmapDrawable> getAllDetailedPokemonSprites() {
         return cachedDisplaySprites;
+    }
+
+    public void beginCachingRoutines(final PokemonFactory builderInstance){
+        //First ask for the instance
+        pkmnBuild = builderInstance;
+
+        //Then spawn off 2 Threads
+
+        // thread 2 to create the Full Pokemon Objects
+        final Thread initFull = new Thread(){
+            @Override
+            public void run(){
+                // This builds all the Detailed Pokemon, even though we might not want to store it!
+                //TODO: Paralelize and optimize for speed
+                pkmnBuild.getAllDetailedPokemon();
+
+                //Signals full completion
+                Log.d("QPDEX_Manager","All Detailed Pokemon Objects Created");
+                Log.d("QPDEX_Manager","PokedexManager is now Ready");
+                isReady = true;
+            }
+        };
+
+        // thread 1 to create the Minimal Pokemon list.
+        Thread initMin = new Thread(){
+            @Override
+            public void run(){
+                allMinimalPokemon = pkmnBuild.getAllMinimalPokemon();
+                isMinimalReady=true;
+                // After this is done, spawn off initFull to finish the setup
+//                initFull.start(); //TODO: Uncomment after optimizing
+                Log.d("QPDEX_Manager","All Minimal Pokemon Objects Created");
+            }
+        };
+
+        // Start with the initMin thread and it will call initFull afterwards.
+        initMin.start();
+        initMin.setPriority(Thread.MAX_PRIORITY);
+
+
     }
 
 

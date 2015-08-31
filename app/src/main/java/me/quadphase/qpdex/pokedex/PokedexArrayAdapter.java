@@ -1,8 +1,6 @@
 package me.quadphase.qpdex.pokedex;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,12 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-
 import me.quadphase.qpdex.R;
-import me.quadphase.qpdex.databaseAccess.PokemonFactory;
 import me.quadphase.qpdex.pokemon.MinimalPokemon;
 
 /**
@@ -61,18 +54,26 @@ public class PokedexArrayAdapter extends ArrayAdapter<MinimalPokemon> implements
         LinearLayout row = (LinearLayout) rowEntry.findViewById(R.id.linlayout_pokedexrow);
         TextView entryString = (TextView) rowEntry.findViewById(R.id.textview_pkmn_list_entry);
         ImageView miniSprite = (ImageView) rowEntry.findViewById(R.id.img_pkmnmini);
-        ImageButton caught = (ImageButton) rowEntry.findViewById(R.id.imgbutton_caught);
+        final ImageButton caught = (ImageButton) rowEntry.findViewById(R.id.imgbutton_caught);
 
         if(entryObjects[position].isCaught()){
             caught.setAlpha(1.0f);
         }
+        else{
+            caught.setAlpha(0.2f);
+        }
 
-        if(!caught.hasOnClickListeners()){
+        if (!caught.hasOnClickListeners()) {
             caught.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    entryObjects[position].toggleCaught();
-                    Log.d("QPDEX",String.format("Pokemon %s has been caught",entryObjects[position].getNationalID()));
+                    entryObjects[position].toggleCaught();
+                    Log.d("QPDEX", String.format("Pokemon %s has been caught", entryObjects[position].getPokemonNationalID()));
+                    if (entryObjects[position].isCaught()) {
+                        caught.setAlpha(1.0f);
+                    } else {
+                        caught.setAlpha(0.2f);
+                    }
                 }
             });
         }
@@ -83,7 +84,7 @@ public class PokedexArrayAdapter extends ArrayAdapter<MinimalPokemon> implements
             entryString.setTextSize(fontSize);
 
         miniSprite.setImageDrawable(new BitmapDrawable(super.getContext().getResources(),
-                PokedexAssetFactory.getPokemonMinimalSprite(super.getContext(),entryObjects[position].getNationalID())));
+                PokedexAssetFactory.getPokemonMinimalSprite(super.getContext(),entryObjects[position].getPokemonNationalID())));
 
         return rowEntry;
     }
