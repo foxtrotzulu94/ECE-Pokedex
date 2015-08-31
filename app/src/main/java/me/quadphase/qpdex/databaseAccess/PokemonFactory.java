@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -204,7 +203,7 @@ public class PokemonFactory {
 
     private static PokemonFactory instance = null;
 
-    private HashMap<Integer,Type> types;
+    private Type[] types;
 
     /**
      * SQLite database handle
@@ -221,7 +220,7 @@ public class PokemonFactory {
 
         setupLargeCacheLists();
 
-        types = new HashMap<>();
+        types = new Type[getMaxTypeID() + 1];
 
         loadAllTypes();
     }
@@ -734,7 +733,7 @@ public class PokemonFactory {
      * @return  {@link Type} from the database corresponding to that typeID
      */
     private Type getType(int typeID) {
-        Type type = types.get(typeID);
+        Type type = types[typeID];
 
         if(PRINT_DEBUG)
             Log.v("Database Access", "From typeID " + String.valueOf(typeID) + " type obtained was " + type.getName());
@@ -1067,12 +1066,15 @@ public class PokemonFactory {
      * Loads all the Types into memory. Should be done at program start (during splash screen)
      */
     public void loadAllTypes() {
+        // fail safe 0th index of types:
+        types[0] = new Type("None/Bird", 0);
+        // get the real types from the database:
         for (int i = 1; i < getMaxTypeID() + 1; i++) {
             String[] selectionArg = {String.valueOf(i)};
             Cursor cursor = database.query(TYPES_TABLE, null, TYPE_ID + "=?", selectionArg, null, null, null);
             cursor.moveToFirst();
 
-            types.put(i, (new Type(cursor.getString(cursor.getColumnIndex(NAME)))));
+            types[i] = new Type(cursor.getString(cursor.getColumnIndex(NAME)), i);
 
             // close the cursor
             cursor.close();
