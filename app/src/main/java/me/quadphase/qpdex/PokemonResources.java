@@ -6,6 +6,7 @@ import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 
@@ -23,6 +24,7 @@ public class PokemonResources extends ActionBarActivity {
             int websiteID = getResources().getIdentifier(String.format("%s",websitearray[i]),"id",getPackageName());
             TextView testy = (TextView) findViewById(websiteID);
             testy.setText(Html.fromHtml(testy.getText().toString()));
+            testy.setGravity(View.TEXT_ALIGNMENT_CENTER);
             testy.setMovementMethod(LinkMovementMethod.getInstance());
         }
         }

@@ -33,7 +33,7 @@
     <!-- PokemonResources Strings Start-->
     <string name="website_bulbapedia"><![CDATA[<a href="http://www.bulbapedia.bulbagarden.net">Bulbapedia - The community-driven Pokemon encyclopedia</a>]]></string>
     <string name="website_smogon"><![CDATA[<a href="http://www.smogon.com">Smogon - Competitive Pokemon Community</a>]]></string>
-    <string name="website_serebii"><![CDATA[<a href="http://www.serebii.net">Serebii - Where Legends come to Life*</a>]]></string>
+    <string name="website_serebii"><![CDATA[<a href="http://www.serebii.net">Serebii - Where Legends come to Life</a>]]></string>
     <string name="website_pldh"><![CDATA[<a href="http://www.pldh.net">PLDH - Pokemon News</a>]]></string>
     <string name="website_veekun"><![CDATA[<a href="http://www.veekun.com>Veekun - Pokemon Blog</a>]]></string>
     <string name="website_pokemonvideogames"><![CDATA[<a href="http://www.pokemon.com/us/pokemon-video-games/">Please support the Official Release!</a>]]></string>

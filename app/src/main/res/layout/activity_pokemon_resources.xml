@@ -7,7 +7,7 @@
     tools:context="me.quadphase.qpdex.PokemonResources"
     android:id="@+id/pokemon_resources"
     android:orientation="vertical"
-    android:background="#6666aaff">
+    android:background="@drawable/pkmnrestile">
 
     <TextView
         android:layout_width="wrap_content"
@@ -18,13 +18,16 @@
         android:autoText="false"
         android:gravity="left"
         android:layout_weight="0"
-        android:textColor="#FFFFFFFF"/>
+        android:textColor="#ff5c6cff"
+        android:background="@color/dex_grey"
+        android:fontFamily=""/>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.2">
+        android:layout_weight="0.2"
+        android:background="@color/dex_grey_transparent">
 
 
         <ScrollView
@@ -42,7 +45,9 @@
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:minHeight="100dp">
+                    android:minHeight="100dp"
+                    android:gravity="center"
+                    android:layout_weight="0.2">
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -57,13 +62,14 @@
 
                     <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:text="@string/website_pokemonvideogames"
                         android:id="@+id/pokemonvideogames"
                         android:layout_weight="0.3"
                         android:clickable="false"
-                        android:textColor="#FFFFFFFF" />
+                        android:textColor="#FFFFFFFF"
+                        android:gravity="center" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -71,7 +77,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.2"
-                    android:minHeight="100dp">
+                    android:minHeight="100dp"
+                    android:gravity="center">
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -100,7 +107,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.2"
-                    android:minHeight="100dp">
+                    android:minHeight="100dp"
+                    android:gravity="center">
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -129,7 +137,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.2"
-                    android:minHeight="100dp">
+                    android:minHeight="100dp"
+                    android:gravity="center">
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -157,7 +166,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.2"
-                    android:minHeight="100dp">
+                    android:minHeight="100dp"
+                    android:gravity="center">
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -185,7 +195,9 @@
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.2" >
+                    android:layout_weight="0.2"
+                    android:minHeight="100dp"
+                    android:gravity="center">
 
                     <ImageView
                         android:layout_width="match_parent"
