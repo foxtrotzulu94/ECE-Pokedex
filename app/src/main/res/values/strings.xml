@@ -31,12 +31,12 @@
 
 
     <!-- PokemonResources Strings Start-->
-    <string name="website_bulbapedia">For comprehensive lists: \n <![CDATA[<a href="http://www.bulbapedia.bulbagarden.net">Bulbapedia</a>]]></string>
-    <string name="website_smogon">For an excellent Pokemon battle simulator: \n <![CDATA[<a href="http://www.smogon.com">Smogon</a>]]></string>
-    <string name="website_serebii">For anything Pokemon related: \n <![CDATA[<a href="http://www.serebii.net"></a>]]>Serebii</string>
-    <string name="website_pldh">For Pokemon cries: \n <![CDATA[<a href="http://www.pldh.net">Pldh</a>]]></string>
-    <string name="website_veekun">For Pokemon sprites that were used: \n <![CDATA[<a href="http://www.veekun.com>Veekun</a>]]></string>
-    <string name="website_pokemonvideogames">Please support the Official Release! <br>\n</br> <![CDATA[<a href="http://www.pokemon.com/us/pokemon-video-games/">Pokemon Official</a>]]></string>
+    <string name="website_bulbapedia"><![CDATA[<a href="http://www.bulbapedia.bulbagarden.net">Bulbapedia - The community-driven Pokemon encyclopedia</a>]]></string>
+    <string name="website_smogon"><![CDATA[<a href="http://www.smogon.com">Smogon - Competitive Pokemon Community</a>]]></string>
+    <string name="website_serebii"><![CDATA[<a href="http://www.serebii.net">Serebii - Where Legends come to Life*</a>]]></string>
+    <string name="website_pldh"><![CDATA[<a href="http://www.pldh.net">PLDH - Pokemon News</a>]]></string>
+    <string name="website_veekun"><![CDATA[<a href="http://www.veekun.com>Veekun - Pokemon Blog</a>]]></string>
+    <string name="website_pokemonvideogames"><![CDATA[<a href="http://www.pokemon.com/us/pokemon-video-games/">Please support the Official Release!</a>]]></string>
     <!-- PokemonResources Strings End-->
 
     <!-- Work in Progress strings-->
