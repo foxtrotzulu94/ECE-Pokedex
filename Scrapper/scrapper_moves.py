@@ -21,9 +21,11 @@ c = conn.cursor();
 c.execute("delete from " + "moves")
 c.execute("delete from " + "category")
 c.execute("delete from " + "types")
+c.execute("delete from " + "types_effectiveness")
 c.execute("delete from " + " sqlite_sequence where name = 'moves'")
 c.execute("delete from " + " sqlite_sequence where name = 'category'")
 c.execute("delete from " + " sqlite_sequence where name = 'types'")
+c.execute("delete from " + " sqlite_sequence where name = 'types_effectiveness'")
 
 
 # Used for listing the form of the move, whether physical (fighting) or special (fire), or Non-Damage (status boost)
@@ -87,9 +89,7 @@ for moves in data["moves"]:
     temp = len(moves["genfamily"])
     genFirstAppeared = 1 + currentGeneration - temp
 
-     # TODO Not sure about secondary effect, like can a move burn and lower attack for example.
-     # Growth increases attack and sp attack. Does that count as secondary effect?
-     # I feel like we've had this conversation before...
+     # TODO Affects column in table needs to be added
 
     typeString = moves["type"]
     typeID = typeList.index(typeString) + 1
