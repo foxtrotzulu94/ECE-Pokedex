@@ -17,7 +17,8 @@ public class PokemonResources extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pokemon_resources);
 
-//        An array of all the websites used. Make sure the strings match the textview ID used
+        //An array of all the websites used. Make sure the strings match the textview ID used,
+        //Make sure to update array if new resources hyperlinks are added
         String[] websitearray = {"pokemonvideogames", "bulbapedia", "serebii", "smogon", "pldh",
                 "veekun"};
         for (int i = 0; i < websitearray.length; i++){

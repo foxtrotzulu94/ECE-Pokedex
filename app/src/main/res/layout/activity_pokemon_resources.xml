@@ -19,8 +19,9 @@
         android:gravity="left"
         android:layout_weight="0"
         android:textColor="#ff5c6cff"
-        android:background="@color/dex_grey"
-        android:fontFamily=""/>
+        android:fontFamily=""
+        android:layout_marginBottom="10dp"
+        android:background="@color/dex_grey" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -53,12 +54,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:id="@+id/imagepokemonvideogames"
-                        android:src="@drawable/logo_pokemon"
+                        android:src="@drawable/logo_pokemonimage"
                         android:layout_marginRight="10dp"
                         android:scaleType="fitCenter"
                         android:layout_weight="0.6"
                         android:autoLink="web"
-                        android:clickable="true" />
+                        android:clickable="true"
+                        android:layout_marginLeft="10dp" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -89,7 +91,8 @@
                         android:scaleType="fitCenter"
                         android:layout_weight="0.6"
                         android:autoLink="web"
-                        android:clickable="true" />
+                        android:clickable="true"
+                        android:layout_marginLeft="10dp" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -119,7 +122,8 @@
                         android:scaleType="fitCenter"
                         android:layout_weight="0.6"
                         android:autoLink="web"
-                        android:clickable="true" />
+                        android:clickable="true"
+                        android:layout_marginLeft="10dp" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -149,7 +153,8 @@
                         android:scaleType="fitCenter"
                         android:layout_weight="0.6"
                         android:autoLink="web"
-                        android:clickable="true" />
+                        android:clickable="true"
+                        android:layout_marginLeft="10dp" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -178,7 +183,8 @@
                         android:scaleType="fitCenter"
                         android:layout_weight="0.6"
                         android:autoLink="web"
-                        android:clickable="true" />
+                        android:clickable="true"
+                        android:layout_marginLeft="10dp" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -208,7 +214,8 @@
                         android:scaleType="fitCenter"
                         android:layout_weight="0.6"
                         android:autoLink="web"
-                        android:clickable="true" />
+                        android:clickable="true"
+                        android:layout_marginLeft="10dp" />
 
                     <TextView
                         android:layout_width="match_parent"
