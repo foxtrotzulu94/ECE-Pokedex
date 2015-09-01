@@ -66,6 +66,16 @@ public class DetailedPokemonActivity extends FragmentActivity
                     "id", current.getPackageName());
             final TextView display = (TextView) findViewById(displayID);
             final ProgressBar anim = (ProgressBar) findViewById(barID);
+
+            //Put the value immediately on the UI
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    display.setText(Integer.toString(finalValue));
+                }
+            });
+
+            //Animate the progress bar loading
             try {
                 for(int i=0; i<=finalValue; i++) {
                     final int j = i;
@@ -73,7 +83,6 @@ public class DetailedPokemonActivity extends FragmentActivity
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                display.setText(Integer.toString(j));
                                 anim.setProgress(j);
                             }
                         });
@@ -381,8 +390,6 @@ public class DetailedPokemonActivity extends FragmentActivity
             //TODO: Fix Evolution class to detect MegaEvolutions and check for those sprites.
             for (int i = 0; i < detailedPokemon.getEvolutions().size(); i++) {
 
-                //TODO: Fix this modeling! Since Evolutions might be Mega, we should get a Pokemon!
-                // NOT a minimal!
                 final Pokemon evoPokemon = detailedPokemon.getEvolutions().get(i).getEvolvesInto();
 
                 LinearLayout evolutionBox = createCustomPokemonBox(
