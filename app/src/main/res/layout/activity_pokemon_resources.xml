@@ -23,215 +23,205 @@
         android:layout_marginBottom="10dp"
         android:background="@color/dex_grey" />
 
-    <LinearLayout
-        android:orientation="vertical"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.2"
-        android:background="@color/dex_grey_transparent">
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView"
+        android:layout_gravity="center_vertical">
 
-
-        <ScrollView
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/scrollView"
-            android:layout_gravity="center_vertical">
+            android:layout_height="match_parent">
 
             <LinearLayout
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:minHeight="100dp"
+                android:gravity="center"
+                android:layout_weight="0.2">
 
-                <LinearLayout
-                    android:orientation="horizontal"
+                <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:minHeight="100dp"
-                    android:gravity="center"
-                    android:layout_weight="0.2">
+                    android:id="@+id/imagepokemonvideogames"
+                    android:src="@drawable/logo_pokemonimage"
+                    android:layout_marginRight="10dp"
+                    android:scaleType="fitCenter"
+                    android:layout_weight="0.6"
+                    android:autoLink="web"
+                    android:clickable="true"
+                    android:layout_marginLeft="10dp" />
 
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/imagepokemonvideogames"
-                        android:src="@drawable/logo_pokemonimage"
-                        android:layout_marginRight="10dp"
-                        android:scaleType="fitCenter"
-                        android:layout_weight="0.6"
-                        android:autoLink="web"
-                        android:clickable="true"
-                        android:layout_marginLeft="10dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="@string/website_pokemonvideogames"
-                        android:id="@+id/pokemonvideogames"
-                        android:layout_weight="0.3"
-                        android:clickable="false"
-                        android:textColor="#FFFFFFFF"
-                        android:gravity="center" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="horizontal"
+                <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.2"
-                    android:minHeight="100dp"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/bulbapediaimage"
-                        android:src="@drawable/logo_bulbapedia"
-                        android:layout_marginRight="10dp"
-                        android:scaleType="fitCenter"
-                        android:layout_weight="0.6"
-                        android:autoLink="web"
-                        android:clickable="true"
-                        android:layout_marginLeft="10dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="@string/website_bulbapedia"
-                        android:id="@+id/bulbapedia"
-                        android:layout_weight="0.3"
-                        android:clickable="false"
-                        android:textColor="#FFFFFFFF"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.2"
-                    android:minHeight="100dp"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/serebiiimage"
-                        android:src="@drawable/logo_serebii"
-                        android:layout_marginRight="10dp"
-                        android:scaleType="fitCenter"
-                        android:layout_weight="0.6"
-                        android:autoLink="web"
-                        android:clickable="true"
-                        android:layout_marginLeft="10dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="@string/website_serebii"
-                        android:id="@+id/serebii"
-                        android:layout_weight="0.3"
-                        android:clickable="false"
-                        android:textColor="#FFFFFFFF" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.2"
-                    android:minHeight="100dp"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/smogonimage"
-                        android:src="@drawable/logo_smogon"
-                        android:layout_marginRight="10dp"
-                        android:scaleType="fitCenter"
-                        android:layout_weight="0.6"
-                        android:autoLink="web"
-                        android:clickable="true"
-                        android:layout_marginLeft="10dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="@string/website_smogon"
-                        android:id="@+id/smogon"
-                        android:layout_weight="0.3"
-                        android:textColor="#FFFFFFFF" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.2"
-                    android:minHeight="100dp"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/pldhimage"
-                        android:src="@drawable/logo_pldh"
-                        android:layout_marginRight="10dp"
-                        android:scaleType="fitCenter"
-                        android:layout_weight="0.6"
-                        android:autoLink="web"
-                        android:clickable="true"
-                        android:layout_marginLeft="10dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="@string/website_pldh"
-                        android:id="@+id/pldh"
-                        android:layout_weight="0.3"
-                        android:clickable="false"
-                        android:textColor="#FFFFFFFF" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.2"
-                    android:minHeight="100dp"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/imageveekun"
-                        android:src="@drawable/logo_veekun"
-                        android:layout_marginRight="10dp"
-                        android:scaleType="fitCenter"
-                        android:layout_weight="0.6"
-                        android:autoLink="web"
-                        android:clickable="true"
-                        android:layout_marginLeft="10dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="@string/website_veekun"
-                        android:id="@+id/veekun"
-                        android:layout_weight="0.3"
-                        android:clickable="false"
-                        android:textColor="#FFFFFFFF"/>
-                </LinearLayout>
-
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/website_pokemonvideogames"
+                    android:id="@+id/pokemonvideogames"
+                    android:layout_weight="0.3"
+                    android:clickable="false"
+                    android:textColor="#FFFFFFFF"
+                    android:gravity="center" />
             </LinearLayout>
 
-        </ScrollView>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:minHeight="100dp"
+                android:gravity="center">
 
-    </LinearLayout>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/bulbapediaimage"
+                    android:src="@drawable/logo_bulbapedia"
+                    android:layout_marginRight="10dp"
+                    android:scaleType="fitCenter"
+                    android:layout_weight="0.6"
+                    android:autoLink="web"
+                    android:clickable="true"
+                    android:layout_marginLeft="10dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/website_bulbapedia"
+                    android:id="@+id/bulbapedia"
+                    android:layout_weight="0.3"
+                    android:clickable="false"
+                    android:textColor="#FFFFFFFF"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:minHeight="100dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/serebiiimage"
+                    android:src="@drawable/logo_serebii"
+                    android:layout_marginRight="10dp"
+                    android:scaleType="fitCenter"
+                    android:layout_weight="0.6"
+                    android:autoLink="web"
+                    android:clickable="true"
+                    android:layout_marginLeft="10dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/website_serebii"
+                    android:id="@+id/serebii"
+                    android:layout_weight="0.3"
+                    android:clickable="false"
+                    android:textColor="#FFFFFFFF" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:minHeight="100dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/smogonimage"
+                    android:src="@drawable/logo_smogon"
+                    android:layout_marginRight="10dp"
+                    android:scaleType="fitCenter"
+                    android:layout_weight="0.6"
+                    android:autoLink="web"
+                    android:clickable="true"
+                    android:layout_marginLeft="10dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/website_smogon"
+                    android:id="@+id/smogon"
+                    android:layout_weight="0.3"
+                    android:textColor="#FFFFFFFF" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:minHeight="100dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/pldhimage"
+                    android:src="@drawable/logo_pldh"
+                    android:layout_marginRight="10dp"
+                    android:scaleType="fitCenter"
+                    android:layout_weight="0.6"
+                    android:autoLink="web"
+                    android:clickable="true"
+                    android:layout_marginLeft="10dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/website_pldh"
+                    android:id="@+id/pldh"
+                    android:layout_weight="0.3"
+                    android:clickable="false"
+                    android:textColor="#FFFFFFFF" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:minHeight="100dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/imageveekun"
+                    android:src="@drawable/logo_veekun"
+                    android:layout_marginRight="10dp"
+                    android:scaleType="fitCenter"
+                    android:layout_weight="0.6"
+                    android:autoLink="web"
+                    android:clickable="true"
+                    android:layout_marginLeft="10dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/website_veekun"
+                    android:id="@+id/veekun"
+                    android:layout_weight="0.3"
+                    android:clickable="false"
+                    android:textColor="#FFFFFFFF"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>
