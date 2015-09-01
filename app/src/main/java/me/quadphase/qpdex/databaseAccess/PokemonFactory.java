@@ -206,6 +206,12 @@ public class PokemonFactory {
     private Type[] types;
 
     /**
+     * Type effectiveness sparse matrix.
+     * [attacking type][defending type]
+     */
+    private final double[][] typeEffectiveness;
+
+    /**
      * SQLite database handle
      */
     private SQLiteDatabase database;
@@ -220,9 +226,12 @@ public class PokemonFactory {
 
         setupLargeCacheLists();
 
+        // loads all Type objects into memory
         types = new Type[getMaxTypeID() + 1];
-
         loadAllTypes();
+
+        // Load the type effectiveness sparse matrix:
+        typeEffectiveness = buildTypeEffectivenessTable();
     }
 
     private void setupLargeCacheLists(){
@@ -1105,6 +1114,49 @@ public class PokemonFactory {
 
     public boolean isDetailedNationalIDBuiltAndReady(int nationalID){
         return detailedPokemonShortList!=null && detailedPokemonShortList[nationalID]!=null;
+    }
+
+    /**
+     * Constructs a sparse matrix of the type effectivenesses.
+     *
+     * This should be done on initiation of the {@link PokemonFactory}
+     *
+     * @return sparse matrix of the types effectiveness against each other
+     */
+    private double[][] buildTypeEffectivenessTable() {
+        int maxTypeID = getMaxTypeID();
+        double[][] typeEffectiveness = new double[maxTypeID][maxTypeID];
+
+        for (int i = 0; i < maxTypeID; i++) {
+            for (int j = 0; j < maxTypeID; j++) {
+                String[] selectionArg = {String.valueOf(i + 1), String.valueOf(j + 1)};
+                Cursor cursor = database.query(TYPE_EFFECTIVENESS_TABLE, null, FROM_TYPE_ID + "=?"
+                        + " AND " + TO_TYPE_ID + "=?", selectionArg, null, null, null);
+                cursor.moveToFirst();
+                typeEffectiveness[i][j] = cursor.getDouble(cursor.getColumnIndex(EFFECTIVE_LEVEL));
+                // close the cursor
+                cursor.close();
+            }
+        }
+
+        return typeEffectiveness;
+    }
+
+    /**
+     * Getter for typeEffectiveness sparse matrix.
+     *
+     * @return sparse matrix of the types effectiveness against each other
+     */
+    public double[][] getTypeEffectivenessTable() {
+        return typeEffectiveness;
+    }
+
+    /**
+     * getter for the list of types
+     * @return array of types
+     */
+    public Type[] getListOfTypes() {
+        return types;
     }
 
 }
