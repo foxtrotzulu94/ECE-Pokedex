@@ -23,10 +23,10 @@ public class PokemonResources extends ActionBarActivity {
                 "veekun"};
         for (int i = 0; i < websitearray.length; i++){
             int websiteID = getResources().getIdentifier(String.format("%s",websitearray[i]),"id",getPackageName());
-            TextView testy = (TextView) findViewById(websiteID);
-            testy.setText(Html.fromHtml(testy.getText().toString()));
-            testy.setGravity(View.TEXT_ALIGNMENT_CENTER);
-            testy.setMovementMethod(LinkMovementMethod.getInstance());
+            TextView websiteHyperlink = (TextView) findViewById(websiteID);
+            websiteHyperlink.setText(Html.fromHtml(websiteHyperlink.getText().toString()));
+            websiteHyperlink.setGravity(View.TEXT_ALIGNMENT_CENTER);
+            websiteHyperlink.setMovementMethod(LinkMovementMethod.getInstance());
         }
         }
 
