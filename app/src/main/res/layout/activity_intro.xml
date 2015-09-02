@@ -98,7 +98,8 @@
             android:id="@+id/legal_note"
             android:gravity="center"
             android:layout_margin="5dp"
-            android:textSize="12sp"/>
+            android:textSize="12sp"
+            android:onClick="showCreditsActivity"/>
     </LinearLayout>
 
 </LinearLayout>

@@ -159,4 +159,9 @@ public class IntroActivity extends AppCompatActivity {
         Intent intent = new Intent(this,WIPActivity.class);
         startActivity(intent);
     }
+
+    public void showCreditsActivity(View view) {
+        Intent intent = new Intent(this, CreditsActivity.class);
+        startActivity(intent);
+    }
 }

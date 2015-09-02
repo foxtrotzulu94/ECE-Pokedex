@@ -50,6 +50,17 @@
     <!-- Easter Egg -->
     <!--<string name="ketsuban">けつばん</string>-->
 
+    <!-- CreditsActivity Strings start-->
+    <string name="amit">Amit Desai</string>
+    <string name="javier">Javier Fajardo</string>
+    <string name="nicole">Nicole Cappadocia-Assaly</string>
+    <string name="thinesh">Thinesh Thuraisingam</string>
+    <string name="credit_bulbapedia"><![CDATA[<a href="http://bulbapedia.bulbagarden.net">Bulbapedia</a>]]></string>
+    <string name="credit_smogon"><![CDATA[<a href="http://www.smogon.com">Smogon</a>]]></string>
+    <string name="credit_serebii"><![CDATA[<a href="http://www.serebii.net">Serebii</a>]]></string>
+    <string name="credit_veekun"><![CDATA[<a href="http://www.veekun.com>Veekun - Pokemon Blog</a>]]></string>
+    <!-- CreditsActivity Strings end-->
+
     <!-- Placeholder -->
     <string name="dex_list_placeholder">[NUM]. [POKEMON]</string>
 
