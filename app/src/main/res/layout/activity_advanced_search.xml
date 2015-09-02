@@ -9,7 +9,8 @@
     <Spinner
         android:id="@+id/type1_spinner"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/confirm_button" />
 
     <Button
         android:layout_width="wrap_content"
@@ -19,5 +20,12 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:onClick="switchToPokedex" />
+
+    <Spinner
+        android:id="@+id/type2_spinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/confirm_button" />
 
 </RelativeLayout>
