@@ -1,5 +1,6 @@
 package me.quadphase.qpdex;
 
+import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.app.Activity;
@@ -23,12 +24,48 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.Arrays;
+
+import me.quadphase.qpdex.databaseAccess.PokemonFactory;
+import me.quadphase.qpdex.pokedex.PokedexArrayAdapter;
+import me.quadphase.qpdex.pokedex.PokedexManager;
+import me.quadphase.qpdex.pokemon.MinimalPokemon;
+import me.quadphase.qpdex.pokemon.Type;
+
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
 public class NavigationDrawerFragment extends Fragment {
+
+    private class PokedexDrawerClickListener implements AdapterView.OnItemClickListener{
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+
+            //Get the national ID of the retrieved Pokemon (though it should match with the list position)
+            // consider that a potential optimization
+            int retrievedID = ((MinimalPokemon) parent.getItemAtPosition(position)).getPokemonNationalID();
+
+
+            if (retrievedID>0) {
+                PokedexManager.getInstance().updatePokedexSelection(
+                        PokemonFactory.getPokemonFactory(getActivity()).getPokemonByNationalID(retrievedID),
+                        getActivity());
+            }
+            else{
+                PokedexManager.getInstance().updatePokedexSelection(
+                        PokedexManager.getInstance().missingNo,
+                        getActivity());
+            }
+
+            DetailedPokemonActivity parentActivity = (DetailedPokemonActivity)getActivity();
+            if(parentActivity!=null){
+                parentActivity.notifyUpdate();
+            }
+            selectItem(position);
+        }
+    }
 
     /**
      * Remember the position of the selected item.
@@ -90,24 +127,19 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mDrawerListView = (ListView) inflater.inflate(
-                R.layout.fragment_navigation_drawer, container, false);
-        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectItem(position);
-            }
-        });
-        mDrawerListView.setAdapter(new ArrayAdapter<String>(
+        mDrawerListView = (ListView) inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
+
+        mDrawerListView.setOnItemClickListener(new PokedexDrawerClickListener());
+
+        //TODO: CLEANUP when this list is available in the PokedexManager
+        MinimalPokemon[] listy = PokemonFactory.getPokemonFactory(getActivity()).getAllMinimalPokemon();
+        PokedexArrayAdapter pokedexEntries = new PokedexArrayAdapter(
                 getActivity(),
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
-                new String[]{
-                        getString(R.string.title_section1),
-                        getString(R.string.title_section2),
-                        getString(R.string.title_section3),
-                }));
-//        mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+                listy);
+        pokedexEntries.setFontSize(10.0f);
+        mDrawerListView.setAdapter(pokedexEntries);
+        //TODO: Set selection here according to Pokemon in focus from PokedexManager.
+
         return mDrawerListView;
     }
 
@@ -192,6 +224,7 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
+    //NOTE: Not deleting for now in case we might want to default back to the previous behaviour.
     private void selectItem(int position) {
         mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {

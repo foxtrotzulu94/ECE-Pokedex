@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.4"
-        android:gravity="bottom|center">
+        android:gravity="bottom|center"
+        android:background="#c89b9b9b">
 
         <LinearLayout
             android:orientation="vertical"
