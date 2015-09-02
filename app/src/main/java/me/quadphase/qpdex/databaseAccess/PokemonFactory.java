@@ -1103,6 +1103,16 @@ public class PokemonFactory {
         return moveID;
     }
 
+    /**
+     * Getter to access all valid types in PokemonFactory
+     *
+     * @return Type[] array types of all valid typs
+     */
+    public Type[] getAllTypes() {
+
+        return types;
+    }
+
     public boolean isDetailedNationalIDBuiltAndReady(int nationalID){
         return detailedPokemonShortList!=null && detailedPokemonShortList[nationalID]!=null;
     }

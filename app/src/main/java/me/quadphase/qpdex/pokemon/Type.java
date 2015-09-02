@@ -69,4 +69,14 @@ public class Type {
 //        PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(null);
 //        return pokemonFactory.getTypeEffectivenessTable()[pokemonFactory.getTypeID(attackingType)][pokemonFactory.getTypeID(this)];
 //    }
+
+    /**
+     * Overide for advanced search to display the id and name of type
+     *
+     * @return id. TypeName in string format
+     */
+    @Override
+    public String toString(){
+        return String.format("%s. %s",typeID,name);
+    }
 }

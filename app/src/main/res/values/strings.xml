@@ -69,4 +69,5 @@
     <string name="action_example">Example action</string>
     <string name="title_activity_wip">WIPActivity</string>
     <string name="title_activity_exception_caught">Uncaught Exception Occurred</string>
+    <string name="title_activity_advanced_search">AdvancedSearch</string>
 </resources>
