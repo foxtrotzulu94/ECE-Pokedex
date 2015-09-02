@@ -459,21 +459,20 @@ public class DetailedPokemonActivity extends FragmentActivity
         // types, multiply the attacking effectiveness of both types to determine the final values.
 
         // This pokemon is immune to these types when defending itself (i.e. 0 effectiveness)
-        List<Type> typeImmuneDefence = new LinkedList<>();
+        List<Type> typeImmune = new LinkedList<>();
         // This pokemon is resistant to these types when defending itself (i.e. 1/2 effectiveness)
-        List<Type> typeResistsDefence = new LinkedList<>();
+        List<Type> typeResist = new LinkedList<>();
+        // This pokemon is very resistant to these types when defending itself (i.e. 1/4 effectiveness)
+        List<Type> typeResistStrong = new LinkedList<>();
         // This pokemon is weak to these types when defending itself (i.e. 2 effectiveness)
-        List<Type> typeWeakDefence = new LinkedList<>();
+        List<Type> typeWeakTo = new LinkedList<>();
+        // This pokemon is very weak to these types when defending itself (i.e. 4 effectiveness)
+        List<Type> typeWeakStrong = new LinkedList<>();
 
-        // This pokemon is immune to these types when attacking (i.e. 0 effectiveness)
-        List<Type> typeImmuneAttack = new LinkedList<>();
-        // This pokemon is resistant to these types when attacking (i.e. 1/2 effectiveness)
-        List<Type> typeResistsAttack = new LinkedList<>();
-        // This pokemon is weak to these types when attacking (i.e. 2 effectiveness)
-        List<Type> typeWeakAttack = new LinkedList<>();
-
+        // get the types of the pokemon
         List<Type> types = detailedPokemon.getTypes();
 
+        // get the list of all the types
         Type[] allTypes = Type.getListOfTypes();
 
         // when the pokemon has one type:
@@ -485,18 +484,15 @@ public class DetailedPokemonActivity extends FragmentActivity
 
                 // add the types to the correct lists
                 if (effectiveDefence == 0)
-                    typeImmuneDefence.add(allTypes[i]);
-                else if (effectiveDefence == 0.5 || effectiveDefence == 0.25)
-                    typeResistsDefence.add(allTypes[i]);
-                else if (effectiveDefence == 2 || effectiveDefence == 4)
-                    typeWeakDefence.add(allTypes[i]);
-
-                if (effectiveOffence == 0)
-                    typeImmuneAttack.add(allTypes[i]);
-                else if (effectiveOffence == 0.5 || effectiveOffence == 0.25)
-                    typeResistsAttack.add(allTypes[i]);
-                else if (effectiveOffence == 2 || effectiveOffence == 4)
-                    typeWeakAttack.add(allTypes[i]);
+                    typeImmune.add(allTypes[i]);
+                else if (effectiveDefence == 0.25)
+                    typeResistStrong.add(allTypes[i]);
+                else if (effectiveDefence == 0.5)
+                    typeResist.add(allTypes[i]);
+                else if (effectiveDefence == 2)
+                    typeWeakTo.add(allTypes[i]);
+                else if (effectiveDefence == 4)
+                    typeWeakStrong.add(allTypes[i]);
             }
         } // when the pokemon has two types:
         else if (types.size() == 2) {
@@ -505,58 +501,47 @@ public class DetailedPokemonActivity extends FragmentActivity
             for (int i = 1; i < Type.getNumberOfTypes() + 1; i++) {
                 double effectiveDefence = type1.getDefendingEffectivenessAgainst(allTypes[i]) *
                         type2.getDefendingEffectivenessAgainst(allTypes[i]);
-                double effectiveOffence = type1.getAttackingEffectivenessAgainst(allTypes[i]) *
-                        type2.getAttackingEffectivenessAgainst(allTypes[i]);
 
                 // add the types to the correct lists
                 if (effectiveDefence == 0)
-                    typeImmuneDefence.add(allTypes[i]);
-                else if (effectiveDefence == 0.5 || effectiveDefence == 0.25)
-                    typeResistsDefence.add(allTypes[i]);
-                else if (effectiveDefence == 2 || effectiveDefence == 4)
-                    typeWeakDefence.add(allTypes[i]);
-
-                if (effectiveOffence == 0)
-                    typeImmuneAttack.add(allTypes[i]);
-                else if (effectiveOffence == 0.5 || effectiveOffence == 0.25)
-                    typeResistsAttack.add(allTypes[i]);
-                else if (effectiveOffence == 2 || effectiveOffence == 4)
-                    typeWeakAttack.add(allTypes[i]);
+                    typeImmune.add(allTypes[i]);
+                else if (effectiveDefence == 0.25)
+                    typeResistStrong.add(allTypes[i]);
+                else if (effectiveDefence == 0.5)
+                    typeResist.add(allTypes[i]);
+                else if (effectiveDefence == 2)
+                    typeWeakTo.add(allTypes[i]);
+                else if (effectiveDefence == 4)
+                    typeWeakStrong.add(allTypes[i]);
             }
         }
 
         // show the lists in the activity:
-        if (typeImmuneAttack.size() != 0) {
-            LinearLayout immuneAttack = createTypeMatchBlock("Immune", typeImmuneAttack);
-            immuneAttack.setBackgroundResource(R.color.dex_blue_transparent);
-            typeStrong.addView(immuneAttack);
+        if (typeImmune.size() != 0) {
+            LinearLayout immune = createTypeMatchBlock("Immune", typeImmune);
+            immune.setBackgroundResource(R.color.dex_blue_transparent);
+            typeStrong.addView(immune);
         }
-        if (typeImmuneDefence.size() != 0) {
-            LinearLayout immuneDefence = createTypeMatchBlock("Immune", typeImmuneDefence);
-            immuneDefence.setBackgroundResource(R.color.dex_pink_transparent);
-            typeWeak.addView(immuneDefence);
+        if (typeResist.size() != 0) {
+            LinearLayout resists = createTypeMatchBlock("Resists", typeResist);
+            resists.setBackgroundResource(R.color.dex_blue_transparent);
+            typeStrong.addView(resists);
         }
-        if (typeResistsAttack.size() != 0) {
-            LinearLayout resistsAttack = createTypeMatchBlock("Resists", typeResistsAttack);
+        if (typeResistStrong.size() != 0) {
+            LinearLayout resistsAttack = createTypeMatchBlock("Strongly Resists", typeResistStrong);
             resistsAttack.setBackgroundResource(R.color.dex_blue_transparent);
             typeStrong.addView(resistsAttack);
         }
-        if (typeResistsDefence.size() != 0) {
-            LinearLayout resistsDefence = createTypeMatchBlock("Resists",typeResistsDefence);
-            resistsDefence.setBackgroundResource(R.color.dex_pink_transparent);
-            typeWeak.addView(resistsDefence);
+        if (typeWeakTo.size() != 0) {
+            LinearLayout weak = createTypeMatchBlock("Weak",typeWeakTo);
+            weak.setBackgroundResource(R.color.dex_pink_transparent);
+            typeWeak.addView(weak);
         }
-        if (typeWeakAttack.size() != 0) {
-            LinearLayout weakAttack = createTypeMatchBlock("Weak", typeWeakAttack);
-            weakAttack.setBackgroundResource(R.color.dex_blue_transparent);
-            typeStrong.addView(weakAttack);
+        if (typeWeakStrong.size() != 0) {
+            LinearLayout weakStrong = createTypeMatchBlock("Strongly Weak", typeWeakStrong);
+            weakStrong.setBackgroundResource(R.color.dex_pink_transparent);
+            typeWeak.addView(weakStrong);
         }
-        if (typeWeakDefence.size() != 0) {
-            LinearLayout weakDefence = createTypeMatchBlock("Weak",typeWeakDefence);
-            weakDefence.setBackgroundResource(R.color.dex_pink_transparent);
-            typeWeak.addView(weakDefence);
-        }
-
     }
 
     /**
