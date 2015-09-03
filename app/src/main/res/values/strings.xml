@@ -30,6 +30,16 @@
     <string name="speed">Speed</string>
     <!-- DetailedPokemonActivity Strings End-->
 
+
+    <!-- PokemonResources Strings Start-->
+    <string name="website_bulbapedia"><![CDATA[<a href="http://bulbapedia.bulbagarden.net">Bulbapedia - The community-driven Pokemon encyclopedia</a>]]></string>
+    <string name="website_smogon"><![CDATA[<a href="http://www.smogon.com">Smogon - Competitive Pokemon Community</a>]]></string>
+    <string name="website_serebii"><![CDATA[<a href="http://www.serebii.net">Serebii - Where Legends come to Life</a>]]></string>
+    <string name="website_pldh"><![CDATA[<a href="http://www.pldh.net">PLDH - Pokemon News</a>]]></string>
+    <string name="website_veekun"><![CDATA[<a href="http://www.veekun.com>Veekun - Pokemon Blog</a>]]></string>
+    <string name="website_pokemonvideogames"><![CDATA[<a href="http://www.pokemon.com/us/pokemon-video-games/">Please support the Official Release!</a>]]></string>
+    <!-- PokemonResources Strings End-->
+
     <!-- Work in Progress strings-->
     <string name="wip_banner">Pikachu and the Developers are hard at work here!</string>
     <string name="wip_text">Sorry but this isn\'t complete yet!\n We\'re doing our best working day
@@ -69,4 +79,5 @@
     <string name="action_example">Example action</string>
     <string name="title_activity_wip">WIPActivity</string>
     <string name="title_activity_exception_caught">Uncaught Exception Occurred</string>
+    <string name="title_activity_pokemon_resources">PokemonResources</string>
 </resources>
