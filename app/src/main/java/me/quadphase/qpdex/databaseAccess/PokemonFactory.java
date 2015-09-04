@@ -976,9 +976,9 @@ public class PokemonFactory {
     }
 
     /**
-     * Determines the current number of abilities
+     * Determines the current number of eggGroups.
      *
-     * @return max maxEggGroupID
+     * @return max maxEggGroupID+1 since eggGroup ID's start at 0
      */
     public int getMaxEggGroupID() {
         Cursor cursor = database.query(EGG_GROUPS_TABLE, null, null, null, null, null, null);
@@ -990,7 +990,7 @@ public class PokemonFactory {
         // close the cursor:
         cursor.close();
 
-        return maxEggGroupID;
+        return maxEggGroupID+1;
     }
 
     /**
@@ -1181,7 +1181,8 @@ public class PokemonFactory {
         eggGroups[0] = new EggGroup("None");
         // get the real abilities from the database:
         for (int i = 1; i < getMaxEggGroupID() + 1; i++) {
-            String[] selectionArg = {String.valueOf(i)};
+            // eggGroupId's start at 0
+            String[] selectionArg = {String.valueOf(i - 1)};
             Cursor cursor = database.query(EGG_GROUPS_TABLE, null, EGG_GROUP_ID + "=?", selectionArg, null, null, null);
             cursor.moveToFirst();
 
@@ -1348,7 +1349,8 @@ public class PokemonFactory {
         ArrayList<Integer> filteredNationalids = new ArrayList<>();
 
         if(eggGroupID > 0) {
-            String[] selectionArg = {String.valueOf(eggGroupID)};
+            //EggGroupID's start at 0
+            String[] selectionArg = {String.valueOf(eggGroupID - 1 )};
             Cursor cursor = database.query(POKEMON_EGG_GROUPS_TABLE, null, EGG_GROUP_ID + "=?", selectionArg, null, null, null);
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {

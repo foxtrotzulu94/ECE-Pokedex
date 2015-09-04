@@ -134,6 +134,7 @@ public class AdvancedSearch extends ActionBarActivity {
 
         //TODO: Filling out these Spinners with the actual objects seems to be causing a bottleneck,
         // Might want to just store strings to optimize
+        long startTime = System.nanoTime();
         ArrayAdapter<Type> typeArrayAdapter = new ArrayAdapter<Type>(this, android.R.layout.simple_spinner_item, allTypes);
         typeArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
@@ -159,6 +160,11 @@ public class AdvancedSearch extends ActionBarActivity {
         eggGroup1Spinner.setOnItemSelectedListener(new DropDownSelectSpinner());
         eggGroup2Spinner.setOnItemSelectedListener(new DropDownSelectSpinner());
         generationSpinner.setOnItemSelectedListener(new DropDownSelectSpinner());
+
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+
+        Log.d("QPDex", String.format("Total filling spinners took %s ns",duration));
     }
 
     private void resetFilter(){
@@ -170,6 +176,10 @@ public class AdvancedSearch extends ActionBarActivity {
         for(int i =1; i< pokemonFactory.getMaxUniqueID()+1; i++ ){
             filteredUniqueIds.add(i);
             currentFilterPokemonArrayList.add(i);
+        }
+
+        for (int i=1; i <pokemonFactory.getMaxNationalID()+1; i++){
+            filteredNationalIds.add(i);
         }
     }
     @Override
@@ -254,7 +264,8 @@ public class AdvancedSearch extends ActionBarActivity {
         Intent intent = new Intent(this,PokedexActivity.class);
 
         //Comment this out, takes way tooo long 4+sec
-        //resetFilter();
+        currentFilterPokemonArrayList.clear();
+        currentFilterPokemonArrayList.addAll(filteredUniqueIds);
 
         ArrayList<Integer> tempFilterPokemonArrayList = new ArrayList<>();
 
