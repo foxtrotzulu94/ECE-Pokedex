@@ -25,11 +25,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import me.quadphase.qpdex.databaseAccess.PokemonFactory;
 import me.quadphase.qpdex.pokemon.Ability;
+import me.quadphase.qpdex.pokemon.EggGroup;
 import me.quadphase.qpdex.pokemon.MinimalPokemon;
+import me.quadphase.qpdex.pokemon.Pokemon;
 import me.quadphase.qpdex.pokemon.Type;
 
 
@@ -46,15 +50,17 @@ import me.quadphase.qpdex.pokemon.Type;
  * Generation Available
  * Egg Groups 1
  * Egg Groups 2
- * All 6 Base stats
- * The ability to include/exclude Primal/Mega/Alternate Forms
+ * TODO: All 6 Base stats
+ * TODO: The ability to include/exclude Primal/Mega/Alternate Forms
  *
- * TODO: Move all the final logic to the start intent function?
-
  */
 
 
 public class AdvancedSearch extends ActionBarActivity {
+
+
+    // pokemonFactory to access the various DB access functions
+    PokemonFactory pokemonFactory;
 
     // Pokemon information to filter
     MinimalPokemon[] allMinimalPokemon;
@@ -62,32 +68,47 @@ public class AdvancedSearch extends ActionBarActivity {
     //Final Filtered List
     MinimalPokemon [] filteredMinimalPokemon;
     ArrayList<Integer> filteredNationalIds;
+    ArrayList<Integer> filteredUniqueIds;
+    //Contains either or
+    ArrayList<Integer> currentFilterPokemonArrayList;
 
     // Arrays to fill Spinners
     Type[] allTypes;
+    Ability[] allAbilities;
+    EggGroup[] allEggGroups;
+    String allGenerations [];
 
     // User Selections
     Type selectedType1;
     Type selectedType2;
+    EggGroup selectedEggGroup1;
+    EggGroup selectedEggGroup2;
     Ability selectedAbility;
+    int selectedGeneration;
 
 
     // UI elements
     Spinner type1Spinner;
     Spinner type2Spinner;
+    Spinner abilitySpinner;
+    Spinner eggGroup1Spinner;
+    Spinner eggGroup2Spinner;
+    Spinner generationSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_advanced_search);
 
-        // pokemonFactpry to access the various DB access functions
-
-        final PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(this.getApplicationContext());
-
+        pokemonFactory = PokemonFactory.getPokemonFactory(this.getApplicationContext());
 
         allTypes = pokemonFactory.getAllTypes();
-        allMinimalPokemon = pokemonFactory.getAllMinimalPokemon();
+        allAbilities = pokemonFactory.getAllAbilities();
+        allEggGroups = pokemonFactory.getAllEggGroups();
+        allGenerations = pokemonFactory.getGeneratons();
+
+        // No need for MinimalPokemon
+        //allMinimalPokemon = pokemonFactory.getAllMinimalPokemon();
 
         //setup and fill in all spinner contents
         retrieveInterfaceElements();
@@ -102,30 +123,54 @@ public class AdvancedSearch extends ActionBarActivity {
         //Retrieve all UI Variables for setup
         type1Spinner = (Spinner) findViewById(R.id.type1_spinner);
         type2Spinner = (Spinner) findViewById(R.id.type2_spinner);
-
-
+        abilitySpinner = (Spinner) findViewById(R.id.ability_spinner);
+        eggGroup1Spinner = (Spinner) findViewById(R.id.egg1_spinner);
+        eggGroup2Spinner = (Spinner) findViewById(R.id.egg2_spinner);
+        generationSpinner = (Spinner) findViewById(R.id.generation_spinner);
 
     }
 
     private void fillInSpinnerValues(){
+
+        //TODO: Filling out these Spinners with the actual objects seems to be causing a bottleneck,
+        // Might want to just store strings to optimize
         ArrayAdapter<Type> typeArrayAdapter = new ArrayAdapter<Type>(this, android.R.layout.simple_spinner_item, allTypes);
         typeArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
+        ArrayAdapter<Ability> abilityArrayAdapter = new ArrayAdapter<Ability>(this, android.R.layout.simple_spinner_item, allAbilities);
+        abilityArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        ArrayAdapter<EggGroup> eggGroupArrayAdapter = new ArrayAdapter<EggGroup>(this, android.R.layout.simple_spinner_item, allEggGroups);
+        eggGroupArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        ArrayAdapter<String> generationArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, allGenerations);
+        generationArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         type1Spinner.setAdapter(typeArrayAdapter);
         type2Spinner.setAdapter(typeArrayAdapter);
+        abilitySpinner.setAdapter(abilityArrayAdapter);
+        eggGroup1Spinner.setAdapter(eggGroupArrayAdapter);
+        eggGroup2Spinner.setAdapter(eggGroupArrayAdapter);
+        generationSpinner.setAdapter(generationArrayAdapter);
 
-        type1Spinner.setOnItemSelectedListener(new TypeSelectSpinner());
-        type2Spinner.setOnItemSelectedListener(new TypeSelectSpinner());
-
+        type1Spinner.setOnItemSelectedListener(new DropDownSelectSpinner());
+        type2Spinner.setOnItemSelectedListener(new DropDownSelectSpinner());
+        abilitySpinner.setOnItemSelectedListener(new DropDownSelectSpinner());
+        eggGroup1Spinner.setOnItemSelectedListener(new DropDownSelectSpinner());
+        eggGroup2Spinner.setOnItemSelectedListener(new DropDownSelectSpinner());
+        generationSpinner.setOnItemSelectedListener(new DropDownSelectSpinner());
     }
 
     private void resetFilter(){
         // Provide a set of solutions if no options are selected
         filteredNationalIds = new ArrayList<Integer>();
-        for(int i=0; i< allMinimalPokemon.length; i++){
-            filteredNationalIds.add(allMinimalPokemon[i].getPokemonNationalID());
+        filteredUniqueIds = new ArrayList<Integer>();
+        currentFilterPokemonArrayList = new ArrayList<Integer>();
+
+        for(int i =1; i< pokemonFactory.getMaxUniqueID()+1; i++ ){
+            filteredUniqueIds.add(i);
+            currentFilterPokemonArrayList.add(i);
         }
-        filteredMinimalPokemon = allMinimalPokemon;
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -149,15 +194,10 @@ public class AdvancedSearch extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class TypeSelectSpinner implements AdapterView.OnItemSelectedListener {
+    private class DropDownSelectSpinner implements AdapterView.OnItemSelectedListener {
 
         /**
-         * Takes care of finding pokemon with the type combination the user requests
-         * To do this, when a type is selected, create a filtered list
-         * Then Check if a second type is selected and filter from the previously filtered list
-         *
-         * Save the Types selected, this way we can compare and not have to refilter if both don't change
-         * Type 0/None/Bird acts like a wildcard Type
+         * Saves the chosen selections from the dropdown spinners
          *
          * @param parent either the type1 or type spinner
          * @param view
@@ -169,79 +209,38 @@ public class AdvancedSearch extends ActionBarActivity {
             // An item was selected. You can retrieve the selected item using
             // parent.getItemAtPosition(pos)
 
-            Type selectedType = (Type) parent.getItemAtPosition(pos);
-            Log.d("QPDex", "Spinner touched");
-            Log.d("QPDEX", String.format("%s - %s chosen", parent.toString(), selectedType));
-
             // Determine other type, and set current type
-            Type otherType;
+            Type otherType = new Type("Temp", -1);
             if (parent.getId() == type1Spinner.getId()){
+                Type selectedType = (Type) parent.getItemAtPosition(pos);
+                Log.d("QPDex", "Spinner touched");
+                Log.d("QPDEX", String.format("%s - %s chosen", parent.toString(), selectedType));
                 selectedType1 = selectedType;
                 otherType = selectedType2;
             }
-            else{
+            else if (parent.getId() == type2Spinner.getId()){
+                Type selectedType = (Type) parent.getItemAtPosition(pos);
+                Log.d("QPDex", "Spinner touched");
+                Log.d("QPDEX", String.format("%s - %s chosen", parent.toString(), selectedType));
                 selectedType2 = selectedType;
                 otherType = selectedType1;
             }
+            else if(parent.getId() == abilitySpinner.getId()){
 
-            if(selectedType.getTypeID() == 0 && otherType !=null && otherType.getTypeID() == 0){
-                resetFilter();
+                selectedAbility = allAbilities[pos];
             }
+            else if(parent.getId() == eggGroup1Spinner.getId()){
 
-            ArrayList<MinimalPokemon> tempFilterList = new ArrayList<MinimalPokemon>();
-
-            // Create arrayList of pokemon and nationalIDs of the type that has just been modified
-            // unless the Type is none, in that case all pokemon are valid
-            if (selectedType.getTypeID() != 0) {
-                // First clear filteredNatID list
-                filteredNationalIds.clear();
-                for (MinimalPokemon p : allMinimalPokemon) {
-                    if (p.getTypes().contains(selectedType)) {
-                    tempFilterList.add(p);
-                    filteredNationalIds.add(p.getPokemonNationalID());
-                    }
-                }
-
-               filteredMinimalPokemon = new MinimalPokemon[tempFilterList.size()];
-               tempFilterList.toArray(filteredMinimalPokemon);
+                selectedEggGroup1 = allEggGroups[pos];
             }
+            else if(parent.getId() == eggGroup2Spinner.getId()){
 
-
-
-            // After this step we have a list of pokemon that are of the type that was just modified
-
-
-
-            // Now we need to make sure that the other spinner's type is accounted for
-            // If both types selected are the same, just consider 1 type
-
-
-            // Filter further
-            if (otherType != null){
-                // IF previously not None, but then the first Type is changed to none
-                // Need to have entire selection
-                if (selectedType.getTypeID() == 0){
-                    filteredMinimalPokemon = allMinimalPokemon;
-                }
-                if(selectedType1 != selectedType2 && otherType.getTypeID() != 0) {
-
-                   tempFilterList.clear();
-                    //We can also clear the exisiting nationalID list
-                    filteredNationalIds.clear();
-
-                    for (MinimalPokemon p : filteredMinimalPokemon) {
-                        if (p.getTypes().contains(otherType)) {
-                            tempFilterList.add(p);
-                            filteredNationalIds.add(p.getPokemonNationalID());
-                        }
-                    }
-                    filteredMinimalPokemon = new MinimalPokemon[tempFilterList.size()];
-                    tempFilterList.toArray(filteredMinimalPokemon);
-                }
-
-
+                selectedEggGroup2 = allEggGroups[pos];
             }
-
+            else if(parent.getId() == generationSpinner.getId()){
+                // Don't actual Need the string value, pos is enough
+                selectedGeneration = pos;
+            }
         }
 
         public void onNothingSelected(AdapterView<?> parent) {
@@ -251,7 +250,77 @@ public class AdvancedSearch extends ActionBarActivity {
     }
 
     public void switchToPokedex(View view){
+        long startTime = System.nanoTime();
         Intent intent = new Intent(this,PokedexActivity.class);
+
+        //Comment this out, takes way tooo long 4+sec
+        //resetFilter();
+
+        ArrayList<Integer> tempFilterPokemonArrayList = new ArrayList<>();
+
+        // Filtering algorithm, will go through a list of all uniqueIDs and apply filters
+        // consecutively. Once the list is filtered, convert the unique to nationalIds
+
+        //Start with the ability chosen, if any. Use the ability ID to get all NationalID's associated
+        if(selectedAbility.getName() != "None"){
+
+            currentFilterPokemonArrayList = pokemonFactory.getAllUniqueIDsFromAbility(Arrays.asList(allAbilities).indexOf(selectedAbility));
+        }
+
+
+        // Filter the remaining IDs by type twice
+
+        if(selectedType1.getTypeID() != 0){
+
+            tempFilterPokemonArrayList = pokemonFactory.getAllUniqueIDsFromType(Arrays.asList(allTypes).indexOf(selectedType1));
+            currentFilterPokemonArrayList.retainAll(tempFilterPokemonArrayList);
+            tempFilterPokemonArrayList.clear();
+        }
+
+
+
+        if(selectedType2.getTypeID() != 0){
+
+            tempFilterPokemonArrayList = pokemonFactory.getAllUniqueIDsFromType(Arrays.asList(allTypes).indexOf(selectedType2));
+            currentFilterPokemonArrayList.retainAll(tempFilterPokemonArrayList);
+            tempFilterPokemonArrayList.clear();
+        }
+
+
+
+        // When Done filtering by UniqueID's convert uniqueIDs to NationalId's
+        filteredNationalIds = pokemonFactory.convertUniqueToNational(currentFilterPokemonArrayList);
+
+        // Filter national IDs based on Egg Groups
+        if(selectedEggGroup1.getName() != "None"){
+
+            tempFilterPokemonArrayList = pokemonFactory.getAllNationalIdsFromEggGroup(Arrays.asList(allEggGroups).indexOf(selectedEggGroup1));
+            filteredNationalIds.retainAll(tempFilterPokemonArrayList);
+            tempFilterPokemonArrayList.clear();
+        }
+
+        if(selectedEggGroup2.getName() != "None"){
+
+            tempFilterPokemonArrayList = pokemonFactory.getAllNationalIdsFromEggGroup(Arrays.asList(allEggGroups).indexOf(selectedEggGroup2));
+            filteredNationalIds.retainAll(tempFilterPokemonArrayList);
+            tempFilterPokemonArrayList.clear();
+        }
+
+
+        if(selectedGeneration != 0){
+
+            tempFilterPokemonArrayList = pokemonFactory.getAllNationalIdsFromGenerationFirstAppeared(selectedGeneration);
+            filteredNationalIds.retainAll(tempFilterPokemonArrayList);
+            tempFilterPokemonArrayList.clear();
+        }
+
+
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+
+        Log.d("QPDex", String.format("Total Filtering took %s ns",duration));
+
+
         //TODO: Investigate parceling the entire object?
         intent.putExtra("FILTERED_POKEMON_NATIONALID", filteredNationalIds);
         startActivity(intent);

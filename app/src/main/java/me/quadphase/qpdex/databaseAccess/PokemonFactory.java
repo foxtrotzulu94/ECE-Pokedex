@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -204,6 +206,12 @@ public class PokemonFactory {
     private static PokemonFactory instance = null;
 
     private Type[] types;
+    private EggGroup[] eggGroups;
+    private Ability[] abilities;
+    private int[] allNationalIDMappedUnique;
+    private  String[] generatons;
+
+
 
     /**
      * SQLite database handle
@@ -221,8 +229,17 @@ public class PokemonFactory {
         setupLargeCacheLists();
 
         types = new Type[getMaxTypeID() + 1];
+        abilities = new Ability[getMaxAbilityID() + 1];
+        allNationalIDMappedUnique = new int[getMaxUniqueID()];
+        eggGroups = new EggGroup[getMaxEggGroupID() + 1];
+        generatons = new String[getMaxGeneration() + 1];
 
         loadAllTypes();
+        loadAllAbilities();
+        loadAllUniqueToNationalID();
+        loadAllEggGroups();
+        loadAllGenerations();
+
     }
 
     private void setupLargeCacheLists(){
@@ -907,6 +924,22 @@ public class PokemonFactory {
     }
 
     /**
+     * Determines the current maximum number of generations
+     *
+     * @return max generations
+     */
+    public int getMaxGeneration() {
+        Cursor cursor = database.query(POKEMON_COMMON_INFO_TABLE, null, null, null, null, null, GENERATION_FIRST_APPEARED);
+        cursor.moveToLast();
+
+        int maxGeneration = cursor.getInt(cursor.getColumnIndex(GENERATION_FIRST_APPEARED));
+
+        // close the cursor:
+        cursor.close();
+
+        return maxGeneration;
+    }
+    /**
      * Determines the current number of types
      *
      * @return max typeID
@@ -924,6 +957,41 @@ public class PokemonFactory {
         return maxTypeID;
     }
 
+    /**
+     * Determines the current number of abilities
+     *
+     * @return max abilityID
+     */
+    public int getMaxAbilityID() {
+        Cursor cursor = database.query(ABILITIES_TABLE, null, null, null, null, null, null);
+        cursor.moveToLast();
+
+        int maxAbilityID = cursor.getInt(cursor.getColumnIndex(ABILITIY_ID));
+        if(PRINT_DEBUG)
+            Log.v("Database Access", "Max abilityID is: " + String.valueOf(maxAbilityID));
+        // close the cursor:
+        cursor.close();
+
+        return maxAbilityID;
+    }
+
+    /**
+     * Determines the current number of abilities
+     *
+     * @return max maxEggGroupID
+     */
+    public int getMaxEggGroupID() {
+        Cursor cursor = database.query(EGG_GROUPS_TABLE, null, null, null, null, null, null);
+        cursor.moveToLast();
+
+        int maxEggGroupID = cursor.getInt(cursor.getColumnIndex(EGG_GROUP_ID));
+        if(PRINT_DEBUG)
+            Log.v("Database Access", "Max eggGroupID is: " + String.valueOf(maxEggGroupID));
+        // close the cursor:
+        cursor.close();
+
+        return maxEggGroupID;
+    }
 
     /**
      * Get the party including all of the {@link Pokemon} and their respective {@link MoveSet}
@@ -1087,6 +1155,78 @@ public class PokemonFactory {
     }
 
     /**
+     * Loads all the Abilities into memory. Should be done at program start (during splash screen)
+     */
+    public void loadAllAbilities() {
+        // fail safe 0th index of types:
+        abilities[0] = new Ability("None","None");
+        // get the real abilities from the database:
+        for (int i = 1; i < getMaxAbilityID() + 1; i++) {
+            String[] selectionArg = {String.valueOf(i)};
+            Cursor cursor = database.query(ABILITIES_TABLE, null, ABILITIY_ID + "=?", selectionArg, null, null, null);
+            cursor.moveToFirst();
+
+            abilities[i] = new Ability(cursor.getString(cursor.getColumnIndex(NAME)), cursor.getString(cursor.getColumnIndex(DESCRIPTION)));
+
+            // close the cursor
+            cursor.close();
+        }
+    }
+
+    /**
+     * Loads all the EggGroups into memory. Should be done at program start (during splash screen)
+     */
+    public void loadAllEggGroups() {
+        // fail safe 0th index of types:
+        eggGroups[0] = new EggGroup("None");
+        // get the real abilities from the database:
+        for (int i = 1; i < getMaxEggGroupID() + 1; i++) {
+            String[] selectionArg = {String.valueOf(i)};
+            Cursor cursor = database.query(EGG_GROUPS_TABLE, null, EGG_GROUP_ID + "=?", selectionArg, null, null, null);
+            cursor.moveToFirst();
+
+            eggGroups[i] = new EggGroup(cursor.getString(cursor.getColumnIndex(NAME)));
+
+            // close the cursor
+            cursor.close();
+        }
+    }
+
+    /**
+     * Loads all the Generations into memory. Should be done at program start (during splash screen)
+     */
+    public void loadAllGenerations() {
+
+        // fail safe 0th index of generations:
+        generatons[0] = "-";
+        // get the real generations, no need to access database, since it's just integers:
+        for (int i = 1; i < getMaxGeneration() + 1; i++) {
+            generatons[i]= Integer.toString(i);
+        }
+    }
+
+    /**
+     * Loads all the National Id's into memory. The position+1 would be the unique ID
+     * Should be done at program start (during splash screen)
+     */
+    public void loadAllUniqueToNationalID() {
+
+        // get the real national IDs from the database:
+
+        Cursor cursor = database.query(POKEMON_NATIONAL_ID_TO_UNIQUE_ID_TABLE, null, null, null, null,null, POKEMON_UNIQUE_ID);
+        cursor.moveToFirst();
+
+        for (int i=0; i < getMaxUniqueID(); i++) {
+            allNationalIDMappedUnique[i] = cursor.getInt(cursor.getColumnIndex(POKEMON_NATIONAL_ID));
+            cursor.moveToNext();
+        }
+
+        // close the cursor
+        cursor.close();
+
+    }
+
+    /**
      * Retrieves the moveID of the move.
      *
      * @param move move to get ID of
@@ -1106,11 +1246,173 @@ public class PokemonFactory {
     /**
      * Getter to access all valid types in PokemonFactory
      *
-     * @return Type[] array types of all valid typs
+     * @return Type[] array types of all valid types
      */
     public Type[] getAllTypes() {
 
         return types;
+    }
+    /**
+     * Getter to access all valid abilities in PokemonFactory
+     *
+     * @return Ability[] array types of all valid abilities
+     */
+    public Ability[] getAllAbilities() {
+
+        return abilities;
+    }
+
+    /**
+     * Getter to access all valid eggGroups in PokemonFactory
+     *
+     * @return EggGroup[] array types of all valid eggGroups
+     */
+    public EggGroup[] getAllEggGroups() {
+
+        return eggGroups;
+    }
+
+    /**
+     * Getter to access all valid generations in PokemonFactory
+     *
+     * @return String[] array types of all valid generartions
+     */
+    public String[] getGeneratons() {
+
+        return generatons;
+    }
+    /**
+     * Database query, returns all uniqueIDs of pokemon with the abilityID in question
+     *
+     * @param abilityID of ability queried
+     * @return ArrayList of Integers containing uniqueIDs
+     */
+
+    public ArrayList<Integer> getAllUniqueIDsFromAbility(int abilityID){
+
+        int actualAbilityID = abilityID;
+        ArrayList<Integer> filteredUniqueids = new ArrayList<>();
+        ArrayList<Integer> filteredNationalids = new ArrayList<>();
+
+        if(actualAbilityID > -1) {
+            String[] selectionArg = {String.valueOf(actualAbilityID)};
+            Cursor cursor = database.query(POKEMON_ABILITIES_TABLE, null, ABILITIY_ID + "=?", selectionArg, null, null, null);
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                int uniqueID = cursor.getInt(cursor.getColumnIndex(POKEMON_UNIQUE_ID));
+                filteredUniqueids.add(uniqueID);
+                cursor.moveToNext();
+            }
+            cursor.close();
+
+        }
+        return filteredUniqueids;
+
+    }
+
+    /**
+     * Filters all unique ID's that are of the type requested
+     *
+     * @param typeID of the type in question
+     * @return array list of ints corresponding to unique ids
+     */
+    public ArrayList<Integer> getAllUniqueIDsFromType(int typeID){
+
+        ArrayList<Integer> filteredUniqueids = new ArrayList<>();
+        ArrayList<Integer> filteredNationalids = new ArrayList<>();
+
+        if(typeID > 0) {
+            String[] selectionArg = {String.valueOf(typeID)};
+            Cursor cursor = database.query(POKEMON_TYPES_TABLE, null, TYPE_ID + "=?", selectionArg, null, null, null);
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                int uniqueID = cursor.getInt(cursor.getColumnIndex(POKEMON_UNIQUE_ID));
+                filteredUniqueids.add(uniqueID);
+                cursor.moveToNext();
+            }
+            cursor.close();
+
+        }
+        return filteredUniqueids;
+
+    }
+
+    /**
+     * Filters all national ID's that are of the eggGroup requested
+     *
+     * @param eggGroupID of the type in question
+     * @return array list of ints corresponding to national id
+     */
+    public ArrayList<Integer> getAllNationalIdsFromEggGroup(int eggGroupID){
+
+        ArrayList<Integer> filteredNationalids = new ArrayList<>();
+
+        if(eggGroupID > 0) {
+            String[] selectionArg = {String.valueOf(eggGroupID)};
+            Cursor cursor = database.query(POKEMON_EGG_GROUPS_TABLE, null, EGG_GROUP_ID + "=?", selectionArg, null, null, null);
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                int nationalID = cursor.getInt(cursor.getColumnIndex(POKEMON_NATIONAL_ID));
+                filteredNationalids.add(nationalID);
+                cursor.moveToNext();
+            }
+            cursor.close();
+
+        }
+        return filteredNationalids;
+
+    }
+
+    /**
+     * Filters all national ID's that are of the Generation first appeared requested
+     *
+     * @param generationID of the generation in question
+     * @return array list of ints corresponding to national id
+     */
+    public ArrayList<Integer> getAllNationalIdsFromGenerationFirstAppeared(int generationID){
+
+        ArrayList<Integer> filteredNationalids = new ArrayList<>();
+
+        if(generationID > 0) {
+            String[] selectionArg = {String.valueOf(generationID)};
+            Cursor cursor = database.query(POKEMON_COMMON_INFO_TABLE, null, GENERATION_FIRST_APPEARED + "=?", selectionArg, null, null, null);
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                int nationalID = cursor.getInt(cursor.getColumnIndex(POKEMON_NATIONAL_ID));
+                filteredNationalids.add(nationalID);
+                cursor.moveToNext();
+            }
+            cursor.close();
+
+        }
+        return filteredNationalids;
+
+    }
+
+    /**
+     * Takes list of unique id's and returns the corresponding non-repeating national ids
+     *
+     * @param uniqueIDList in an array list
+     * @return nationalid;s in array list
+     */
+    public ArrayList<Integer> convertUniqueToNational(ArrayList<Integer> uniqueIDList){
+        long startTime = System.nanoTime();
+        ArrayList<Integer> nationalIDList = new ArrayList<>();
+        for(int uniqueid : uniqueIDList){
+            if(!nationalIDList.contains(allNationalIDMappedUnique[uniqueid-1])) {
+                nationalIDList.add(allNationalIDMappedUnique[uniqueid - 1]);
+            }
+        }
+
+        Collections.sort(nationalIDList);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+
+        Log.d("QPDex", String.format("Converting Unique ID's to National IDs took %s ns", duration));
+
+        return nationalIDList;
+
+
     }
 
     public boolean isDetailedNationalIDBuiltAndReady(int nationalID){

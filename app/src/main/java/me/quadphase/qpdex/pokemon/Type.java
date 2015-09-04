@@ -77,6 +77,6 @@ public class Type {
      */
     @Override
     public String toString(){
-        return String.format("%s. %s",typeID,name);
+        return String.format("%s",name);
     }
 }
