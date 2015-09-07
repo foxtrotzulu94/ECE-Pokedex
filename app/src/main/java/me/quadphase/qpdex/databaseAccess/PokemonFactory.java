@@ -222,17 +222,6 @@ public class PokemonFactory {
 
             //SECTION 2: PARALLEL SETUP
             //Defining 6 small, very specific threads for next section
-            Thread objectInit = new Thread(){
-                @Override
-                public void run(){
-                    int maxID = getMaxNationalID();
-                    for (int i = 1; i <= maxID; i++) {
-                        allMinimalPokemon[i] = new MinimalPokemon(i);
-                    }
-                }
-            };
-            objectInit.setPriority(Thread.MAX_PRIORITY);
-
             Thread mapInit = new Thread(){
                 @Override
                 public void run(){
@@ -252,6 +241,7 @@ public class PokemonFactory {
                     minimalPokemonCaughtInitializer(caughtCursor);
                 }
             };
+            caughtInit.setPriority(Thread.MAX_PRIORITY);
 
             Thread describeInit = new Thread(){
                 @Override
@@ -278,14 +268,13 @@ public class PokemonFactory {
             //Actual operations on threads
             try {
                 //Start creating objects and setup the hashMap
-                objectInit.start();
+                caughtInit.start();
                 mapInit.start();
 
-                objectInit.join(); //Wait for all objects to initialize
+                caughtInit.join(); //Wait for all objects to initialize
 
                 //Now begin calling the others
                 describeInit.start();
-                caughtInit.start();
 
                 mapInit.join(); //Wait for the map before the next step
 
@@ -295,7 +284,6 @@ public class PokemonFactory {
 
                 //Finally, wait for all.
                 describeInit.join();
-                caughtInit.join();
                 typeInit.join();
                 nameInit.join();
 
@@ -316,40 +304,65 @@ public class PokemonFactory {
         return allMinimalPokemon;
     }
 
+    /**
+     * This method initializes the allMinimalPokemon list through the nationalID and Caught values.
+     * @param cursor A Database Cursor that result covers all rows from the pokemon_caught table
+     */
     private void minimalPokemonCaughtInitializer(Cursor cursor){
         if(cursor!=null && allMinimalPokemon!=null){
             cursor.moveToFirst();
 
+            int nationalIDColumn = cursor.getColumnIndex(POKEMON_NATIONAL_ID);
+            int caughtColumn = cursor.getColumnIndex(CAUGHT);
+
             do {
-                MinimalPokemon currentBuild = allMinimalPokemon[cursor.getInt(cursor.getColumnIndex(POKEMON_NATIONAL_ID))];
-                currentBuild.setCaught(cursor.getInt(cursor.getColumnIndex(CAUGHT)));
+                //Initialize the Pokemon
+                int nationalID = cursor.getInt(nationalIDColumn);
+                int caught = cursor.getInt(caughtColumn);
+
+                //Set it in the Array.
+                allMinimalPokemon[nationalID] = new MinimalPokemon(nationalID, caught>0);
             }while (cursor.moveToNext());
         }
     }
 
+    /**
+     * This method sets the description of a Pokemon
+     * @param cursor A DB cursor pointing to rows in pokemon_common_info
+     */
     private void minimalPokemonDescriptionInitializer(Cursor cursor){
         if(cursor!=null && allMinimalPokemon!=null){
             cursor.moveToFirst();
 
+            int nationalIDColumn = cursor.getColumnIndex(POKEMON_NATIONAL_ID);
+            int descriptColumn =cursor.getColumnIndex(DESCRIPTION);
+
             do{
-                MinimalPokemon currentBuild = allMinimalPokemon[cursor.getInt(cursor.getColumnIndex(POKEMON_NATIONAL_ID))];
-                currentBuild.setDescription(cursor.getString(cursor.getColumnIndex(DESCRIPTION)));
+                MinimalPokemon currentBuild = allMinimalPokemon[cursor.getInt(nationalIDColumn)];
+                currentBuild.setDescription(cursor.getString(descriptColumn));
             }while (cursor.moveToNext());
         }
     }
 
+    /**
+     * This method takes a cursor to the pokemon_caught table and intializes the allMinimalPokemon list
+     * @param cursor A DB cursor pointing to rows in pokemon_types
+     */
     private void minimalPokemonTypeInitializer(Cursor cursor){
         if(cursor!=null && allMinimalPokemon!=null){
             cursor.moveToFirst();
 
+            int typeColumn = cursor.getColumnIndex(TYPE_ID);
+            int uniqueIDColumn = cursor.getColumnIndex(POKEMON_UNIQUE_ID);
+
             List<Type> pkmnTypes = new LinkedList<>();
 
-            int currentID = uniqueToNationalMap.get(cursor.getInt(cursor.getColumnIndex(POKEMON_UNIQUE_ID)));
+            int currentID = uniqueToNationalMap.get(cursor.getInt(uniqueIDColumn));
             int formerID = currentID;
 
             do{
                 //Get the ID of current row
-                currentID = uniqueToNationalMap.get(cursor.getInt(cursor.getColumnIndex(POKEMON_UNIQUE_ID)));
+                currentID = uniqueToNationalMap.get(cursor.getInt(uniqueIDColumn));
 
                 //If ID is not the same with the last row
                 if(currentID!=formerID){
@@ -360,7 +373,7 @@ public class PokemonFactory {
                 }
 
                 //Add the type being read in.
-                pkmnTypes.add(types[cursor.getInt(cursor.getColumnIndex(TYPE_ID))]);
+                pkmnTypes.add(types[cursor.getInt(typeColumn)]);
 
 
             }while (cursor.moveToNext());
@@ -371,12 +384,19 @@ public class PokemonFactory {
         }
     }
 
+    /**
+     * Sets the name of objects within the allMinimalPokemon list.
+     * @param cursor A DB cursor pointing to rows in pokemon_common_info
+     */
     private void minimalPokemonNameInitializer(Cursor cursor){
         if (cursor!=null && allMinimalPokemon!=null) {
             cursor.moveToFirst();
+            int nameColumn = cursor.getColumnIndex(NAME);
+            int uniqueIDColumn = cursor.getColumnIndex(POKEMON_UNIQUE_ID);
+
             do{
-                int nationalID = uniqueToNationalMap.get(cursor.getInt(cursor.getColumnIndex(POKEMON_UNIQUE_ID)));
-                String name = cursor.getString(cursor.getColumnIndex(NAME));
+                int nationalID = uniqueToNationalMap.get(cursor.getInt(uniqueIDColumn));
+                String name = cursor.getString(nameColumn);
                 allMinimalPokemon[nationalID].setName(name);
             }while (cursor.moveToNext());
         }

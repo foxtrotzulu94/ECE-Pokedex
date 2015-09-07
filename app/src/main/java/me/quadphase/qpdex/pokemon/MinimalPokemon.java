@@ -40,13 +40,13 @@ public class MinimalPokemon {
         this.caught = caught;
     }
 
-    public MinimalPokemon(int nationalID) {
+    public MinimalPokemon(int nationalID, boolean wasCaught) {
         this.nationalID = nationalID;
+        caught=wasCaught;
         //The rest can be set only once during deferred construction.
         types=null;
         name=null;
         description=null;
-        caught=false;
     }
 
     public int getPokemonNationalID() {
@@ -76,12 +76,6 @@ public class MinimalPokemon {
         // toggle in memory
         this.caught = !this.caught;
         // toggle in the database:
-        PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(null);
-        pokemonFactory.setCaught(this.nationalID,this.caught);
-    }
-
-    public void setCaught(int status){
-        this.caught = status>=1;
         PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(null);
         pokemonFactory.setCaught(this.nationalID,this.caught);
     }
