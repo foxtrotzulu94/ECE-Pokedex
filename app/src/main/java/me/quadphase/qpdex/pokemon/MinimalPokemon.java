@@ -1,5 +1,7 @@
 package me.quadphase.qpdex.pokemon;
 
+import android.util.Log;
+
 import java.util.List;
 
 import me.quadphase.qpdex.databaseAccess.PokemonFactory;
@@ -38,12 +40,13 @@ public class MinimalPokemon {
         this.caught = caught;
     }
 
-    public MinimalPokemon(int nationalID, String name, String description, List<Type> types) {
+    public MinimalPokemon(int nationalID) {
         this.nationalID = nationalID;
-        this.name = name;
-        this.description = description;
-        this.types = types;
-        this.caught = false;
+        //The rest can be set only once during deferred construction.
+        types=null;
+        name=null;
+        description=null;
+        caught=false;
     }
 
     public int getPokemonNationalID() {
@@ -77,8 +80,38 @@ public class MinimalPokemon {
         pokemonFactory.setCaught(this.nationalID,this.caught);
     }
 
+    public void setCaught(int status){
+        this.caught = status>=1;
+        PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(null);
+        pokemonFactory.setCaught(this.nationalID,this.caught);
+    }
+
+    public void setName(String name) {
+        if(this.name==null)
+            this.name = name;
+        else
+            Log.e("QPDEX_MinimalPkmn",String.format("Tried to overwrite validated data in %s.%s",this.nationalID, this.name));
+    }
+
+    public void setDescription(String description) {
+        if (this.description==null)
+            this.description = description;
+        else
+            Log.e("QPDEX_MinimalPkmn",String.format("Tried to overwrite validated data in %s.%s",this.nationalID, this.name));
+    }
+
+    public void setTypes(List<Type> types) {
+        if(this.types==null)
+            this.types = types;
+        else
+            Log.e("QPDEX_MinimalPkmn", String.format("Tried to overwrite validated data in %s.%s", this.nationalID, this.name));
+    }
+
     @Override
     public String toString(){
         return String.format("%s. %s",nationalID,name);
     }
+
+
+
 }

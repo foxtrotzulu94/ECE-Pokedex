@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.sql.Array;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -257,21 +259,132 @@ public class PokemonFactory {
      * @return List of all main (no suffix) minimalPokemon in the database
      */
     public MinimalPokemon[] getAllMinimalPokemon() {
-        //TODO: Perform aggressive optimizations when possible
 
         if (allMinimalPokemon==null) {
             allMinimalPokemon = new MinimalPokemon[getMaxNationalID()+1];
 
+            HashMap<Integer,Integer> uniqueToNationalMap = new HashMap<>();
+
             //Secretly added the fail-safe Pokemon...
             allMinimalPokemon[0] = PokedexManager.getInstance().missingNo.minimal();
 
+            //Step 1. Query the Database
+            Cursor mapCursor = database.rawQuery(String.format("SELECT * FROM %s WHERE %s NOT IN (SELECT %s FROM %s)",
+                    POKEMON_NATIONAL_ID_TO_UNIQUE_ID_TABLE,
+                    POKEMON_UNIQUE_ID,
+                    POKEMON_UNIQUE_ID,POKEMON_SUFFIX_TABLE),null);
+
+            Cursor caughtCursor = database.query(POKEMON_CAUGHT_TABLE,null,null,null,null,null,POKEMON_NATIONAL_ID);
+
+            Cursor describeCursor = database.query(POKEMON_COMMON_INFO_TABLE, new String[] {POKEMON_NATIONAL_ID, DESCRIPTION},null,null,null,null,POKEMON_NATIONAL_ID);
+
+            Cursor nameCursor = database.rawQuery(String.format("SELECT %s,%s FROM %s WHERE %s NOT IN (SELECT %s FROM %s)",
+                    POKEMON_UNIQUE_ID,NAME,POKEMON_UNIQUE_INFO_TABLE,
+                    POKEMON_UNIQUE_ID,
+                    POKEMON_UNIQUE_ID,POKEMON_SUFFIX_TABLE), null);
+
+            Cursor typeCursor = database.rawQuery(String.format("SELECT %s,%s FROM %s WHERE %s NOT IN (SELECT %s FROM %s)",
+                    POKEMON_UNIQUE_ID,TYPE_ID,POKEMON_TYPES_TABLE,
+                    POKEMON_UNIQUE_ID,
+                    POKEMON_UNIQUE_ID,POKEMON_SUFFIX_TABLE),null);
+
+            //Step 2. Initialize the National to Unique Map
+            mapCursor.moveToFirst();
+
+            do {
+                uniqueToNationalMap.put(
+                        mapCursor.getInt(mapCursor.getColumnIndex(POKEMON_UNIQUE_ID)),
+                        mapCursor.getInt(mapCursor.getColumnIndex(POKEMON_NATIONAL_ID)));
+            }while(mapCursor.moveToNext());
+
             for (int i = 1; i <= getMaxNationalID(); i++) {
-                allMinimalPokemon[i] = getMinimalPokemonByNationalID(i);
+                allMinimalPokemon[i] = new MinimalPokemon(i);
             }
+
+            minimalPokemonCaughtInitializer(caughtCursor);
+            minimalPokemonDescriptionInitializer(describeCursor);
+            minimalPokemonNameInitializer(nameCursor,uniqueToNationalMap);
+            minimalPokemonTypeInitializer(typeCursor,uniqueToNationalMap);
+
+
+            //Close ALL cursors
+            mapCursor.close();
+            caughtCursor.close();
+            describeCursor.close();
+            nameCursor.close();
+            typeCursor.close();
+
         }
 
         return allMinimalPokemon;
     }
+
+    private void minimalPokemonCaughtInitializer(Cursor cursor){
+        if(cursor!=null && allMinimalPokemon!=null){
+            cursor.moveToFirst();
+
+            do {
+                MinimalPokemon currentBuild = allMinimalPokemon[cursor.getInt(cursor.getColumnIndex(POKEMON_NATIONAL_ID))];
+                currentBuild.setCaught(cursor.getInt(cursor.getColumnIndex(CAUGHT)));
+            }while (cursor.moveToNext());
+        }
+    }
+
+    private void minimalPokemonDescriptionInitializer(Cursor cursor){
+        if(cursor!=null && allMinimalPokemon!=null){
+            cursor.moveToFirst();
+
+            do{
+                MinimalPokemon currentBuild = allMinimalPokemon[cursor.getInt(cursor.getColumnIndex(POKEMON_NATIONAL_ID))];
+                currentBuild.setDescription(cursor.getString(cursor.getColumnIndex(DESCRIPTION)));
+            }while (cursor.moveToNext());
+        }
+    }
+
+    private void minimalPokemonTypeInitializer(Cursor cursor, HashMap<Integer,Integer> map){
+        if(cursor!=null && allMinimalPokemon!=null){
+            cursor.moveToFirst();
+
+            List<Type> pkmnTypes = new LinkedList<>();
+
+            int currentID = map.get(cursor.getInt(cursor.getColumnIndex(POKEMON_UNIQUE_ID)));
+            int formerID = currentID;
+
+            do{
+                //Get the ID of current row
+                currentID = map.get(cursor.getInt(cursor.getColumnIndex(POKEMON_UNIQUE_ID)));
+
+                //If ID is not the same with the last row
+                if(currentID!=formerID){
+                    //Dump the current list of Types
+                    allMinimalPokemon[formerID].setTypes(pkmnTypes);
+                    pkmnTypes = new LinkedList<>();
+                    formerID = currentID;
+                }
+
+                //Add the type being read in.
+                pkmnTypes.add(types[cursor.getInt(cursor.getColumnIndex(TYPE_ID))]);
+
+
+            }while (cursor.moveToNext());
+
+            if(!pkmnTypes.isEmpty()){
+                allMinimalPokemon[currentID].setTypes(pkmnTypes);
+            }
+        }
+    }
+
+    private void minimalPokemonNameInitializer(Cursor cursor, HashMap<Integer,Integer> map){
+        if (cursor!=null && allMinimalPokemon!=null) {
+            cursor.moveToFirst();
+            do{
+                int nationalID = map.get(cursor.getInt(cursor.getColumnIndex(POKEMON_UNIQUE_ID)));
+                String name = cursor.getString(cursor.getColumnIndex(NAME));
+                allMinimalPokemon[nationalID].setName(name);
+            }while (cursor.moveToNext());
+        }
+    }
+
 
     public void getAllDetailedPokemon(){
         //TODO: Perform aggressive optimizations when possible
@@ -1105,6 +1218,37 @@ public class PokemonFactory {
 
     public boolean isDetailedNationalIDBuiltAndReady(int nationalID){
         return detailedPokemonShortList!=null && detailedPokemonShortList[nationalID]!=null;
+    }
+
+    public void Testy(){
+        Cursor cursor = database.rawQuery(String.format("SELECT * FROM %s WHERE %s NOT IN (SELECT %s FROM %s)",
+                POKEMON_NATIONAL_ID_TO_UNIQUE_ID_TABLE,
+                POKEMON_UNIQUE_ID,
+                POKEMON_UNIQUE_ID,POKEMON_SUFFIX_TABLE),null);
+        Log.d("DB_MAP", String.format("Returned %s columns and %s rows", cursor.getColumnCount(), cursor.getCount()));
+        cursor.close();
+
+        cursor = database.query(POKEMON_CAUGHT_TABLE,null,null,null,null,null,null);
+        Log.d("DB_CAUGHT", String.format("Returned %s columns and %s rows", cursor.getColumnCount(), cursor.getCount()));
+        cursor.close();
+
+        cursor = database.query(POKEMON_COMMON_INFO_TABLE, new String[] {POKEMON_NATIONAL_ID, DESCRIPTION},null,null,null,null,null);
+        Log.d("DB_DESCRIB", String.format("Returned %s columns and %s rows", cursor.getColumnCount(), cursor.getCount()));
+        cursor.close();
+
+        cursor = database.rawQuery(String.format("SELECT %s,%s FROM %s WHERE %s NOT IN (SELECT %s FROM %s)",
+                POKEMON_UNIQUE_ID,NAME,POKEMON_UNIQUE_INFO_TABLE,
+                POKEMON_UNIQUE_ID,
+                POKEMON_UNIQUE_ID,POKEMON_SUFFIX_TABLE), null);
+        Log.d("DB_NAME", String.format("Returned %s columns and %s rows", cursor.getColumnCount(), cursor.getCount()));
+        cursor.close();
+
+        cursor = database.rawQuery(String.format("SELECT %s,%s FROM %s WHERE %s NOT IN (SELECT %s FROM %s)",
+                POKEMON_UNIQUE_ID,TYPE_ID,POKEMON_TYPES_TABLE,
+                POKEMON_UNIQUE_ID,
+                POKEMON_UNIQUE_ID,POKEMON_SUFFIX_TABLE),null);
+        Log.d("DB_TYPE",String.format("Returned %s columns and %s rows",cursor.getColumnCount(),cursor.getCount()));
+        cursor.close();
     }
 
 }
