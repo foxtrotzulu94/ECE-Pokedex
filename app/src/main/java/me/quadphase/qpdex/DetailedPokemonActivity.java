@@ -197,8 +197,6 @@ public class DetailedPokemonActivity extends FragmentActivity
     private TextView evolutionTab;
     private TextView alternatesTab;
 
-    private final int MAX_NUMBER_OF_TYPES = 17;
-
     /**
      * This method retrieves all necessary elements from "activity_detailed_pokemon.xml"
      * It is used both to avoid retrieving elements within functions and keeping track of what
@@ -480,7 +478,6 @@ public class DetailedPokemonActivity extends FragmentActivity
             Type type = types.get(0);
             for (int i = 1; i < Type.getNumberOfTypes() + 1; i++) {
                 double effectiveDefence = type.getDefendingEffectivenessAgainst(allTypes[i]);
-                double effectiveOffence = type.getAttackingEffectivenessAgainst(allTypes[i]);
 
                 // add the types to the correct lists
                 if (effectiveDefence == 0)

@@ -1125,21 +1125,25 @@ public class PokemonFactory {
      */
     private double[][] buildTypeEffectivenessTable() {
         int maxTypeID = getMaxTypeID();
-        double[][] typeEffectiveness = new double[maxTypeID][maxTypeID];
+        double[][] typeEffectivenessTable = new double[maxTypeID + 1][maxTypeID + 1];
 
-        for (int i = 0; i < maxTypeID; i++) {
-            for (int j = 0; j < maxTypeID; j++) {
-                String[] selectionArg = {String.valueOf(i + 1), String.valueOf(j + 1)};
-                Cursor cursor = database.query(TYPE_EFFECTIVENESS_TABLE, null, FROM_TYPE_ID + "=?"
-                        + " AND " + TO_TYPE_ID + "=?", selectionArg, null, null, null);
-                cursor.moveToFirst();
-                typeEffectiveness[i][j] = cursor.getDouble(cursor.getColumnIndex(EFFECTIVE_LEVEL));
-                // close the cursor
-                cursor.close();
-            }
+        // get the whole table from the database
+        Cursor cursor = database.query(TYPE_EFFECTIVENESS_TABLE, null, null, null, null, null, null);
+        cursor.moveToFirst();
+
+        // read the database and set the values for all real types
+        for (int i = 0; i < maxTypeID * maxTypeID; i++) {
+            typeEffectivenessTable[cursor.getInt(cursor.getColumnIndex(FROM_TYPE_ID))][cursor.getInt(cursor.getColumnIndex(TO_TYPE_ID))] = cursor.getDouble(cursor.getColumnIndex(EFFECTIVE_LEVEL));
+            cursor.moveToNext();
         }
 
-        return typeEffectiveness;
+        // set the values for none/bird type
+        for (int i = 0; i < maxTypeID + 1; i++) {
+            typeEffectivenessTable[0][i] = 1;
+            typeEffectivenessTable[i][0] = 1;
+        }
+
+        return typeEffectivenessTable;
     }
 
     /**

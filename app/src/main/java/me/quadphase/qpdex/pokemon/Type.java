@@ -58,7 +58,7 @@ public class Type {
      */
     public double getAttackingEffectivenessAgainst (Type defendingType) {
         PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(null);
-        return pokemonFactory.getTypeEffectivenessTable()[this.typeID - 1][defendingType.getTypeID() - 1];
+        return pokemonFactory.getTypeEffectivenessTable()[this.typeID][defendingType.getTypeID()];
     }
 
     /**
@@ -69,7 +69,7 @@ public class Type {
      */
     public double getDefendingEffectivenessAgainst (Type attackingType) {
         PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(null);
-        return pokemonFactory.getTypeEffectivenessTable()[attackingType.getTypeID() - 1][this.typeID - 1];
+        return pokemonFactory.getTypeEffectivenessTable()[attackingType.getTypeID()][this.typeID];
     }
 
     /**
