@@ -140,6 +140,11 @@ public class IntroActivity extends AppCompatActivity {
         }
     }
 
+    public void switchToPokemonResources(View view){
+        Intent intent = new Intent(this,PokemonResources.class);
+        startActivity(intent);
+    }
+
     public void showConstructionActivity(View view){
         Intent intent = new Intent(this,WIPActivity.class);
         startActivity(intent);

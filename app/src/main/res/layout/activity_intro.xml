@@ -79,7 +79,7 @@
             android:layout_height="wrap_content"
             android:text="@string/resource_button"
             android:background="@color/dex_grey_transparent"
-            android:onClick="showConstructionActivity" />
+            android:onClick="switchToPokemonResources" />
 
     </LinearLayout>
 
