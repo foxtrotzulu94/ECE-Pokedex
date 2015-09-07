@@ -78,7 +78,7 @@ public class IntroActivity extends AppCompatActivity {
         }
 
         //Signal a prefetch.
-        setupAndLoad();
+//        setupAndLoad();
 
         //Signal for collection if needed
         Runtime.getRuntime().gc();
@@ -112,6 +112,9 @@ public class IntroActivity extends AppCompatActivity {
 
         //We might need to signal the PokedexManager to see if the activity can load.
         final PokemonFactory pkmnBuild = PokemonFactory.getPokemonFactory(this);
+
+        //WARNING: TESTING PURPOSES ONLY - THIS SHOULD BE REMOVED BEFORE PUSHING TO MASTER
+        setupAndLoad();
 
         if(!contextMaster.isMinimalReady()){
             final ProgressDialog dialog = ProgressDialog.show(IntroActivity.this, "", "Loading. Please wait...", true);

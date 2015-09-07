@@ -10,6 +10,7 @@ import java.sql.Array;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import me.quadphase.qpdex.exceptions.PartyFullException;
 import me.quadphase.qpdex.pokedex.PokedexManager;
@@ -33,104 +34,28 @@ import me.quadphase.qpdex.pokemon.Type;
  */
 public class PokemonFactory {
 
-    //TODO: Fix and retest!
-    private class DetailedListBuilder extends Thread{
-        int startIndex;
-        int endIndex;
+    /**
+     * Simple Thread class
+     */
+    private class CommandJob extends Thread{
 
-        DetailedListBuilder(int startingPoint,int endPoint){
-            startIndex = startingPoint;
-            endIndex = endPoint;
+        Callable jobToExecute;
+
+        public CommandJob(Callable function){
+            jobToExecute = function;
         }
 
         @Override
         public void run(){
-            buildPartOfDetailedPokemonList(startIndex,endIndex-startIndex);
-        }
-
-    }
-
-    //TODO: Fix and retest!
-    private class DetailedListMaster extends Thread{
-
-        //Best arbitrary number I could choose...
-        int coreMultiplier = 2;
-
-        List<Thread> workerList;
-
-        @Override
-        public void run(){
-            if (allDetailedPokemon==null && detailedPokemonShortList==null) {
-                workerList = new LinkedList<>();
-
-                //Create new short list (matches minimalPokemon with a corresponding Pokemon)
-                detailedPokemonShortList = new Pokemon[getMaxNationalID()+1];
-
-                //Create a new Large Pokemon List
-                allDetailedPokemon = new Pokemon[getMaxUniqueID()+1];
-
-                //Set the fail-safe
-                allDetailedPokemon[0] = PokedexManager.getInstance().missingNo;
-                detailedPokemonShortList[0] = allDetailedPokemon[0];
-
-                int optimalWorkerNumber = Runtime.getRuntime().availableProcessors()*coreMultiplier;
-                int subdivisionSize = getMaxNationalID() / optimalWorkerNumber;
-                int remainder = getMaxNationalID() % optimalWorkerNumber;
-                int currentIndex=1;
-
-                Log.d("QPDEX_PkmnBuilder",String.format("Optimal Workers: %s",optimalWorkerNumber));
-
-                for (int i = 1; i <= optimalWorkerNumber; i++) {
-                    Thread worker;
-//                    Thread worker1;
-//                    Thread worker2;
-
-                    //Build the list from the opposite ends
-                    // We do this because the user is VERY likely to touch either the first couple
-                    // of entries OR the last couple, rather than anything smack in the middle
-
-//                    if(i==1){
-//                        worker1 = new DetailedListBuilder(currentIndex, subdivisionSize * i);
-//                        worker2 = new DetailedListBuilder(subdivisionSize*(optimalWorkerNumber-1), (subdivisionSize*optimalWorkerNumber)+remainder);
-//                    }
-//                    else{
-//                        worker1 = new DetailedListBuilder(currentIndex, subdivisionSize * i);
-//                        worker2 = new DetailedListBuilder(subdivisionSize*(optimalWorkerNumber-i), subdivisionSize * (optimalWorkerNumber-i));
-//                    }
-//
-
-                    if(i<optimalWorkerNumber) {
-                        worker = new DetailedListBuilder(currentIndex, subdivisionSize * i);
-                    }
-                    else {
-                        worker = new DetailedListBuilder(currentIndex, (subdivisionSize*i)+remainder);
-                    }
-
-                    Log.d("QPDEX",String.format("Current index built %s",currentIndex));
-
-                    currentIndex = currentIndex+subdivisionSize-1;
-                    worker.start();
-                    workerList.add(worker);
-
-//                    worker1.start();
-//                    worker2.start();
-//                    workerList.add(worker1);
-//                    workerList.add(worker2);
-
-                }
-
-                try {
-                    for (int i = 0; i < workerList.size(); i++) {
-                        workerList.get(i).join();
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
+            try {
+                jobToExecute.call();
+            } catch (Exception e) {
+                Log.e("PKMN_FACTORY","A CommandJob has ended abruptly due to an exception");
+                e.printStackTrace();
             }
         }
-    }
 
+    }
 
     private final boolean PRINT_DEBUG = false;
 
@@ -207,6 +132,8 @@ public class PokemonFactory {
 
     private Type[] types;
 
+    private HashMap<Integer,Integer> uniqueToNationalMap;
+
     /**
      * SQLite database handle
      */
@@ -260,51 +187,121 @@ public class PokemonFactory {
      */
     public MinimalPokemon[] getAllMinimalPokemon() {
 
-        if (allMinimalPokemon==null) {
-            allMinimalPokemon = new MinimalPokemon[getMaxNationalID()+1];
+        if (allMinimalPokemon==null || uniqueToNationalMap==null) {
 
-            HashMap<Integer,Integer> uniqueToNationalMap = new HashMap<>();
+            allMinimalPokemon = new MinimalPokemon[getMaxNationalID()+1];
+            uniqueToNationalMap = new HashMap<>();
 
             //Secretly added the fail-safe Pokemon...
             allMinimalPokemon[0] = PokedexManager.getInstance().missingNo.minimal();
+            uniqueToNationalMap.put(0,0);
 
-            //Step 1. Query the Database
-            Cursor mapCursor = database.rawQuery(String.format("SELECT * FROM %s WHERE %s NOT IN (SELECT %s FROM %s)",
+
+            //SECTION I: INITIAL QUERIES
+            //5 Cursors initialized after executing 8 queries
+
+            final Cursor mapCursor = database.rawQuery(String.format("SELECT * FROM %s WHERE %s NOT IN (SELECT %s FROM %s)",
                     POKEMON_NATIONAL_ID_TO_UNIQUE_ID_TABLE,
                     POKEMON_UNIQUE_ID,
-                    POKEMON_UNIQUE_ID,POKEMON_SUFFIX_TABLE),null);
+                    POKEMON_UNIQUE_ID, POKEMON_SUFFIX_TABLE), null);
 
-            Cursor caughtCursor = database.query(POKEMON_CAUGHT_TABLE,null,null,null,null,null,POKEMON_NATIONAL_ID);
+            final Cursor caughtCursor = database.query(POKEMON_CAUGHT_TABLE, null, null, null, null, null, POKEMON_NATIONAL_ID);
 
-            Cursor describeCursor = database.query(POKEMON_COMMON_INFO_TABLE, new String[] {POKEMON_NATIONAL_ID, DESCRIPTION},null,null,null,null,POKEMON_NATIONAL_ID);
+            final Cursor describeCursor = database.query(POKEMON_COMMON_INFO_TABLE, new String[]{POKEMON_NATIONAL_ID, DESCRIPTION}, null, null, null, null, POKEMON_NATIONAL_ID);
 
-            Cursor nameCursor = database.rawQuery(String.format("SELECT %s,%s FROM %s WHERE %s NOT IN (SELECT %s FROM %s)",
-                    POKEMON_UNIQUE_ID,NAME,POKEMON_UNIQUE_INFO_TABLE,
+            final Cursor nameCursor = database.rawQuery(String.format("SELECT %s,%s FROM %s WHERE %s NOT IN (SELECT %s FROM %s)",
+                    POKEMON_UNIQUE_ID, NAME, POKEMON_UNIQUE_INFO_TABLE,
                     POKEMON_UNIQUE_ID,
-                    POKEMON_UNIQUE_ID,POKEMON_SUFFIX_TABLE), null);
+                    POKEMON_UNIQUE_ID, POKEMON_SUFFIX_TABLE), null);
 
-            Cursor typeCursor = database.rawQuery(String.format("SELECT %s,%s FROM %s WHERE %s NOT IN (SELECT %s FROM %s)",
+            final Cursor typeCursor = database.rawQuery(String.format("SELECT %s,%s FROM %s WHERE %s NOT IN (SELECT %s FROM %s)",
                     POKEMON_UNIQUE_ID,TYPE_ID,POKEMON_TYPES_TABLE,
                     POKEMON_UNIQUE_ID,
                     POKEMON_UNIQUE_ID,POKEMON_SUFFIX_TABLE),null);
 
-            //Step 2. Initialize the National to Unique Map
-            mapCursor.moveToFirst();
 
-            do {
-                uniqueToNationalMap.put(
-                        mapCursor.getInt(mapCursor.getColumnIndex(POKEMON_UNIQUE_ID)),
-                        mapCursor.getInt(mapCursor.getColumnIndex(POKEMON_NATIONAL_ID)));
-            }while(mapCursor.moveToNext());
+            //SECTION 2: PARALLEL SETUP
+            //Defining 6 small, very specific threads for next section
+            Thread objectInit = new Thread(){
+                @Override
+                public void run(){
+                    int maxID = getMaxNationalID();
+                    for (int i = 1; i <= maxID; i++) {
+                        allMinimalPokemon[i] = new MinimalPokemon(i);
+                    }
+                }
+            };
+            objectInit.setPriority(Thread.MAX_PRIORITY);
 
-            for (int i = 1; i <= getMaxNationalID(); i++) {
-                allMinimalPokemon[i] = new MinimalPokemon(i);
+            Thread mapInit = new Thread(){
+                @Override
+                public void run(){
+                    mapCursor.moveToFirst();
+                    do {
+                        uniqueToNationalMap.put(
+                                mapCursor.getInt(mapCursor.getColumnIndex(POKEMON_UNIQUE_ID)),
+                                mapCursor.getInt(mapCursor.getColumnIndex(POKEMON_NATIONAL_ID)));
+                    }while(mapCursor.moveToNext());
+                }
+            };
+            mapInit.setPriority(Thread.MAX_PRIORITY);
+
+            Thread caughtInit = new Thread(){
+                @Override
+                public void run(){
+                    minimalPokemonCaughtInitializer(caughtCursor);
+                }
+            };
+
+            Thread describeInit = new Thread(){
+                @Override
+                public void run(){
+                    minimalPokemonDescriptionInitializer(describeCursor);
+                }
+            };
+
+            Thread nameInit = new Thread(){
+                @Override
+                public void run(){
+                    minimalPokemonNameInitializer(nameCursor);
+                }
+            };
+
+            Thread typeInit = new Thread(){
+                @Override
+                public void run(){
+                    minimalPokemonTypeInitializer(typeCursor);
+                }
+            };
+
+            //SECTION 3: THREAD MANAGEMENT
+            //Actual operations on threads
+            try {
+                //Start creating objects and setup the hashMap
+                objectInit.start();
+                mapInit.start();
+
+                objectInit.join(); //Wait for all objects to initialize
+
+                //Now begin calling the others
+                describeInit.start();
+                caughtInit.start();
+
+                mapInit.join(); //Wait for the map before the next step
+
+                //Signal the start of the last two threads
+                typeInit.start();
+                nameInit.start();
+
+                //Finally, wait for all.
+                describeInit.join();
+                caughtInit.join();
+                typeInit.join();
+                nameInit.join();
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-
-            minimalPokemonCaughtInitializer(caughtCursor);
-            minimalPokemonDescriptionInitializer(describeCursor);
-            minimalPokemonNameInitializer(nameCursor,uniqueToNationalMap);
-            minimalPokemonTypeInitializer(typeCursor,uniqueToNationalMap);
 
 
             //Close ALL cursors
@@ -341,18 +338,18 @@ public class PokemonFactory {
         }
     }
 
-    private void minimalPokemonTypeInitializer(Cursor cursor, HashMap<Integer,Integer> map){
+    private void minimalPokemonTypeInitializer(Cursor cursor){
         if(cursor!=null && allMinimalPokemon!=null){
             cursor.moveToFirst();
 
             List<Type> pkmnTypes = new LinkedList<>();
 
-            int currentID = map.get(cursor.getInt(cursor.getColumnIndex(POKEMON_UNIQUE_ID)));
+            int currentID = uniqueToNationalMap.get(cursor.getInt(cursor.getColumnIndex(POKEMON_UNIQUE_ID)));
             int formerID = currentID;
 
             do{
                 //Get the ID of current row
-                currentID = map.get(cursor.getInt(cursor.getColumnIndex(POKEMON_UNIQUE_ID)));
+                currentID = uniqueToNationalMap.get(cursor.getInt(cursor.getColumnIndex(POKEMON_UNIQUE_ID)));
 
                 //If ID is not the same with the last row
                 if(currentID!=formerID){
@@ -374,11 +371,11 @@ public class PokemonFactory {
         }
     }
 
-    private void minimalPokemonNameInitializer(Cursor cursor, HashMap<Integer,Integer> map){
+    private void minimalPokemonNameInitializer(Cursor cursor){
         if (cursor!=null && allMinimalPokemon!=null) {
             cursor.moveToFirst();
             do{
-                int nationalID = map.get(cursor.getInt(cursor.getColumnIndex(POKEMON_UNIQUE_ID)));
+                int nationalID = uniqueToNationalMap.get(cursor.getInt(cursor.getColumnIndex(POKEMON_UNIQUE_ID)));
                 String name = cursor.getString(cursor.getColumnIndex(NAME));
                 allMinimalPokemon[nationalID].setName(name);
             }while (cursor.moveToNext());
@@ -409,27 +406,10 @@ public class PokemonFactory {
 
             if(PRINT_DEBUG)
                 Log.d("QPDEX",String.format("Building %s",i));
-//                //We have to slow down the loop intentionally...
-//                try {
-//                    Thread.sleep(10);
-//                }
-//                catch(InterruptedException e){
-//
-//                }
         }
 
     }
 
-    //TODO: FIX thread classes before calling again.
-    public void getAllDetailedPokemonInParallel(){
-        Thread masterBuilder = new DetailedListMaster();
-        masterBuilder.start();
-        try {
-            masterBuilder.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 
     private void buildPartOfDetailedPokemonList(int start, int end){
         for (int i = start; i < end; i++) {
@@ -1186,17 +1166,18 @@ public class PokemonFactory {
     public void loadAllTypes() {
         // fail safe 0th index of types:
         types[0] = new Type("None/Bird", 0);
+
         // get the real types from the database:
-        for (int i = 1; i < getMaxTypeID() + 1; i++) {
-            String[] selectionArg = {String.valueOf(i)};
-            Cursor cursor = database.query(TYPES_TABLE, null, TYPE_ID + "=?", selectionArg, null, null, null);
-            cursor.moveToFirst();
+        Cursor cursor = database.query(TYPES_TABLE, null, null, null, null, null, null);
+        int typeID = 0;
+        cursor.moveToFirst();
+        do{
+            typeID = cursor.getInt(cursor.getColumnIndex(TYPE_ID));
+            types[typeID] = new Type(cursor.getString(cursor.getColumnIndex(NAME)), typeID);
 
-            types[i] = new Type(cursor.getString(cursor.getColumnIndex(NAME)), i);
+        }while(cursor.moveToNext());
 
-            // close the cursor
-            cursor.close();
-        }
+        cursor.close();
     }
 
     /**
@@ -1218,37 +1199,6 @@ public class PokemonFactory {
 
     public boolean isDetailedNationalIDBuiltAndReady(int nationalID){
         return detailedPokemonShortList!=null && detailedPokemonShortList[nationalID]!=null;
-    }
-
-    public void Testy(){
-        Cursor cursor = database.rawQuery(String.format("SELECT * FROM %s WHERE %s NOT IN (SELECT %s FROM %s)",
-                POKEMON_NATIONAL_ID_TO_UNIQUE_ID_TABLE,
-                POKEMON_UNIQUE_ID,
-                POKEMON_UNIQUE_ID,POKEMON_SUFFIX_TABLE),null);
-        Log.d("DB_MAP", String.format("Returned %s columns and %s rows", cursor.getColumnCount(), cursor.getCount()));
-        cursor.close();
-
-        cursor = database.query(POKEMON_CAUGHT_TABLE,null,null,null,null,null,null);
-        Log.d("DB_CAUGHT", String.format("Returned %s columns and %s rows", cursor.getColumnCount(), cursor.getCount()));
-        cursor.close();
-
-        cursor = database.query(POKEMON_COMMON_INFO_TABLE, new String[] {POKEMON_NATIONAL_ID, DESCRIPTION},null,null,null,null,null);
-        Log.d("DB_DESCRIB", String.format("Returned %s columns and %s rows", cursor.getColumnCount(), cursor.getCount()));
-        cursor.close();
-
-        cursor = database.rawQuery(String.format("SELECT %s,%s FROM %s WHERE %s NOT IN (SELECT %s FROM %s)",
-                POKEMON_UNIQUE_ID,NAME,POKEMON_UNIQUE_INFO_TABLE,
-                POKEMON_UNIQUE_ID,
-                POKEMON_UNIQUE_ID,POKEMON_SUFFIX_TABLE), null);
-        Log.d("DB_NAME", String.format("Returned %s columns and %s rows", cursor.getColumnCount(), cursor.getCount()));
-        cursor.close();
-
-        cursor = database.rawQuery(String.format("SELECT %s,%s FROM %s WHERE %s NOT IN (SELECT %s FROM %s)",
-                POKEMON_UNIQUE_ID,TYPE_ID,POKEMON_TYPES_TABLE,
-                POKEMON_UNIQUE_ID,
-                POKEMON_UNIQUE_ID,POKEMON_SUFFIX_TABLE),null);
-        Log.d("DB_TYPE",String.format("Returned %s columns and %s rows",cursor.getColumnCount(),cursor.getCount()));
-        cursor.close();
     }
 
 }

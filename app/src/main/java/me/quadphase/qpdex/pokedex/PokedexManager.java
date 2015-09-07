@@ -410,10 +410,14 @@ public class PokedexManager {
         Thread initMin = new Thread(){
             @Override
             public void run(){
+                long startTime = System.nanoTime();
                 allMinimalPokemon = pkmnBuild.getAllMinimalPokemon();
+                long total = System.nanoTime()-startTime; //Consider removing on first release
+                Log.w("Manager",String.format("Initialization took %s nanoseconds",total));
+
                 isMinimalReady=true;
                 // After this is done, spawn off initFull to finish the setup
-//                initFull.start(); //TODO: Uncomment after optimizing
+//                initFull.start();
                 Log.d("QPDEX_Manager","All Minimal Pokemon Objects Created");
             }
         };
