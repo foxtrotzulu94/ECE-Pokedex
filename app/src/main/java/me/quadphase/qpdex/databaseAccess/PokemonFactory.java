@@ -34,29 +34,6 @@ import me.quadphase.qpdex.pokemon.Type;
  */
 public class PokemonFactory {
 
-    /**
-     * Simple Thread class
-     */
-    private class CommandJob extends Thread{
-
-        Callable jobToExecute;
-
-        public CommandJob(Callable function){
-            jobToExecute = function;
-        }
-
-        @Override
-        public void run(){
-            try {
-                jobToExecute.call();
-            } catch (Exception e) {
-                Log.e("PKMN_FACTORY","A CommandJob has ended abruptly due to an exception");
-                e.printStackTrace();
-            }
-        }
-
-    }
-
     private final boolean PRINT_DEBUG = false;
 
     private static final String DB_NAME = "pokedex.db";
@@ -404,7 +381,7 @@ public class PokemonFactory {
 
 
     public void getAllDetailedPokemon(){
-        //TODO: Perform aggressive optimizations when possible
+        //NOTE: This method is here for testing purposes. Avoid using in production builds.
 
         if (allDetailedPokemon==null || detailedPokemonShortList==null) {
             setupLargeCacheLists();

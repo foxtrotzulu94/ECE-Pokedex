@@ -25,28 +25,12 @@ public class IntroActivity extends AppCompatActivity {
     private PokedexManager contextMaster;
 
     private void setupAndLoad(){
-        //Register with the ExceptionHandler
-        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
-
         //Initialize the PokedexManager class
          contextMaster = PokedexManager.getInstance();
 
-        //Tell the PokedexManager to begin caching operations with the PokedexFactory
+        //Tell the PokedexManager to begin caching operations
         //This takes care of any steps related to pre-fetching objects and building them together.
-        contextMaster.beginCachingRoutines(PokemonFactory.getPokemonFactory(this));
-
-//
-//        //Create the minimal pokemon objects
-//        final long minBuild = System.nanoTime();
-//        Thread fullBuilder = new Thread(){
-//            @Override
-//            public void run(){
-//                Pokemon[] fullListy = PokemonFactory.getPokemonFactory(getApplicationContext()).getAllDetailedPokemon();
-//                Log.d("QPDEX",String.format("All Pokemon objects done in: %s ns",System.nanoTime()-minBuild));
-//            }
-//        };
-//        fullBuilder.start();
-
+        contextMaster.beginCachingRoutines(this);
     }
 
     @Override
@@ -76,6 +60,9 @@ public class IntroActivity extends AppCompatActivity {
                     BuildConfig.GIT_BRANCH);
             buildField.setText(formatter.toString());
         }
+
+        //Register with the ExceptionHandler
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
 
         //Signal a prefetch.
 //        setupAndLoad();
@@ -109,11 +96,6 @@ public class IntroActivity extends AppCompatActivity {
 
     public void switchToPokedex(View view){
         final Intent intent = new Intent(this,PokedexActivity.class);
-
-        //We might need to signal the PokedexManager to see if the activity can load.
-        final PokemonFactory pkmnBuild = PokemonFactory.getPokemonFactory(this);
-
-        //WARNING: TESTING PURPOSES ONLY - THIS SHOULD BE REMOVED BEFORE PUSHING TO MASTER
         setupAndLoad();
 
         if(!contextMaster.isMinimalReady()){
