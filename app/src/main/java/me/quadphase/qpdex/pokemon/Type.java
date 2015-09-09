@@ -88,5 +88,16 @@ public class Type {
     public static Type[] getListOfTypes() {
         return PokemonFactory.getPokemonFactory(null).getListOfTypes();
     }
+
+
+    /**
+     * Overide for advanced search to display the id and name of type
+     *
+     * @return id. TypeName in string format
+     */
+    @Override
+    public String toString(){
+        return String.format("%s",name);
+    }
 }
 

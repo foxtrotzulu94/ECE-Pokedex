@@ -1,21 +1,17 @@
 package me.quadphase.qpdex;
 
-import android.app.Activity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Spinner;
 import android.content.Intent;
-import android.view.KeyEvent;
 
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.TextView;
 
 
 import java.util.ArrayList;
@@ -120,10 +116,10 @@ public class AdvancedSearch extends ActionBarActivity {
 
         pokemonFactory = PokemonFactory.getPokemonFactory(this.getApplicationContext());
 
-        allTypes = pokemonFactory.getAllTypes();
+        allTypes = pokemonFactory.getListOfTypes();
         allAbilities = pokemonFactory.getAllAbilities();
         allEggGroups = pokemonFactory.getAllEggGroups();
-        allGenerations = pokemonFactory.getGeneratons();
+        allGenerations = pokemonFactory.getGenerations();
 
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
@@ -215,12 +211,12 @@ public class AdvancedSearch extends ActionBarActivity {
         filteredUniqueIds = new ArrayList<Integer>();
         currentFilterPokemonArrayList = new ArrayList<Integer>();
 
-        for(int i =1; i< pokemonFactory.getMaxUniqueID()+1; i++ ){
+        for(int i =1; i< pokemonFactory.getMAX_UNIQUE_ID()+1 ; i++ ){
             filteredUniqueIds.add(i);
             currentFilterPokemonArrayList.add(i);
         }
 
-        for (int i=1; i <pokemonFactory.getMaxNationalID()+1; i++){
+        for (int i=1; i <pokemonFactory.getMAX_NATIONAL_ID()+1; i++){
             filteredNationalIds.add(i);
         }
     }

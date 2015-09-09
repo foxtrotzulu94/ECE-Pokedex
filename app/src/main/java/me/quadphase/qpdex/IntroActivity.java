@@ -154,9 +154,7 @@ public class IntroActivity extends AppCompatActivity {
 
         // Using Javier's code from how it enters pokedex activity
         final Intent intent = new Intent(this,AdvancedSearch.class);
-
-        //We might need to signal the PokedexManager to see if the activity can load.
-        final PokemonFactory pkmnBuild = PokemonFactory.getPokemonFactory(this);
+        setupAndLoad();
 
         if(!contextMaster.isMinimalReady()){
             final ProgressDialog dialog = ProgressDialog.show(IntroActivity.this, "", "Loading. Please wait...", true);
