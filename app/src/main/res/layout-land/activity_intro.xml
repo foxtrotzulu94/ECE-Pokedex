@@ -62,16 +62,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/enter_pokedex"
-                android:background="@color/dex_pink_transparent"
-                android:onClick="switchToPokedex" />
+                android:background="@drawable/custom_buttonbrowse"
+                android:onClick="switchToPokedex"
+                android:layout_marginBottom="5dp" />
 
             <Button
                 android:id="@+id/button_mytrainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/enter_trainer"
-                android:background="@color/dex_green_transparent"
-                android:onClick="showConstructionActivity" />
+                android:background="@drawable/custom_buttonmytrainer"
+                android:onClick="switchToMyTrainerActivity"
+                android:layout_marginBottom="5dp" />
 
             <Button
                 android:id="@+id/button_allgens"
@@ -79,23 +81,26 @@
                 android:layout_height="wrap_content"
                 android:text="@string/enter_gameview"
                 android:background="@color/dex_yellow_transparent"
-                android:onClick="showConstructionActivity" />
+                android:onClick="showConstructionActivity"
+                android:layout_marginBottom="5dp" />
 
             <Button
                 android:id="@+id/button_advsearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/adv_search"
-                android:background="@color/dex_blue_transparent"
-                android:onClick="showConstructionActivity" />
+                android:background="@drawable/custom_buttonsearch"
+                android:onClick="showConstructionActivity"
+                android:layout_marginBottom="5dp" />
 
             <Button
                 android:id="@+id/button_resources"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/resource_button"
-                android:background="@color/dex_grey_transparent"
-                android:onClick="switchToPokemonResources" />
+                android:background="@drawable/custom_buttonresources"
+                android:onClick="switchToPokemonResources"
+                android:layout_marginBottom="5dp" />
         </LinearLayout>
 
         <LinearLayout
