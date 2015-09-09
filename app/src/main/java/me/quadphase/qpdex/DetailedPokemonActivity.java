@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -233,6 +234,9 @@ public class DetailedPokemonActivity extends FragmentActivity
         GridLayout frame=(GridLayout) typeMatchBlock.findViewById(R.id.gridlay_types);
         TextView title = (TextView) typeMatchBlock.findViewById(R.id.characteristic);
 
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        int screenDPI = metrics.densityDpi;
+
         title.setText(quantifier);
 
         for (int i=0;i<types.size();i++) {
@@ -248,7 +252,7 @@ public class DetailedPokemonActivity extends FragmentActivity
             typeBadge.setScaleType(ImageView.ScaleType.FIT_XY);
 //            typeBadge.setMaxHeight(30);
             typeBadge.setAdjustViewBounds(true);
-            typeBadge.getLayoutParams().width = 160;
+            typeBadge.getLayoutParams().width = (screenDPI/5)*2;
             frame.addView(typeBadge);
         }
 
@@ -257,11 +261,15 @@ public class DetailedPokemonActivity extends FragmentActivity
         // (Ultra high DP devices may take 3 columns)
         // Mid DP devices can take 2
         // low DP can take only 1
-        frame.setColumnCount(1);
+
+
+
+
+        frame.setColumnCount(2);
 
         Configuration configuration = getResources().getConfiguration();
         int smallestScreenWidthDp = configuration.screenWidthDp;
-        Log.d("QPDEX", String.format("min DP of screen: %s", smallestScreenWidthDp));
+        Log.d("QPDEX", String.format("widthDP %s, DPI %s", smallestScreenWidthDp,metrics.densityDpi));
 
         return typeMatchBlock;
     }

@@ -100,7 +100,7 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5">
+            android:layout_weight="0.6">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -125,7 +125,7 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5">
+            android:layout_weight="0.4">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -140,26 +140,29 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@color/dex_detail_greyback"
                 android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp">
+                android:layout_marginRight="5dp"
+                android:layout_gravity="left">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:text="Egg\nGroup(s)"
                     android:id="@+id/title_egggroup"
-                    android:layout_gravity="center|left"
+                    android:layout_gravity="left"
                     android:padding="5dp"
-                    android:gravity="center" />
+                    android:gravity="center_vertical|left"
+                    android:layout_weight="0.8" />
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:id="@+id/linlay_egggroupbox"
-                    android:gravity="center"></LinearLayout>
+                    android:gravity="center"
+                    android:layout_weight="0.5"></LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -178,7 +181,8 @@
                     android:layout_gravity="center|left"
                     android:padding="5dp"
                     android:layout_weight="0.5"
-                    android:gravity="center" />
+                    android:gravity="left"
+                    android:layout_marginLeft="10dp" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -187,7 +191,8 @@
                     android:id="@+id/textview_eggsteps"
                     android:layout_gravity="center|left"
                     android:padding="5dp"
-                    android:layout_weight="0.5" />
+                    android:layout_weight="0.5"
+                    android:gravity="center" />
             </LinearLayout>
 
         </LinearLayout>

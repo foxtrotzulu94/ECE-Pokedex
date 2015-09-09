@@ -304,7 +304,7 @@ public class PokedexManager {
             @Override
             public void run(){
                 cachedDisplaySprites = new LinkedList<BitmapDrawable>();
-                for (int i = restrictUpToGeneration; i >0; i--) {
+                for (int i = restrictUpToGeneration; i >=currentDetailedPokemon.getGenFirstAppeared(); i--) {
                     InputStream file = PokedexAssetFactory.getPokemonSpriteInGeneration(
                             currentContext,
                             currentDetailedPokemon.getPokemonNationalID(),
