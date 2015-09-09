@@ -4,7 +4,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="me.quadphase.qpdex.AdvancedSearch">
+    tools:context="me.quadphase.qpdex.AdvancedSearch"
+    android:id="@+id/adv_search">
 
     <Spinner
         android:id="@+id/type1_spinner"
@@ -57,5 +58,194 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:onClick="switchToPokedex" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Stats"
+        android:id="@+id/stats_title"
+        android:layout_below="@+id/egg1_spinner"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="  HP "
+        android:id="@+id/hp_title"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:layout_below="@+id/stats_explain"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text=" ATT "
+        android:id="@+id/att_title"
+        android:layout_below="@+id/hp_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text=" DEF "
+        android:id="@+id/def_title"
+        android:layout_below="@+id/att_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text=" SP. ATT "
+        android:id="@+id/spatt_title"
+        android:layout_below="@+id/def_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text=" SP. DEF "
+        android:id="@+id/spdef_title"
+        android:layout_below="@+id/spatt_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text=" SPEED "
+        android:layout_below="@+id/spdef_title"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/speed_title"
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Choose a range of values that you wish to filter for. "
+        android:id="@+id/stats_explain"
+        android:layout_below="@+id/stats_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="3"
+        android:id="@+id/hp_lower"
+        android:layout_alignBottom="@+id/hp_title"
+        android:layout_toStartOf="@+id/spatt_title" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="3"
+        android:id="@+id/hp_greater"
+        android:layout_alignBottom="@+id/hp_lower"
+        android:layout_toEndOf="@+id/spatt_title" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="3"
+        android:id="@+id/att_lower"
+        android:layout_alignBottom="@+id/att_title"
+        android:layout_alignEnd="@+id/hp_lower" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="3"
+        android:id="@+id/att_greater"
+        android:layout_alignBottom="@+id/att_title"
+        android:layout_alignStart="@+id/hp_greater" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="3"
+        android:id="@+id/def_lower"
+        android:layout_below="@+id/att_lower"
+        android:layout_alignStart="@+id/spatt_lower" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="3"
+        android:id="@+id/def_greater"
+        android:layout_below="@+id/att_greater"
+        android:layout_alignStart="@+id/spatt_greater" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="3"
+        android:id="@+id/spatt_lower"
+        android:layout_below="@+id/def_lower"
+        android:layout_alignStart="@+id/hp_lower" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="3"
+        android:id="@+id/spatt_greater"
+        android:layout_below="@+id/def_greater"
+        android:layout_alignStart="@+id/hp_greater" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="3"
+        android:id="@+id/spdef_lower"
+        android:layout_below="@+id/spatt_lower"
+        android:layout_alignStart="@+id/hp_lower" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="3"
+        android:id="@+id/spdef_greater"
+        android:layout_below="@+id/spatt_greater"
+        android:layout_alignStart="@+id/hp_greater" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="3"
+        android:id="@+id/speed_lower"
+        android:layout_below="@+id/spdef_lower"
+        android:layout_alignStart="@+id/hp_lower" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="3"
+        android:id="@+id/speed_greater"
+        android:layout_below="@+id/spdef_greater"
+        android:layout_alignStart="@+id/hp_greater" />
+
 
 </RelativeLayout>

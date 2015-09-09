@@ -1339,6 +1339,34 @@ public class PokemonFactory {
     }
 
     /**
+     * Filters all unique ID's that are of the bewteen the range of stats or the stat requested
+     * @param lowerLimit lower integer value limit
+     * @param upperLimit upper integer value
+     * @param stat the stat being filtered for
+     * @return array of integers of the unique id's that correspond
+     */
+    public ArrayList<Integer> getAllUniqueIDsFromStat(int lowerLimit, int upperLimit, String stat){
+
+        ArrayList<Integer> filteredUniqueids = new ArrayList<>();
+
+//        if(typeID > 0) {
+//            String[] selectionArg = {String.valueOf(typeID)};
+//            Cursor cursor = database.query(POKEMON_TYPES_TABLE, null, TYPE_ID + "=?", selectionArg, null, null, null);
+//            cursor.moveToFirst();
+//            while (!cursor.isAfterLast()) {
+//                int uniqueID = cursor.getInt(cursor.getColumnIndex(POKEMON_UNIQUE_ID));
+//                filteredUniqueids.add(uniqueID);
+//                cursor.moveToNext();
+//            }
+//            cursor.close();
+//
+//        }
+        return filteredUniqueids;
+
+    }
+
+
+    /**
      * Filters all national ID's that are of the eggGroup requested
      *
      * @param eggGroupID of the type in question

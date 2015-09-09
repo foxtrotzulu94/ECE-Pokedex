@@ -1,39 +1,30 @@
 package me.quadphase.qpdex;
 
+import android.app.Activity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Spinner;
 import android.content.Intent;
+import android.view.KeyEvent;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Filter;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import me.quadphase.qpdex.databaseAccess.PokemonFactory;
 import me.quadphase.qpdex.pokemon.Ability;
 import me.quadphase.qpdex.pokemon.EggGroup;
 import me.quadphase.qpdex.pokemon.MinimalPokemon;
-import me.quadphase.qpdex.pokemon.Pokemon;
 import me.quadphase.qpdex.pokemon.Type;
 
 
@@ -85,6 +76,18 @@ public class AdvancedSearch extends ActionBarActivity {
     EggGroup selectedEggGroup2;
     Ability selectedAbility;
     int selectedGeneration;
+    int selectedHpLower;
+    int selectedHpGreater;
+    int selectedAttLower;
+    int selectedAttGreater;
+    int selectedDefGreater;
+    int selectedDefLower;
+    int selectedSpattLower;
+    int selectedSpattGreater;
+    int selectedSpdefLower;
+    int selectedSpdefGreater;
+    int selectedSpeedLower;
+    int selectedSpeedGreater;
 
 
     // UI elements
@@ -94,6 +97,19 @@ public class AdvancedSearch extends ActionBarActivity {
     Spinner eggGroup1Spinner;
     Spinner eggGroup2Spinner;
     Spinner generationSpinner;
+
+    EditText hpLowerTextUI;
+    EditText hpGreaterTextUI;
+    EditText attLowerTextUI;
+    EditText attGreaterTextUI;
+    EditText defLowerTextUI;
+    EditText defGreaterTextUI;
+    EditText spattLowerTextUI;
+    EditText spattGreaterTextUI;
+    EditText spdefLowerTextUI;
+    EditText spdefGreaterTextUI;
+    EditText speedLowerTextUI;
+    EditText speedGreaterTextUI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +143,43 @@ public class AdvancedSearch extends ActionBarActivity {
         eggGroup1Spinner = (Spinner) findViewById(R.id.egg1_spinner);
         eggGroup2Spinner = (Spinner) findViewById(R.id.egg2_spinner);
         generationSpinner = (Spinner) findViewById(R.id.generation_spinner);
+
+        hpLowerTextUI = (EditText) findViewById(R.id.hp_lower);
+        hpLowerTextUI.setOnFocusChangeListener(new StatsChoice());
+
+        hpGreaterTextUI = (EditText) findViewById(R.id.hp_greater);
+        hpGreaterTextUI.setOnFocusChangeListener(new StatsChoice());
+
+        attLowerTextUI = (EditText) findViewById(R.id.att_lower);
+        attLowerTextUI.setOnFocusChangeListener(new StatsChoice());
+
+        attGreaterTextUI = (EditText) findViewById(R.id.att_greater);
+        attGreaterTextUI.setOnFocusChangeListener(new StatsChoice());
+
+        defLowerTextUI = (EditText) findViewById(R.id.def_lower);
+        defLowerTextUI.setOnFocusChangeListener(new StatsChoice());
+
+        defGreaterTextUI = (EditText) findViewById(R.id.def_greater);
+        defGreaterTextUI.setOnFocusChangeListener(new StatsChoice());
+
+        spattLowerTextUI = (EditText) findViewById(R.id.spatt_lower);
+        spattLowerTextUI.setOnFocusChangeListener(new StatsChoice());
+
+        spattGreaterTextUI = (EditText) findViewById(R.id.spatt_greater);
+        spattGreaterTextUI.setOnFocusChangeListener(new StatsChoice());
+
+        spdefLowerTextUI = (EditText) findViewById(R.id.spdef_lower);
+        spdefLowerTextUI.setOnFocusChangeListener(new StatsChoice());
+
+        spdefGreaterTextUI = (EditText) findViewById(R.id.spdef_greater);
+        spdefGreaterTextUI.setOnFocusChangeListener(new StatsChoice());
+
+        speedLowerTextUI = (EditText) findViewById(R.id.speed_lower);
+        speedLowerTextUI.setOnFocusChangeListener(new StatsChoice());
+
+        speedGreaterTextUI = (EditText) findViewById(R.id.speed_greater);
+        spdefGreaterTextUI.setOnFocusChangeListener(new StatsChoice());
+
 
     }
 
@@ -256,6 +309,68 @@ public class AdvancedSearch extends ActionBarActivity {
         public void onNothingSelected(AdapterView<?> parent) {
             // Another interface callback
         }
+
+    }
+
+    private class StatsChoice extends Activity implements TextView.OnFocusChangeListener {
+
+
+        @Override
+        public void onFocusChange(TextView view, boolean focus) {
+
+            if (!view.getText().toString().equals("") && !focus) {
+                int selectedStat = Integer.parseInt(view.getText().toString());
+                int selectedUiId = view.getId();
+
+                Log.d("QPDex", "Stats touched");
+
+                Log.d("QPDEX", String.format("%s entered", String.valueOf(selectedStat)));
+
+                if (selectedUiId == hpLowerTextUI.getId()) {
+                    selectedHpLower = selectedStat;
+                }
+                else if (selectedUiId == hpGreaterTextUI.getId()){
+                    selectedHpGreater = selectedStat;
+                }
+                else if (selectedUiId == attLowerTextUI.getId()){
+                    selectedAttLower = selectedStat;
+                }
+                else if (selectedUiId == attGreaterTextUI.getId()){
+                    selectedAttGreater = selectedStat;
+                }
+                else if (selectedUiId == defLowerTextUI.getId()){
+                    selectedDefLower = selectedStat;
+                }
+                else if (selectedUiId == defGreaterTextUI.getId()){
+                    selectedDefGreater = selectedStat;
+                }
+                else if (selectedUiId == spattLowerTextUI.getId()){
+                    selectedSpattLower = selectedStat;
+                }
+                else if (selectedUiId == spattGreaterTextUI.getId()){
+                    selectedSpattGreater = selectedStat;
+                }
+                else if (selectedUiId == spdefLowerTextUI.getId()){
+                    selectedSpdefLower = selectedStat;
+                }
+                else if (selectedUiId == spdefGreaterTextUI.getId()){
+                    selectedSpdefGreater = selectedStat;
+                }
+                else if (selectedUiId == speedLowerTextUI.getId()){
+                    selectedSpeedLower = selectedStat;
+                }
+                else if (selectedUiId == speedGreaterTextUI.getId()){
+                    selectedSpeedGreater = selectedStat;
+                }
+            }
+
+
+            }
+
+
+
+
+
 
     }
 
