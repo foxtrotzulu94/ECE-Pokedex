@@ -1342,16 +1342,30 @@ public class PokemonFactory {
      * Filters all unique ID's that are of the bewteen the range of stats or the stat requested
      * @param lowerLimit lower integer value limit
      * @param upperLimit upper integer value
-     * @param stat the stat being filtered for
+     * @param stat the stat being filtered for, where stat is either: HP, ATTACK, DEFENCE, spattack, spdefence or SPEED
+     *             TODO stat can also be SUM, which will search for SUM
      * @return array of integers of the unique id's that correspond
      */
     public ArrayList<Integer> getAllUniqueIDsFromStat(int lowerLimit, int upperLimit, String stat){
-
+        //TODO: Add validation step for stat string
         ArrayList<Integer> filteredUniqueids = new ArrayList<>();
 
-//        if(typeID > 0) {
-//            String[] selectionArg = {String.valueOf(typeID)};
-//            Cursor cursor = database.query(POKEMON_TYPES_TABLE, null, TYPE_ID + "=?", selectionArg, null, null, null);
+        String[] selectionArg = {String.valueOf(lowerLimit), String.valueOf(upperLimit)};
+        if(!stat.equals("SUM")) {
+            Cursor cursor = database.query(POKEMON_UNIQUE_INFO_TABLE, null, stat + ">=? AND " + stat + "<=?", selectionArg, null, null, null);
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                int uniqueID = cursor.getInt(cursor.getColumnIndex(POKEMON_UNIQUE_ID));
+                filteredUniqueids.add(uniqueID);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+//        else{
+//            // Filter by the total sum of base stats
+//            // using a raw query to get sum, not sure if even possible with query
+//            Cursor cursor = database.rawQuery("select (HP + ATTACK + DEFENCE + SPATTACK + SPDEFENCE + SPEED) as sum from pokemon_unique_info where sum >="+String.valueOf(lowerLimit)+" AND sum <="+String.valueOf(upperLimit)+
+//                    "   ;", null);
 //            cursor.moveToFirst();
 //            while (!cursor.isAfterLast()) {
 //                int uniqueID = cursor.getInt(cursor.getColumnIndex(POKEMON_UNIQUE_ID));
@@ -1361,6 +1375,9 @@ public class PokemonFactory {
 //            cursor.close();
 //
 //        }
+
+
+
         return filteredUniqueids;
 
     }

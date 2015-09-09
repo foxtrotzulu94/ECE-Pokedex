@@ -11,42 +11,48 @@
         android:id="@+id/type1_spinner"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_toStartOf="@+id/confirm_button" />
+        android:layout_toStartOf="@+id/confirm_button"
+        android:layout_marginBottom="10dp" />
 
     <Spinner
         android:id="@+id/type2_spinner"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/confirm_button" />
+        android:layout_toEndOf="@+id/confirm_button"
+        android:layout_marginBottom="10dp" />
 
     <Spinner
         android:id="@+id/ability_spinner"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/type1_spinner"
-        android:layout_toStartOf="@+id/confirm_button"  />
+        android:layout_toStartOf="@+id/confirm_button"
+        android:layout_marginBottom="10dp"/>
 
     <Spinner
         android:id="@+id/generation_spinner"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/type1_spinner"
-        android:layout_toEndOf="@+id/confirm_button"  />
+        android:layout_toEndOf="@+id/confirm_button"
+        android:layout_marginBottom="10dp"/>
 
     <Spinner
         android:id="@+id/egg1_spinner"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ability_spinner"
-        android:layout_toStartOf="@+id/confirm_button" />
+        android:layout_toStartOf="@+id/confirm_button"
+        android:layout_marginBottom="10dp"/>
 
     <Spinner
         android:id="@+id/egg2_spinner"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ability_spinner"
-        android:layout_toEndOf="@+id/confirm_button" />
+        android:layout_toEndOf="@+id/confirm_button"
+        android:layout_marginBottom="10dp"/>
 
 
 
@@ -57,7 +63,8 @@
         android:id="@+id/confirm_button"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:onClick="switchToPokedex" />
+        android:onClick="switchToPokedex"
+        android:layout_marginTop="10dp"/>
 
     <TextView
         android:layout_width="wrap_content"

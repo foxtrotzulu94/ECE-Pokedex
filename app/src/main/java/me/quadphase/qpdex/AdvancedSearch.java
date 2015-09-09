@@ -113,6 +113,8 @@ public class AdvancedSearch extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        long startTime = System.nanoTime();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_advanced_search);
 
@@ -123,6 +125,11 @@ public class AdvancedSearch extends ActionBarActivity {
         allEggGroups = pokemonFactory.getAllEggGroups();
         allGenerations = pokemonFactory.getGeneratons();
 
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+
+        Log.d("QPDex", String.format("Obtaining Spinner Data took %s ns",duration));
+
         // No need for MinimalPokemon
         //allMinimalPokemon = pokemonFactory.getAllMinimalPokemon();
 
@@ -132,6 +139,11 @@ public class AdvancedSearch extends ActionBarActivity {
 
         // Provide a set of solutions if no options are selected
         resetFilter();
+
+        endTime = System.nanoTime();
+        duration = (endTime - startTime);
+
+        Log.d("QPDex", String.format("Total creation took %s ns",duration));
 
     }
 
@@ -145,40 +157,17 @@ public class AdvancedSearch extends ActionBarActivity {
         generationSpinner = (Spinner) findViewById(R.id.generation_spinner);
 
         hpLowerTextUI = (EditText) findViewById(R.id.hp_lower);
-        hpLowerTextUI.setOnFocusChangeListener(new StatsChoice());
-
         hpGreaterTextUI = (EditText) findViewById(R.id.hp_greater);
-        hpGreaterTextUI.setOnFocusChangeListener(new StatsChoice());
-
         attLowerTextUI = (EditText) findViewById(R.id.att_lower);
-        attLowerTextUI.setOnFocusChangeListener(new StatsChoice());
-
         attGreaterTextUI = (EditText) findViewById(R.id.att_greater);
-        attGreaterTextUI.setOnFocusChangeListener(new StatsChoice());
-
         defLowerTextUI = (EditText) findViewById(R.id.def_lower);
-        defLowerTextUI.setOnFocusChangeListener(new StatsChoice());
-
         defGreaterTextUI = (EditText) findViewById(R.id.def_greater);
-        defGreaterTextUI.setOnFocusChangeListener(new StatsChoice());
-
         spattLowerTextUI = (EditText) findViewById(R.id.spatt_lower);
-        spattLowerTextUI.setOnFocusChangeListener(new StatsChoice());
-
         spattGreaterTextUI = (EditText) findViewById(R.id.spatt_greater);
-        spattGreaterTextUI.setOnFocusChangeListener(new StatsChoice());
-
         spdefLowerTextUI = (EditText) findViewById(R.id.spdef_lower);
-        spdefLowerTextUI.setOnFocusChangeListener(new StatsChoice());
-
         spdefGreaterTextUI = (EditText) findViewById(R.id.spdef_greater);
-        spdefGreaterTextUI.setOnFocusChangeListener(new StatsChoice());
-
         speedLowerTextUI = (EditText) findViewById(R.id.speed_lower);
-        speedLowerTextUI.setOnFocusChangeListener(new StatsChoice());
-
         speedGreaterTextUI = (EditText) findViewById(R.id.speed_greater);
-        spdefGreaterTextUI.setOnFocusChangeListener(new StatsChoice());
 
 
     }
@@ -312,71 +301,130 @@ public class AdvancedSearch extends ActionBarActivity {
 
     }
 
-    private class StatsChoice extends Activity implements TextView.OnFocusChangeListener {
+    /**
+     * Function to collect the user input of stats
+     */
+    public void collectStats() {
 
+        final int max_stat = 999;
+        final int min_stat = 0;
 
-        @Override
-        public void onFocusChange(TextView view, boolean focus) {
-
-            if (!view.getText().toString().equals("") && !focus) {
-                int selectedStat = Integer.parseInt(view.getText().toString());
-                int selectedUiId = view.getId();
-
-                Log.d("QPDex", "Stats touched");
-
-                Log.d("QPDEX", String.format("%s entered", String.valueOf(selectedStat)));
-
-                if (selectedUiId == hpLowerTextUI.getId()) {
-                    selectedHpLower = selectedStat;
-                }
-                else if (selectedUiId == hpGreaterTextUI.getId()){
-                    selectedHpGreater = selectedStat;
-                }
-                else if (selectedUiId == attLowerTextUI.getId()){
-                    selectedAttLower = selectedStat;
-                }
-                else if (selectedUiId == attGreaterTextUI.getId()){
-                    selectedAttGreater = selectedStat;
-                }
-                else if (selectedUiId == defLowerTextUI.getId()){
-                    selectedDefLower = selectedStat;
-                }
-                else if (selectedUiId == defGreaterTextUI.getId()){
-                    selectedDefGreater = selectedStat;
-                }
-                else if (selectedUiId == spattLowerTextUI.getId()){
-                    selectedSpattLower = selectedStat;
-                }
-                else if (selectedUiId == spattGreaterTextUI.getId()){
-                    selectedSpattGreater = selectedStat;
-                }
-                else if (selectedUiId == spdefLowerTextUI.getId()){
-                    selectedSpdefLower = selectedStat;
-                }
-                else if (selectedUiId == spdefGreaterTextUI.getId()){
-                    selectedSpdefGreater = selectedStat;
-                }
-                else if (selectedUiId == speedLowerTextUI.getId()){
-                    selectedSpeedLower = selectedStat;
-                }
-                else if (selectedUiId == speedGreaterTextUI.getId()){
-                    selectedSpeedGreater = selectedStat;
-                }
-            }
-
-
-            }
+        Log.d("QPDex", "Stats being collected");
 
 
 
+        if (!hpLowerTextUI.getText().toString().equals("")) {
+            selectedHpLower = Integer.parseInt(hpLowerTextUI.getText().toString());
+        }else{
+            selectedHpLower = min_stat;
+        }
 
+        if (!hpGreaterTextUI.getText().toString().equals("")){
+            selectedHpGreater = Integer.parseInt(hpGreaterTextUI.getText().toString());
+        }else {
+            selectedHpGreater = max_stat;
+        }
 
+        if (!attLowerTextUI.getText().toString().equals("")){
+            selectedAttLower = Integer.parseInt(attLowerTextUI.getText().toString());
+        }else{
+            selectedAttLower = min_stat;
+        }
+
+        if (!attGreaterTextUI.getText().toString().equals("")){
+            selectedAttGreater = Integer.parseInt(attGreaterTextUI.getText().toString());
+        }else {
+            selectedAttGreater = max_stat;
+        }
+
+        if (!defLowerTextUI.getText().toString().equals("")){
+            selectedDefLower = Integer.parseInt(defLowerTextUI.getText().toString());
+        }else{
+            selectedDefLower = min_stat;
+        }
+
+        if (!defGreaterTextUI.getText().toString().equals("")){
+            selectedDefGreater = Integer.parseInt(defGreaterTextUI.getText().toString());
+        }else {
+            selectedDefGreater = max_stat;
+        }
+
+        if (!spattLowerTextUI.getText().toString().equals("")){
+            selectedSpattLower = Integer.parseInt(spattLowerTextUI.getText().toString());
+        }else{
+            selectedSpattLower = min_stat;
+        }
+
+        if (!spattGreaterTextUI.getText().toString().equals("")){
+            selectedSpattGreater = Integer.parseInt(spattGreaterTextUI.getText().toString());
+        }
+        else {
+            selectedSpattGreater = max_stat;
+        }
+
+        if (!spdefLowerTextUI.getText().toString().equals("")){
+            selectedSpdefLower = Integer.parseInt(spdefLowerTextUI.getText().toString());
+        }else{
+            selectedSpdefLower = min_stat;
+        }
+
+        if (!spdefGreaterTextUI.getText().toString().equals("")){
+            selectedSpdefGreater = Integer.parseInt(spdefGreaterTextUI.getText().toString());
+        }else {
+            selectedSpdefGreater = max_stat;
+        }
+
+        if (!speedLowerTextUI.getText().toString().equals("")){
+            selectedSpeedLower = Integer.parseInt(speedLowerTextUI.getText().toString());
+        }else{
+            selectedSpeedLower = min_stat;
+        }
+
+        if (!speedGreaterTextUI.getText().toString().equals("")){
+            selectedSpeedGreater = Integer.parseInt(speedGreaterTextUI.getText().toString());
+        }else {
+            selectedSpeedGreater = max_stat;
+        }
+
+        Log.d("QPDEX", String.format("Stats chosen: %s/%s/%s/%s/%s/%s - %s/%s/%s/%s/%s/%s ",
+                String.valueOf(selectedHpLower),String.valueOf(selectedAttLower),String.valueOf(selectedDefLower),
+                String.valueOf(selectedSpattLower),String.valueOf(selectedSpdefLower),String.valueOf(selectedSpeedLower),
+                String.valueOf(selectedHpGreater),String.valueOf(selectedAttGreater),String.valueOf(selectedDefGreater),
+                String.valueOf(selectedSpattGreater),String.valueOf(selectedSpdefGreater),String.valueOf(selectedSpeedGreater)
+                ));
 
     }
+
+    /**
+     * Function to filter for the stats of pokemon
+     *
+     * @param lowerLimit of the stat
+     * @param upperLimit of the stat
+     * @param statName either HP, DEFENCE, ATTACK, SPATTACK, SPDEFENCE or SPEED
+     */
+    private void filterStats(int lowerLimit, int upperLimit, String statName){
+
+        // Filter only if one of the values is not a default value
+        if(lowerLimit > 0 || upperLimit < 999){
+            ArrayList<Integer> tempFilterPokemonArrayList = new ArrayList<Integer>();
+            tempFilterPokemonArrayList = pokemonFactory.getAllUniqueIDsFromStat(lowerLimit, upperLimit, statName);
+            currentFilterPokemonArrayList.retainAll(tempFilterPokemonArrayList);
+            tempFilterPokemonArrayList.clear();
+        }
+
+    }
+
+
+
+
+
 
     public void switchToPokedex(View view){
         long startTime = System.nanoTime();
         Intent intent = new Intent(this,PokedexActivity.class);
+
+        // Obtain all stats chosen
+        collectStats();
 
         //Comment this out, takes way tooo long 4+sec
         currentFilterPokemonArrayList.clear();
@@ -412,7 +460,15 @@ public class AdvancedSearch extends ActionBarActivity {
             tempFilterPokemonArrayList.clear();
         }
 
-
+        // If at least one is not default value, filter
+        filterStats(selectedHpLower, selectedHpGreater, "HP");
+        filterStats(selectedAttLower, selectedAttGreater, "ATTACK");
+        filterStats(selectedDefLower, selectedDefGreater, "DEFENCE");
+        filterStats(selectedSpattLower, selectedSpattGreater, "SPATTACK");
+        filterStats(selectedSpdefLower, selectedSpdefGreater, "SPDEFENCE");
+        filterStats(selectedSpeedLower, selectedSpeedGreater, "SPEED");
+        //TODO: Filter by sum
+        //filterStats(selectedSpeedLower, selectedSpeedGreater, "SUM");
 
         // When Done filtering by UniqueID's convert uniqueIDs to NationalId's
         filteredNationalIds = pokemonFactory.convertUniqueToNational(currentFilterPokemonArrayList);
