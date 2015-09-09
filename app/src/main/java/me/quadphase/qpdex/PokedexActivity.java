@@ -174,8 +174,7 @@ public class PokedexActivity extends AppCompatActivity {
         });
         }
 
-        //TODO: Move to PokedexManager.
-        // this is a test to ensure that the database is working
+        //Call the Factory and get the MinimalPokemon list
         final PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(this.getApplicationContext());
 
         long startTime = System.nanoTime();

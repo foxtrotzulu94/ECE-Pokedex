@@ -1,6 +1,8 @@
 package me.quadphase.qpdex.pokemon;
 
 
+import me.quadphase.qpdex.databaseAccess.PokemonFactory;
+
 /** */
 public class Type {
     /**
@@ -54,10 +56,10 @@ public class Type {
      * @param defendingType type that this type is defending against
      * @return the attacking effectiveness against the defendingType
      */
-//    public short getAttackingEffectivenessAgainst (Type defendingType) {
-//        PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(null);
-//        return pokemonFactory.getTypeEffectivenessTable()[pokemonFactory.getTypeID(this)][pokemonFactory.getTypeID(defendingType)];
-//    }
+    public double getAttackingEffectivenessAgainst (Type defendingType) {
+        PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(null);
+        return pokemonFactory.getTypeEffectivenessTable()[this.typeID][defendingType.getTypeID()];
+    }
 
     /**
      * Determine the defending effectiveness of this type against an attacking one.
@@ -65,18 +67,26 @@ public class Type {
      * @param attackingType type that this type is attacking
      * @return the defensive effectiveness against the attackingType
      */
-//    public short getDefendingEffectivenessAgainst (Type attackingType) {
-//        PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(null);
-//        return pokemonFactory.getTypeEffectivenessTable()[pokemonFactory.getTypeID(attackingType)][pokemonFactory.getTypeID(this)];
-//    }
+    public double getDefendingEffectivenessAgainst (Type attackingType) {
+        PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(null);
+        return pokemonFactory.getTypeEffectivenessTable()[attackingType.getTypeID()][this.typeID];
+    }
 
     /**
-     * Overide for advanced search to display the id and name of type
+     * Get the number of types in the game.
      *
-     * @return id. TypeName in string format
+     * @return int of the number of types possible, excluding the invalid bird/none type
      */
-    @Override
-    public String toString(){
-        return String.format("%s",name);
+    public static int getNumberOfTypes() {
+        return PokemonFactory.getPokemonFactory(null).getMaxTypeID();
+    }
+
+    /**
+     * Gets an array of all possible types (including bird/none type)
+     * @return array of all possible types (including bird/none type)
+     */
+    public static Type[] getListOfTypes() {
+        return PokemonFactory.getPokemonFactory(null).getListOfTypes();
     }
 }
+
