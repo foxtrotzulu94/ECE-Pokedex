@@ -180,7 +180,7 @@
                     android:id="@+id/title_hatchtime"
                     android:layout_gravity="center|left"
                     android:padding="5dp"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.9"
                     android:gravity="left"
                     android:layout_marginLeft="10dp" />
 
