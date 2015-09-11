@@ -58,7 +58,11 @@
     <string name="credit_bulbapedia"><![CDATA[<a href="http://bulbapedia.bulbagarden.net">Bulbapedia</a>]]></string>
     <string name="credit_smogon"><![CDATA[<a href="http://www.smogon.com">Smogon</a>]]></string>
     <string name="credit_serebii"><![CDATA[<a href="http://www.serebii.net">Serebii</a>]]></string>
-    <string name="credit_veekun"><![CDATA[<a href="http://www.veekun.com>Veekun - Pokemon Blog</a>]]></string>
+    <string name="credit_veekun"><![CDATA[<a href="http://www.veekun.com>Veekun</a>]]></string>
+    <string name="credit_amit"><![CDATA[<a href="https://www.github.com/flareflare>Amit</a>]]></string>
+    <string name="credit_javier"><![CDATA[<a href="https://www.github.com/foxtrot94>Javier</a>]]></string>
+    <string name="credit_nicole"><![CDATA[<a href="https://www.github.com/minicol>Nicole</a>]]></string>
+    <string name="credit_thinesh"><![CDATA[<a href="https://www.github.com/thineshth>Thinesh</a>]]></string>
     <!-- CreditsActivity Strings end-->
 
     <!-- Placeholder -->
