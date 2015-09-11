@@ -385,40 +385,26 @@ public class PokedexManager {
         return cachedDisplaySprites;
     }
 
-    public void beginCachingRoutines(final PokemonFactory builderInstance){
-        //First ask for the instance
-        pkmnBuild = builderInstance;
+    public void beginCachingRoutines(final Context currentContext){
 
-        //Then spawn off 2 Threads
-
-        // thread 2 to create the Full Pokemon Objects
-        final Thread initFull = new Thread(){
-            @Override
-            public void run(){
-                // This builds all the Detailed Pokemon, even though we might not want to store it!
-                //TODO: Paralelize and optimize for speed
-                pkmnBuild.getAllDetailedPokemon();
-
-                //Signals full completion
-                Log.d("QPDEX_Manager","All Detailed Pokemon Objects Created");
-                Log.d("QPDEX_Manager","PokedexManager is now Ready");
-                isReady = true;
-            }
-        };
-
-        // thread 1 to create the Minimal Pokemon list.
+        // Spawn off a separate thread to avoid clogging up the caller thread
         Thread initMin = new Thread(){
             @Override
             public void run(){
+                //First ask for the instance
+                pkmnBuild = PokemonFactory.getPokemonFactory(currentContext);
+                long startTime = System.nanoTime();
                 allMinimalPokemon = pkmnBuild.getAllMinimalPokemon();
+                long total = System.nanoTime()-startTime; //Consider removing on first release
+                Log.w("QPDEX_Manager",String.format("Initialization took %s nanoseconds",total));
+
                 isMinimalReady=true;
-                // After this is done, spawn off initFull to finish the setup
-//                initFull.start(); //TODO: Uncomment after optimizing
+
                 Log.d("QPDEX_Manager","All Minimal Pokemon Objects Created");
             }
         };
 
-        // Start with the initMin thread and it will call initFull afterwards.
+        // Start with the initMin thread
         initMin.start();
         initMin.setPriority(Thread.MAX_PRIORITY);
 

@@ -6396,7 +6396,6 @@ INSERT INTO pokemon_suffix VALUES(167,'Defense');
 INSERT INTO pokemon_suffix VALUES(168,'Speed');
 INSERT INTO pokemon_suffix VALUES(171,'Mega');
 INSERT INTO pokemon_suffix VALUES(212,'Mega');
-INSERT INTO pokemon_suffix VALUES(218,'F');
 INSERT INTO pokemon_suffix VALUES(219,'M');
 INSERT INTO pokemon_suffix VALUES(235,'Eternal');
 INSERT INTO pokemon_suffix VALUES(249,'Mega');

@@ -169,17 +169,9 @@ public class PokedexActivity extends AppCompatActivity {
         });
         }
 
-        //TODO: Move to PokedexManager.
-        // this is a test to ensure that the database is working
+        //Call the Factory and get the MinimalPokemon list
         final PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(this.getApplicationContext());
-
-        long startTime = System.nanoTime();
-        MinimalPokemon[] listy = pokemonFactory.getAllMinimalPokemon();
-        final long minBuild = System.nanoTime();
-        Log.d("QPDEX", String.format("All MinimalPokemon done in: %s ns", minBuild - startTime));
-
-        //Initialize the ArrayAdapter object.
-        pokedexEntries = new PokedexArrayAdapter(this,listy);
+        pokedexEntries = new PokedexArrayAdapter(this,pokemonFactory.getAllMinimalPokemon());
 
         //Setup the pokedexListView object
         pokedexListView.setAdapter(pokedexEntries);

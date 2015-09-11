@@ -55,6 +55,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="me.quadphase.qpdex.IntroActivity" />
         </activity>
+        <activity
+            android:name=".PokemonResources"
+            android:label="@string/title_activity_pokemon_resources"
+            android:parentActivityName=".IntroActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="me.quadphase.qpdex.IntroActivity" />
+        </activity>
     </application>
 
 </manifest>
