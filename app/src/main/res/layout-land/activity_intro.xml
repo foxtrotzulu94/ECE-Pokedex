@@ -16,7 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.18"
-            android:gravity="center" >
+            android:gravity="center"
+            android:onClick="showCreditsActivity">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -112,7 +113,8 @@
                 android:text="@string/legal_note"
                 android:id="@+id/legal_note"
                 android:gravity="center"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:onClick="showCreditsActivity"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
