@@ -212,7 +212,7 @@ public class PokedexManager {
      * @param currentContext The context in which the update occurs (usually, "this" within an Activity)
      */
     public void updatePokedexSelection(int nationalID, final Context currentContext, boolean prefetch){
-        if(nationalID>0 && nationalID<maxPokemonNationalID)
+        if(nationalID>=0 && nationalID<=maxPokemonNationalID)
             this.updatePokedexSelection(allMinimalPokemon[nationalID],currentContext,prefetch);
         else
             Log.e("QPDEX_Manager",String.format("Sent invalid National ID %s with update. Manager has stopped update",nationalID));

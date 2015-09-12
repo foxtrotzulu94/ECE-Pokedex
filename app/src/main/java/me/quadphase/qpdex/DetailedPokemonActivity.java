@@ -17,6 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -198,6 +200,9 @@ public class DetailedPokemonActivity extends FragmentActivity
     private TextView evolutionTab;
     private TextView alternatesTab;
 
+    private CheckBox pokemonCaughtBox;
+    private CheckBox pokemonInPartyBox;
+
     /**
      * This method retrieves all necessary elements from "activity_detailed_pokemon.xml"
      * It is used both to avoid retrieving elements within functions and keeping track of what
@@ -220,6 +225,9 @@ public class DetailedPokemonActivity extends FragmentActivity
 
         evolutionTab = (TextView) findViewById(R.id.title_evolutions);
         alternatesTab = (TextView) findViewById(R.id.title_altforms);
+
+        pokemonCaughtBox = (CheckBox) findViewById(R.id.checkbox_caught);
+        pokemonInPartyBox = (CheckBox) findViewById(R.id.checkbox_trainerparty);
     }
 
     /**
@@ -357,6 +365,9 @@ public class DetailedPokemonActivity extends FragmentActivity
         statsBarController = new statsUpdaterMasterThread();
         statsBarController.start();
 
+        //Set up CheckBox status
+        setPokemonOwnershipInfo();
+
         //Place Description
         pkmnDescription.setText(detailedPokemon.getDescription());
 
@@ -376,6 +387,21 @@ public class DetailedPokemonActivity extends FragmentActivity
 
         //Place all moves
         populateMoveInfo();
+    }
+
+    private void setPokemonOwnershipInfo(){
+        //TODO: fix considerably (separate task)
+        pokemonCaughtBox.setEnabled(false);
+        pokemonInPartyBox.setEnabled(false);
+
+        //Setup the caught CheckBox
+//        pokemonCaughtBox.setChecked(contextMaster.getCurrentDetailedPokemon().getCaught());
+//        pokemonCaughtBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                contextMaster.getCurrentDetailedPokemon().toggleCaught(getBaseContext());
+//            }
+//        });
     }
 
     /**
@@ -780,7 +806,7 @@ public class DetailedPokemonActivity extends FragmentActivity
     public void onClickNextPokemon(View view){
         int currentNationalID=contextMaster.getCurrentDetailedPokemon().getPokemonNationalID();
         int maxNationalID = PokemonFactory.getPokemonFactory(this).getMaxNationalID();
-        int nextNationalID = (currentNationalID+1) % maxNationalID;
+        int nextNationalID = (currentNationalID+1) % (maxNationalID+1);
         contextMaster.updatePokedexSelection(nextNationalID,this,true);
         refreshAllDetails();
         mNavigationDrawerFragment.performItemSelection(nextNationalID);
@@ -789,7 +815,7 @@ public class DetailedPokemonActivity extends FragmentActivity
     public void onClickPreviousPokemon(View view){
         int currentNationalID=contextMaster.getCurrentDetailedPokemon().getPokemonNationalID();
         int maxNationalID = contextMaster.getMaxPokemonNationalID();
-        int nextNationalID = (currentNationalID-1) % maxNationalID;
+        int nextNationalID = (currentNationalID-1);
         if(nextNationalID<0){
             nextNationalID = maxNationalID-1;
         }
