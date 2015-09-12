@@ -208,6 +208,19 @@ public class PokedexManager {
     /**
      * Change the currently selected Pokemon in the Pokedex and send a message to update all classes
      * This will also store a reference to the assets the Pokemon with the National ID is associated with.
+     * @param nationalID The ID of the minimal pokemon to build {@link PokedexArrayAdapter}
+     * @param currentContext The context in which the update occurs (usually, "this" within an Activity)
+     */
+    public void updatePokedexSelection(int nationalID, final Context currentContext, boolean prefetch){
+        if(nationalID>0 && nationalID<maxPokemonNationalID)
+            this.updatePokedexSelection(allMinimalPokemon[nationalID],currentContext,prefetch);
+        else
+            Log.e("QPDEX_Manager",String.format("Sent invalid National ID %s with update. Manager has stopped update",nationalID));
+    }
+
+    /**
+     * Change the currently selected Pokemon in the Pokedex and send a message to update all classes
+     * This will also store a reference to the assets the Pokemon with the National ID is associated with.
      * @param pokedexSelection The minimal pokemon, preferrably from the {@link PokedexArrayAdapter}
      * @param currentContext The context in which the update occurs (usually, "this" within an Activity)
      */
@@ -336,6 +349,10 @@ public class PokedexManager {
         return isMinimalReady;
     }
 
+    public int getMaxPokemonNationalID(){
+        return maxPokemonNationalID;
+    }
+
     /**
      * Retrieve a reference to the MinimalPokemon currently loaded
      */
@@ -397,6 +414,8 @@ public class PokedexManager {
                 allMinimalPokemon = pkmnBuild.getAllMinimalPokemon();
                 long total = System.nanoTime()-startTime; //Consider removing on first release
                 Log.w("QPDEX_Manager",String.format("Initialization took %s nanoseconds",total));
+
+                maxPokemonNationalID = allMinimalPokemon.length;
 
                 isMinimalReady=true;
 

@@ -18,13 +18,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -190,7 +190,7 @@ public class DetailedPokemonActivity extends FragmentActivity
 
     private LinearLayout typeWeak;
     private LinearLayout typeStrong;
-    private LinearLayout evolutionChain;
+    private HorizontalScrollView evolutionChain;
     private LinearLayout eggGroupBox;
     private LinearLayout abilitiesBox;
     private LinearLayout movesBox;
@@ -213,7 +213,7 @@ public class DetailedPokemonActivity extends FragmentActivity
 
         typeStrong = (LinearLayout) findViewById(R.id.linlayout_typestrong);
         typeWeak = (LinearLayout) findViewById(R.id.linlayout_typeweak);
-        evolutionChain = (LinearLayout) findViewById(R.id.linlayout_evolutions_detail);
+        evolutionChain = (HorizontalScrollView) findViewById(R.id.horizontalsv_evolutions_detail);
         eggGroupBox = (LinearLayout) findViewById(R.id.linlay_egggroupbox);
         abilitiesBox = (LinearLayout) findViewById(R.id.linlay_abilitiesbox);
         movesBox = (LinearLayout) findViewById(R.id.linlay_movebox);
@@ -397,6 +397,9 @@ public class DetailedPokemonActivity extends FragmentActivity
     private void buildEvolutionChain(){
         if(detailedPokemon.getEvolutions()!=null && !detailedPokemon.getEvolutions().isEmpty()){
             //TODO: Fix Evolution class to detect MegaEvolutions and check for those sprites.
+
+            LinearLayout boxContainer = new LinearLayout(this);
+
             for (int i = 0; i < detailedPokemon.getEvolutions().size(); i++) {
 
                 final Pokemon evoPokemon = detailedPokemon.getEvolutions().get(i).getEvolvesInto();
@@ -418,8 +421,9 @@ public class DetailedPokemonActivity extends FragmentActivity
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         .3f));
 
-                evolutionChain.addView(evolutionBox);
+                boxContainer.addView(evolutionBox);
             }
+            evolutionChain.addView(boxContainer);
 
         }
         else{
@@ -447,10 +451,10 @@ public class DetailedPokemonActivity extends FragmentActivity
                 refreshAllDetails();
             }
         });
-        altForm.setLayoutParams(new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                .3f));
+//        altForm.setLayoutParams(new LinearLayout.LayoutParams(
+//                ViewGroup.LayoutParams.WRAP_CONTENT,
+//                ViewGroup.LayoutParams.MATCH_PARENT,
+//                .3f));
         evolutionChain.addView(altForm);
 
 
@@ -771,6 +775,28 @@ public class DetailedPokemonActivity extends FragmentActivity
         buildAlternateForms();
         evolutionTab.setBackgroundColor(getResources().getColor(R.color.dex_detail_greydarkened));
         alternatesTab.setBackgroundColor(getResources().getColor(R.color.dex_detail_greylight));
+    }
+
+    public void onClickNextPokemon(View view){
+        int currentNationalID=contextMaster.getCurrentDetailedPokemon().getPokemonNationalID();
+        int maxNationalID = PokemonFactory.getPokemonFactory(this).getMaxNationalID();
+        int nextNationalID = (currentNationalID+1) % maxNationalID;
+        contextMaster.updatePokedexSelection(nextNationalID,this,true);
+        refreshAllDetails();
+        mNavigationDrawerFragment.performItemSelection(nextNationalID);
+    }
+
+    public void onClickPreviousPokemon(View view){
+        int currentNationalID=contextMaster.getCurrentDetailedPokemon().getPokemonNationalID();
+        int maxNationalID = contextMaster.getMaxPokemonNationalID();
+        int nextNationalID = (currentNationalID-1) % maxNationalID;
+        if(nextNationalID<0){
+            nextNationalID = maxNationalID-1;
+        }
+
+        contextMaster.updatePokedexSelection(nextNationalID,this,true);
+        refreshAllDetails();
+        mNavigationDrawerFragment.performItemSelection(nextNationalID);
     }
 
     /**

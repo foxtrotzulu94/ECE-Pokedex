@@ -138,8 +138,8 @@ public class NavigationDrawerFragment extends Fragment {
                 listy);
         pokedexEntries.setFontSize(10.0f);
         mDrawerListView.setAdapter(pokedexEntries);
-        //TODO: Set selection here according to Pokemon in focus from PokedexManager.
 
+        mDrawerListView.setSelection(PokedexManager.getInstance().getCurrentMinimalPokemon().getPokemonNationalID());
         return mDrawerListView;
     }
 
@@ -222,6 +222,11 @@ public class NavigationDrawerFragment extends Fragment {
         });
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+    }
+
+    public void performItemSelection(int position){
+        if(position>0 && position<mDrawerListView.getCount())
+            selectItem(position);
     }
 
     //NOTE: Not deleting for now in case we might want to default back to the previous behaviour.

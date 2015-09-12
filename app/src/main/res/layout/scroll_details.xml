@@ -2,10 +2,39 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginLeft="5dp">
+
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pokemon Caught"
+            android:id="@+id/checkbox_caught"
+            android:layout_weight="0.5"
+            android:background="@color/dex_detail_greyback"
+            android:layout_margin="5dp" />
+
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="In Trainer Party"
+            android:id="@+id/checkbox_trainerparty"
+            android:layout_weight="0.5"
+            android:background="@color/dex_detail_greyback"
+            android:layout_margin="5dp" />
+
+    </LinearLayout>
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -14,7 +43,9 @@
             android:id="@+id/title_description"
             android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"
-            android:background="@color/dex_detail_greylight" />
+            android:background="@color/dex_detail_greylight"
+            android:textStyle="bold"
+            android:padding="2dp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -36,7 +67,9 @@
         android:id="@+id/title_typematch"
         android:background="@color/dex_detail_greylight"
         android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp" />
+        android:layout_marginTop="5dp"
+        android:textStyle="bold"
+        android:padding="2dp" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -109,7 +142,9 @@
                 android:id="@+id/textView8"
                 android:background="@color/dex_detail_greylight"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="5dp"
+                android:textStyle="bold"
+                android:padding="2dp" />
 
             <LinearLayout
                 android:orientation="vertical"
@@ -135,7 +170,9 @@
                 android:layout_weight="0.8"
                 android:background="@color/dex_detail_greylight"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="5dp"
+                android:textStyle="bold"
+                android:padding="2dp" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -206,7 +243,9 @@
         android:id="@+id/textView6"
         android:background="@color/dex_detail_greylight"
         android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp" />
+        android:layout_marginTop="5dp"
+        android:textStyle="bold"
+        android:padding="2dp" />
 
     <LinearLayout
         android:orientation="vertical"
