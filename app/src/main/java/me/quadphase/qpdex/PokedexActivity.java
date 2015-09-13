@@ -183,7 +183,7 @@ public class PokedexActivity extends AppCompatActivity {
         // Advanced search will have extra info
         Bundle extraInfo = getIntent().getExtras();
         MinimalPokemon[] listy = pokemonFactory.getAllMinimalPokemon();
-        if(extraInfo != null) {
+        if(extraInfo != null){
 
             ArrayList<Integer> filteredPokemonNationalid = extraInfo.getIntegerArrayList("FILTERED_POKEMON_NATIONALID");
 
@@ -195,7 +195,7 @@ public class PokedexActivity extends AppCompatActivity {
             //Initialize the ArrayAdapter object.
             pokedexEntries = new PokedexArrayAdapter(this,filteredlist);
         }
-        else {
+        else{
             //Initialize the ArrayAdapter object with full list.
             pokedexEntries = new PokedexArrayAdapter(this,listy);
 

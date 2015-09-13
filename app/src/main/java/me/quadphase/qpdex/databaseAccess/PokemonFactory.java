@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.lang.Enum;
 
 import me.quadphase.qpdex.exceptions.PartyFullException;
 import me.quadphase.qpdex.pokedex.PokedexManager;
@@ -76,6 +77,7 @@ public class PokemonFactory {
     private final String SPECIAL_ATTACK = "spattack";
     private final String SPECIAL_DEFENCE = "spdefence";
     private final String SPEED = "speed";
+    private final String TOTAL_BASE_STATS = "basestat";
     private final String CATCH_RATE = "catchRate";
     private final String CAUGHT = "caught";
     private final String CONDITION = "condition";
@@ -111,9 +113,10 @@ public class PokemonFactory {
     private EggGroup[] eggGroups;
     private Ability[] abilities;
     private int[] allNationalIDMappedUnique;
-    private  String[] generations;
+    private String[] generations;
     private int MAX_UNIQUE_ID;
     private int MAX_NATIONAL_ID;
+
 
     private HashMap<Integer,Integer> uniqueToNationalMap;
 
@@ -153,6 +156,7 @@ public class PokemonFactory {
         loadAllUniqueToNationalID();
         loadAllEggGroups();
         loadAllGenerations();
+
 
     }
 
@@ -412,7 +416,8 @@ public class PokemonFactory {
 
 
     public void getAllDetailedPokemon(){
-        //TODO: Perform aggressive optimizations when possible
+
+        //NOTE: This method is here for testing purposes. Avoid using in production builds.
 
         if (allDetailedPokemon==null || detailedPokemonShortList==null) {
             setupLargeCacheLists();
@@ -1180,7 +1185,7 @@ public class PokemonFactory {
      */
     public void loadAllTypes() {
         // fail safe 0th index of types:
-        types[0] = new Type("None/Bird", 0);
+        types[0] = new Type("Types", 0);
 
         // get the real types from the database:
         Cursor cursor = database.query(TYPES_TABLE, null, null, null, null, null, null);
@@ -1200,18 +1205,21 @@ public class PokemonFactory {
      */
     public void loadAllAbilities() {
         // fail safe 0th index of types:
-        abilities[0] = new Ability("None","None");
+        abilities[0] = new Ability("Ability","None");
         // get the real abilities from the database:
-        for (int i = 1; i < getMaxAbilityID() + 1; i++) {
-            String[] selectionArg = {String.valueOf(i)};
-            Cursor cursor = database.query(ABILITIES_TABLE, null, ABILITIY_ID + "=?", selectionArg, null, null, null);
-            cursor.moveToFirst();
+        Cursor cursor = database.query(ABILITIES_TABLE, null, null, null, null, null, null);
+        cursor.moveToFirst();
+        int i = 1;
 
-            abilities[i] = new Ability(cursor.getString(cursor.getColumnIndex(NAME)), cursor.getString(cursor.getColumnIndex(DESCRIPTION)));
+        int nameColumnIndex = cursor.getColumnIndex(NAME);
+        int descriptionColumnIndex = cursor.getColumnIndex(DESCRIPTION);
 
-            // close the cursor
-            cursor.close();
-        }
+        do {
+            abilities[i] = new Ability(cursor.getString(nameColumnIndex), cursor.getString(descriptionColumnIndex));
+            i++;
+        }while(cursor.moveToNext());
+        // close the cursor
+        cursor.close();
     }
 
     /**
@@ -1219,19 +1227,21 @@ public class PokemonFactory {
      */
     public void loadAllEggGroups() {
         // fail safe 0th index of types:
-        eggGroups[0] = new EggGroup("None");
+        eggGroups[0] = new EggGroup("Egg Group");
+        Cursor cursor = database.query(EGG_GROUPS_TABLE, null, null, null, null, null, null);
+        cursor.moveToFirst();
+        int eggGroupNameColumn = cursor.getColumnIndex(NAME);
+        int i = 1;
         // get the real abilities from the database:
-        for (int i = 1; i < getMaxEggGroupID() + 1; i++) {
+        do {
             // eggGroupId's start at 0
-            String[] selectionArg = {String.valueOf(i - 1)};
-            Cursor cursor = database.query(EGG_GROUPS_TABLE, null, EGG_GROUP_ID + "=?", selectionArg, null, null, null);
-            cursor.moveToFirst();
+            eggGroups[i] = new EggGroup(cursor.getString(eggGroupNameColumn));
+            i++;
 
-            eggGroups[i] = new EggGroup(cursor.getString(cursor.getColumnIndex(NAME)));
+        }while(cursor.moveToNext());
 
-            // close the cursor
-            cursor.close();
-        }
+        // close cursor
+        cursor.close();
     }
 
     /**
@@ -1240,7 +1250,7 @@ public class PokemonFactory {
     public void loadAllGenerations() {
 
         // fail safe 0th index of generations:
-        generations[0] = "-";
+        generations[0] = "Generation Appeared";
         // get the real generations, no need to access database, since it's just integers:
         for (int i = 1; i < getMaxGeneration() + 1; i++) {
             generations[i]= Integer.toString(i);
@@ -1310,7 +1320,7 @@ public class PokemonFactory {
      *
      * @return String[] array types of all valid generartions
      */
-    public String[] getGenerations() {
+    public String[] getAllGenerations() {
 
         return generations;
     }
@@ -1323,12 +1333,10 @@ public class PokemonFactory {
 
     public ArrayList<Integer> getAllUniqueIDsFromAbility(int abilityID){
 
-        int actualAbilityID = abilityID;
         ArrayList<Integer> filteredUniqueids = new ArrayList<>();
-        ArrayList<Integer> filteredNationalids = new ArrayList<>();
 
-        if(actualAbilityID > -1) {
-            String[] selectionArg = {String.valueOf(actualAbilityID)};
+        if(abilityID > -1) {
+            String[] selectionArg = {String.valueOf(abilityID)};
             Cursor cursor = database.query(POKEMON_ABILITIES_TABLE, null, ABILITIY_ID + "=?", selectionArg, null, null, null);
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
@@ -1352,7 +1360,6 @@ public class PokemonFactory {
     public ArrayList<Integer> getAllUniqueIDsFromType(int typeID){
 
         ArrayList<Integer> filteredUniqueids = new ArrayList<>();
-        ArrayList<Integer> filteredNationalids = new ArrayList<>();
 
         if(typeID > 0) {
             String[] selectionArg = {String.valueOf(typeID)};
@@ -1375,40 +1382,30 @@ public class PokemonFactory {
      * @param lowerLimit lower integer value limit
      * @param upperLimit upper integer value
      * @param stat the stat being filtered for, where stat is either: HP, ATTACK, DEFENCE, spattack, spdefence or SPEED
-     *             TODO stat can also be SUM, which will search for SUM
+     *             TODO stat can also be basestat, which will search for TOTAL_BASE STATS
      * @return array of integers of the unique id's that correspond
      */
     public ArrayList<Integer> getAllUniqueIDsFromStat(int lowerLimit, int upperLimit, String stat){
-        //TODO: Add validation step for stat string
         ArrayList<Integer> filteredUniqueids = new ArrayList<>();
 
-        String[] selectionArg = {String.valueOf(lowerLimit), String.valueOf(upperLimit)};
-        if(!stat.equals("SUM")) {
-            Cursor cursor = database.query(POKEMON_UNIQUE_INFO_TABLE, null, stat + ">=? AND " + stat + "<=?", selectionArg, null, null, null);
+        //TODO: Consider using enum
+        if(stat.equals(HP) || stat.equals(ATTACK) || stat.equals(DEFENCE) || stat.equals(SPECIAL_ATTACK)
+                || stat.equals(SPECIAL_DEFENCE) || stat.equals(SPEED) || stat.equals(TOTAL_BASE_STATS)) {
+
+            String[] columnsToReturn = {POKEMON_UNIQUE_ID,};
+            String[] selectionArg = {String.valueOf(lowerLimit), String.valueOf(upperLimit)};
+
+            Cursor cursor = database.query(POKEMON_UNIQUE_INFO_TABLE, columnsToReturn, stat + ">=? AND " + stat + "<=?", selectionArg, null, null, null);
+            int uniqueIDColIndex = cursor.getColumnIndex(POKEMON_UNIQUE_ID);
             cursor.moveToFirst();
+
             while (!cursor.isAfterLast()) {
-                int uniqueID = cursor.getInt(cursor.getColumnIndex(POKEMON_UNIQUE_ID));
+                int uniqueID = cursor.getInt(uniqueIDColIndex);
                 filteredUniqueids.add(uniqueID);
                 cursor.moveToNext();
             }
             cursor.close();
         }
-//        else{
-//            // Filter by the total sum of base stats
-//            // using a raw query to get sum, not sure if even possible with query
-//            Cursor cursor = database.rawQuery("select (HP + ATTACK + DEFENCE + SPATTACK + SPDEFENCE + SPEED) as sum from pokemon_unique_info where sum >="+String.valueOf(lowerLimit)+" AND sum <="+String.valueOf(upperLimit)+
-//                    "   ;", null);
-//            cursor.moveToFirst();
-//            while (!cursor.isAfterLast()) {
-//                int uniqueID = cursor.getInt(cursor.getColumnIndex(POKEMON_UNIQUE_ID));
-//                filteredUniqueids.add(uniqueID);
-//                cursor.moveToNext();
-//            }
-//            cursor.close();
-//
-//        }
-
-
 
         return filteredUniqueids;
 
@@ -1541,7 +1538,7 @@ public class PokemonFactory {
      * getter for the list of types
      * @return array of types
      */
-    public Type[] getListOfTypes() {
+    public Type[] getAllTypes() {
         return types;
     }
 
@@ -1557,6 +1554,8 @@ public class PokemonFactory {
      */
     public int getMAX_NATIONAL_ID() { return MAX_NATIONAL_ID;}
 
+
 }
+
 
 

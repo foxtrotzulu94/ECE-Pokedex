@@ -86,7 +86,7 @@ public class Type {
      * @return array of all possible types (including bird/none type)
      */
     public static Type[] getListOfTypes() {
-        return PokemonFactory.getPokemonFactory(null).getListOfTypes();
+        return PokemonFactory.getPokemonFactory(null).getAllTypes();
     }
 
 
@@ -97,7 +97,7 @@ public class Type {
      */
     @Override
     public String toString(){
-        return String.format("%s",name);
+        return name;
     }
 }
 

@@ -1,258 +1,355 @@
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="me.quadphase.qpdex.AdvancedSearch"
-    android:id="@+id/adv_search">
+    tools:context="me.quadphase.qpdex.AdvancedSearchActivity"
+    android:id="@+id/adv_search"
+    android:orientation="vertical"
+    android:background="@drawable/advsearchtile">
 
-    <Spinner
-        android:id="@+id/type1_spinner"
-        android:layout_width="fill_parent"
+
+
+    <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toStartOf="@+id/confirm_button"
-        android:layout_marginBottom="10dp" />
+        android:id="@+id/scrollView"
+        android:layout_gravity="center_vertical">
 
-    <Spinner
-        android:id="@+id/type2_spinner"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/confirm_button"
-        android:layout_marginBottom="10dp" />
+        <RelativeLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <Spinner
-        android:id="@+id/ability_spinner"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/type1_spinner"
-        android:layout_toStartOf="@+id/confirm_button"
-        android:layout_marginBottom="10dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Advanced Search Filter"
+            android:id="@+id/advsearchtitle"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:layout_alignParentTop="true"/>
 
-    <Spinner
-        android:id="@+id/generation_spinner"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/type1_spinner"
-        android:layout_toEndOf="@+id/confirm_button"
-        android:layout_marginBottom="10dp"/>
+        <Spinner
+            android:id="@+id/type1_spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/confirm_button"
+            android:layout_below="@id/advsearchtitle"
+            android:layout_marginBottom="10dp" />
 
-    <Spinner
-        android:id="@+id/egg1_spinner"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ability_spinner"
-        android:layout_toStartOf="@+id/confirm_button"
-        android:layout_marginBottom="10dp"/>
+        <Spinner
+            android:id="@+id/type2_spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/advsearchtitle"
+            android:layout_toEndOf="@+id/confirm_button"
+            android:layout_marginBottom="10dp" />
 
-    <Spinner
-        android:id="@+id/egg2_spinner"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ability_spinner"
-        android:layout_toEndOf="@+id/confirm_button"
-        android:layout_marginBottom="10dp"/>
+        <Spinner
+            android:id="@+id/ability_spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/type1_spinner"
+            android:layout_toStartOf="@+id/confirm_button"
+            android:layout_marginBottom="10dp"/>
+
+        <Spinner
+            android:id="@+id/generation_spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/type1_spinner"
+            android:layout_toEndOf="@+id/confirm_button"
+            android:layout_marginBottom="10dp"/>
+
+        <Spinner
+            android:id="@+id/egg1_spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ability_spinner"
+            android:layout_toStartOf="@+id/confirm_button"
+            android:layout_marginBottom="10dp"/>
+
+        <Spinner
+            android:id="@+id/egg2_spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ability_spinner"
+            android:layout_toEndOf="@+id/confirm_button"
+            android:layout_marginBottom="10dp"/>
 
 
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ok"
-        android:id="@+id/confirm_button"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:onClick="switchToPokedex"
-        android:layout_marginTop="10dp"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Filter"
+            android:id="@+id/confirm_button"
+            android:layout_below="@+id/basestat_title"
+            android:layout_centerHorizontal="true"
+            android:onClick="switchToPokedex"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Stats"
-        android:id="@+id/stats_title"
-        android:layout_below="@+id/egg1_spinner"
-        android:layout_centerHorizontal="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Stats"
+            android:id="@+id/stats_title"
+            android:layout_below="@+id/egg1_spinner"
+            android:layout_centerHorizontal="true" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="  HP "
-        android:id="@+id/hp_title"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        android:layout_below="@+id/stats_explain"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="  HP "
+            android:textStyle="bold"
+            android:id="@+id/hp_title"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:layout_below="@+id/lower_title"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text=" ATT "
-        android:id="@+id/att_title"
-        android:layout_below="@+id/hp_title"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text=" ATT "
+            android:textStyle="bold"
+            android:id="@+id/att_title"
+            android:layout_below="@+id/hp_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text=" DEF "
-        android:id="@+id/def_title"
-        android:layout_below="@+id/att_title"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text=" DEF "
+            android:textStyle="bold"
+            android:id="@+id/def_title"
+            android:layout_below="@+id/att_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text=" SP. ATT "
-        android:id="@+id/spatt_title"
-        android:layout_below="@+id/def_title"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text=" SP. ATT "
+            android:textStyle="bold"
+            android:id="@+id/spatt_title"
+            android:layout_below="@+id/def_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text=" SP. DEF "
-        android:id="@+id/spdef_title"
-        android:layout_below="@+id/spatt_title"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text=" SP. DEF "
+            android:textStyle="bold"
+            android:id="@+id/spdef_title"
+            android:layout_below="@+id/spatt_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text=" SPEED "
-        android:layout_below="@+id/spdef_title"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/speed_title"
-        android:layout_marginBottom="20dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text=" SPEED "
+            android:textStyle="bold"
+            android:layout_below="@+id/spdef_title"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/speed_title"
+            android:layout_marginBottom="20dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Choose a range of values that you wish to filter for. "
-        android:id="@+id/stats_explain"
-        android:layout_below="@+id/stats_title"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text=" TOTAL BASE STATS "
+            android:textStyle="bold"
+            android:layout_below="@+id/speed_title"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/basestat_title"
+            android:layout_marginBottom="20dp"/>
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="3"
-        android:id="@+id/hp_lower"
-        android:layout_alignBottom="@+id/hp_title"
-        android:layout_toStartOf="@+id/spatt_title" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Choose a range of values that you wish to filter for. "
+            android:id="@+id/stats_explain"
+            android:layout_below="@+id/stats_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="3"
-        android:id="@+id/hp_greater"
-        android:layout_alignBottom="@+id/hp_lower"
-        android:layout_toEndOf="@+id/spatt_title" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Lower Limit"
+            android:textStyle="bold"
+            android:id="@+id/lower_title"
+            android:layout_below="@+id/stats_explain"
+            android:layout_toStartOf="@+id/basestat_title"
+            android:layout_marginBottom="10dp" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="3"
-        android:id="@+id/att_lower"
-        android:layout_alignBottom="@+id/att_title"
-        android:layout_alignEnd="@+id/hp_lower" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Upper Limit"
+            android:textStyle="bold"
+            android:id="@+id/upper_title"
+            android:layout_below="@+id/stats_explain"
+            android:layout_toEndOf="@+id/basestat_title"
+            android:layout_marginBottom="10dp" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="3"
-        android:id="@+id/att_greater"
-        android:layout_alignBottom="@+id/att_title"
-        android:layout_alignStart="@+id/hp_greater" />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="3"
+            android:id="@+id/hp_lower"
+            android:layout_alignBottom="@+id/hp_title"
+            android:layout_toStartOf="@+id/basestat_title" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="3"
-        android:id="@+id/def_lower"
-        android:layout_below="@+id/att_lower"
-        android:layout_alignStart="@+id/spatt_lower" />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="3"
+            android:id="@+id/hp_greater"
+            android:layout_alignBottom="@+id/hp_lower"
+            android:layout_toEndOf="@+id/basestat_title" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="3"
-        android:id="@+id/def_greater"
-        android:layout_below="@+id/att_greater"
-        android:layout_alignStart="@+id/spatt_greater" />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="3"
+            android:id="@+id/att_lower"
+            android:layout_alignBottom="@+id/att_title"
+            android:layout_alignEnd="@+id/hp_lower" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="3"
-        android:id="@+id/spatt_lower"
-        android:layout_below="@+id/def_lower"
-        android:layout_alignStart="@+id/hp_lower" />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="3"
+            android:id="@+id/att_greater"
+            android:layout_alignBottom="@+id/att_title"
+            android:layout_alignStart="@+id/hp_greater" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="3"
-        android:id="@+id/spatt_greater"
-        android:layout_below="@+id/def_greater"
-        android:layout_alignStart="@+id/hp_greater" />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="3"
+            android:id="@+id/def_lower"
+            android:layout_below="@+id/att_lower"
+            android:layout_alignBottom="@+id/def_title"
+            android:layout_alignStart="@+id/spatt_lower" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="3"
-        android:id="@+id/spdef_lower"
-        android:layout_below="@+id/spatt_lower"
-        android:layout_alignStart="@+id/hp_lower" />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="3"
+            android:id="@+id/def_greater"
+            android:layout_below="@+id/att_greater"
+            android:layout_alignBottom="@+id/def_title"
+            android:layout_alignStart="@+id/spatt_greater" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="3"
-        android:id="@+id/spdef_greater"
-        android:layout_below="@+id/spatt_greater"
-        android:layout_alignStart="@+id/hp_greater" />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="3"
+            android:id="@+id/spatt_lower"
+            android:layout_below="@+id/def_lower"
+            android:layout_alignBottom="@+id/spatt_title"
+            android:layout_alignStart="@+id/hp_lower" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="3"
-        android:id="@+id/speed_lower"
-        android:layout_below="@+id/spdef_lower"
-        android:layout_alignStart="@+id/hp_lower" />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="3"
+            android:id="@+id/spatt_greater"
+            android:layout_below="@+id/def_greater"
+            android:layout_alignBottom="@+id/spatt_title"
+            android:layout_alignStart="@+id/hp_greater" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="3"
-        android:id="@+id/speed_greater"
-        android:layout_below="@+id/spdef_greater"
-        android:layout_alignStart="@+id/hp_greater" />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="3"
+            android:id="@+id/spdef_lower"
+            android:layout_below="@+id/spatt_lower"
+            android:layout_alignBottom="@+id/spdef_title"
+            android:layout_alignStart="@+id/hp_lower" />
 
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="3"
+            android:id="@+id/spdef_greater"
+            android:layout_below="@+id/spatt_greater"
+            android:layout_alignBottom="@+id/spdef_title"
+            android:layout_alignStart="@+id/hp_greater" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="3"
+            android:id="@+id/speed_lower"
+            android:layout_below="@+id/spdef_lower"
+            android:layout_alignBottom="@+id/speed_title"
+            android:layout_alignStart="@+id/hp_lower" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="3"
+            android:id="@+id/speed_greater"
+            android:layout_below="@+id/spdef_greater"
+            android:layout_alignBottom="@+id/speed_title"
+            android:layout_alignStart="@+id/hp_greater" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="3"
+            android:id="@+id/basestat_lower"
+            android:layout_below="@+id/speed_lower"
+            android:layout_alignBottom="@+id/basestat_title"
+            android:layout_alignStart="@+id/hp_lower" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="3"
+            android:id="@+id/basestat_greater"
+            android:layout_below="@+id/speed_greater"
+            android:layout_alignBottom="@+id/basestat_title"
+            android:layout_alignStart="@+id/hp_greater" />
+
+
+            </RelativeLayout>
+    </ScrollView>
 
 </RelativeLayout>
+

@@ -1,7 +1,7 @@
 package me.quadphase.qpdex;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Spinner;
@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Toast;
 
 
 import java.util.ArrayList;
@@ -20,7 +21,6 @@ import java.util.Arrays;
 import me.quadphase.qpdex.databaseAccess.PokemonFactory;
 import me.quadphase.qpdex.pokemon.Ability;
 import me.quadphase.qpdex.pokemon.EggGroup;
-import me.quadphase.qpdex.pokemon.MinimalPokemon;
 import me.quadphase.qpdex.pokemon.Type;
 
 
@@ -37,23 +37,19 @@ import me.quadphase.qpdex.pokemon.Type;
  * Generation Available
  * Egg Groups 1
  * Egg Groups 2
- * TODO: All 6 Base stats
+ * All 6 Base stats + Total Base stats
  * TODO: The ability to include/exclude Primal/Mega/Alternate Forms
  *
  */
 
 
-public class AdvancedSearch extends ActionBarActivity {
+public class AdvancedSearchActivity extends AppCompatActivity {
 
 
     // pokemonFactory to access the various DB access functions
     PokemonFactory pokemonFactory;
 
-    // Pokemon information to filter
-    MinimalPokemon[] allMinimalPokemon;
-
     //Final Filtered List
-    MinimalPokemon [] filteredMinimalPokemon;
     ArrayList<Integer> filteredNationalIds;
     ArrayList<Integer> filteredUniqueIds;
     //Contains either or
@@ -63,7 +59,7 @@ public class AdvancedSearch extends ActionBarActivity {
     Type[] allTypes;
     Ability[] allAbilities;
     EggGroup[] allEggGroups;
-    String allGenerations [];
+    String[] allGenerations;
 
     // User Selections
     Type selectedType1;
@@ -84,6 +80,8 @@ public class AdvancedSearch extends ActionBarActivity {
     int selectedSpdefGreater;
     int selectedSpeedLower;
     int selectedSpeedGreater;
+    int selectedBaseStatLower;
+    int selectedBaseStatGreater;
 
 
     // UI elements
@@ -106,6 +104,8 @@ public class AdvancedSearch extends ActionBarActivity {
     EditText spdefGreaterTextUI;
     EditText speedLowerTextUI;
     EditText speedGreaterTextUI;
+    EditText basestatLowerTextUI;
+    EditText basestatGreaterTextUI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,20 +114,17 @@ public class AdvancedSearch extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_advanced_search);
 
-        pokemonFactory = PokemonFactory.getPokemonFactory(this.getApplicationContext());
+        pokemonFactory = PokemonFactory.getPokemonFactory(null);
 
-        allTypes = pokemonFactory.getListOfTypes();
+        allTypes = pokemonFactory.getAllTypes();
         allAbilities = pokemonFactory.getAllAbilities();
         allEggGroups = pokemonFactory.getAllEggGroups();
-        allGenerations = pokemonFactory.getGenerations();
+        allGenerations = pokemonFactory.getAllGenerations();
 
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
 
         Log.d("QPDex", String.format("Obtaining Spinner Data took %s ns",duration));
-
-        // No need for MinimalPokemon
-        //allMinimalPokemon = pokemonFactory.getAllMinimalPokemon();
 
         //setup and fill in all spinner contents
         retrieveInterfaceElements();
@@ -164,14 +161,13 @@ public class AdvancedSearch extends ActionBarActivity {
         spdefGreaterTextUI = (EditText) findViewById(R.id.spdef_greater);
         speedLowerTextUI = (EditText) findViewById(R.id.speed_lower);
         speedGreaterTextUI = (EditText) findViewById(R.id.speed_greater);
-
+        basestatLowerTextUI = (EditText) findViewById(R.id.basestat_lower);
+        basestatGreaterTextUI = (EditText) findViewById(R.id.basestat_greater);
 
     }
 
     private void fillInSpinnerValues(){
 
-        //TODO: Filling out these Spinners with the actual objects seems to be causing a bottleneck,
-        // Might want to just store strings to optimize
         long startTime = System.nanoTime();
         ArrayAdapter<Type> typeArrayAdapter = new ArrayAdapter<Type>(this, android.R.layout.simple_spinner_item, allTypes);
         typeArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -257,25 +253,28 @@ public class AdvancedSearch extends ActionBarActivity {
             // An item was selected. You can retrieve the selected item using
             // parent.getItemAtPosition(pos)
 
-            // Determine other type, and set current type
-            Type otherType = new Type("Temp", -1);
             if (parent.getId() == type1Spinner.getId()){
                 Type selectedType = (Type) parent.getItemAtPosition(pos);
                 Log.d("QPDex", "Spinner touched");
                 Log.d("QPDEX", String.format("%s - %s chosen", parent.toString(), selectedType));
                 selectedType1 = selectedType;
-                otherType = selectedType2;
             }
             else if (parent.getId() == type2Spinner.getId()){
                 Type selectedType = (Type) parent.getItemAtPosition(pos);
                 Log.d("QPDex", "Spinner touched");
                 Log.d("QPDEX", String.format("%s - %s chosen", parent.toString(), selectedType));
                 selectedType2 = selectedType;
-                otherType = selectedType1;
             }
             else if(parent.getId() == abilitySpinner.getId()){
 
                 selectedAbility = allAbilities[pos];
+
+                // Give description of ability as well if not position 0
+                if(pos>0) {
+                    Toast.makeText(getBaseContext(), selectedAbility.getDescription(), Toast.LENGTH_LONG).show();
+                }
+
+
             }
             else if(parent.getId() == eggGroup1Spinner.getId()){
 
@@ -382,6 +381,18 @@ public class AdvancedSearch extends ActionBarActivity {
             selectedSpeedGreater = max_stat;
         }
 
+        if (!basestatLowerTextUI.getText().toString().equals("")){
+            selectedBaseStatLower = Integer.parseInt(basestatLowerTextUI.getText().toString());
+        }else{
+            selectedBaseStatLower = min_stat;
+        }
+
+        if (!basestatGreaterTextUI.getText().toString().equals("")){
+            selectedBaseStatGreater = Integer.parseInt(basestatGreaterTextUI.getText().toString());
+        }else {
+            selectedBaseStatGreater = max_stat;
+        }
+
         Log.d("QPDEX", String.format("Stats chosen: %s/%s/%s/%s/%s/%s - %s/%s/%s/%s/%s/%s ",
                 String.valueOf(selectedHpLower),String.valueOf(selectedAttLower),String.valueOf(selectedDefLower),
                 String.valueOf(selectedSpattLower),String.valueOf(selectedSpdefLower),String.valueOf(selectedSpeedLower),
@@ -422,9 +433,8 @@ public class AdvancedSearch extends ActionBarActivity {
         // Obtain all stats chosen
         collectStats();
 
-        //Comment this out, takes way tooo long 4+sec
-        currentFilterPokemonArrayList.clear();
-        currentFilterPokemonArrayList.addAll(filteredUniqueIds);
+        // start new filtering
+        resetFilter();
 
         ArrayList<Integer> tempFilterPokemonArrayList = new ArrayList<>();
 
@@ -432,7 +442,7 @@ public class AdvancedSearch extends ActionBarActivity {
         // consecutively. Once the list is filtered, convert the unique to nationalIds
 
         //Start with the ability chosen, if any. Use the ability ID to get all NationalID's associated
-        if(selectedAbility.getName() != "None"){
+        if(!selectedAbility.getName().equals("Ability")){
 
             currentFilterPokemonArrayList = pokemonFactory.getAllUniqueIDsFromAbility(Arrays.asList(allAbilities).indexOf(selectedAbility));
         }
@@ -442,7 +452,7 @@ public class AdvancedSearch extends ActionBarActivity {
 
         if(selectedType1.getTypeID() != 0){
 
-            tempFilterPokemonArrayList = pokemonFactory.getAllUniqueIDsFromType(Arrays.asList(allTypes).indexOf(selectedType1));
+            tempFilterPokemonArrayList = pokemonFactory.getAllUniqueIDsFromType(selectedType1.getTypeID());
             currentFilterPokemonArrayList.retainAll(tempFilterPokemonArrayList);
             tempFilterPokemonArrayList.clear();
         }
@@ -451,33 +461,32 @@ public class AdvancedSearch extends ActionBarActivity {
 
         if(selectedType2.getTypeID() != 0){
 
-            tempFilterPokemonArrayList = pokemonFactory.getAllUniqueIDsFromType(Arrays.asList(allTypes).indexOf(selectedType2));
+            tempFilterPokemonArrayList = pokemonFactory.getAllUniqueIDsFromType(selectedType2.getTypeID());
             currentFilterPokemonArrayList.retainAll(tempFilterPokemonArrayList);
             tempFilterPokemonArrayList.clear();
         }
 
         // If at least one is not default value, filter
-        filterStats(selectedHpLower, selectedHpGreater, "HP");
-        filterStats(selectedAttLower, selectedAttGreater, "ATTACK");
-        filterStats(selectedDefLower, selectedDefGreater, "DEFENCE");
-        filterStats(selectedSpattLower, selectedSpattGreater, "SPATTACK");
-        filterStats(selectedSpdefLower, selectedSpdefGreater, "SPDEFENCE");
-        filterStats(selectedSpeedLower, selectedSpeedGreater, "SPEED");
-        //TODO: Filter by sum
-        //filterStats(selectedSpeedLower, selectedSpeedGreater, "SUM");
+        filterStats(selectedHpLower, selectedHpGreater, "hp");
+        filterStats(selectedAttLower, selectedAttGreater, "attack");
+        filterStats(selectedDefLower, selectedDefGreater, "defence");
+        filterStats(selectedSpattLower, selectedSpattGreater, "spattack");
+        filterStats(selectedSpdefLower, selectedSpdefGreater, "spdefence");
+        filterStats(selectedSpeedLower, selectedSpeedGreater, "speed");
+        filterStats(selectedBaseStatLower, selectedBaseStatGreater, "basestat");
 
         // When Done filtering by UniqueID's convert uniqueIDs to NationalId's
         filteredNationalIds = pokemonFactory.convertUniqueToNational(currentFilterPokemonArrayList);
 
         // Filter national IDs based on Egg Groups
-        if(selectedEggGroup1.getName() != "None"){
+        if(!selectedEggGroup1.getName().equals("Egg Group")){
 
             tempFilterPokemonArrayList = pokemonFactory.getAllNationalIdsFromEggGroup(Arrays.asList(allEggGroups).indexOf(selectedEggGroup1));
             filteredNationalIds.retainAll(tempFilterPokemonArrayList);
             tempFilterPokemonArrayList.clear();
         }
 
-        if(selectedEggGroup2.getName() != "None"){
+        if(!selectedEggGroup2.getName().equals("Egg Group")){
 
             tempFilterPokemonArrayList = pokemonFactory.getAllNationalIdsFromEggGroup(Arrays.asList(allEggGroups).indexOf(selectedEggGroup2));
             filteredNationalIds.retainAll(tempFilterPokemonArrayList);
@@ -498,10 +507,13 @@ public class AdvancedSearch extends ActionBarActivity {
 
         Log.d("QPDex", String.format("Total Filtering took %s ns",duration));
 
-
-        //TODO: Investigate parceling the entire object?
-        intent.putExtra("FILTERED_POKEMON_NATIONALID", filteredNationalIds);
-        startActivity(intent);
+        // Only start new activity if there are actual pokemon to display
+        if(filteredNationalIds.size() > 0) {
+            intent.putExtra("FILTERED_POKEMON_NATIONALID", filteredNationalIds);
+            startActivity(intent);
+        }else{
+            Toast.makeText(getBaseContext(), "No Pokemon meet the current filters", Toast.LENGTH_SHORT).show();
+        }
     }
 
 

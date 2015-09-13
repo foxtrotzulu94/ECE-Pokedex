@@ -17,7 +17,6 @@ import java.util.Date;
 import java.util.Formatter;
 import java.util.Locale;
 
-import me.quadphase.qpdex.databaseAccess.PokemonFactory;
 import me.quadphase.qpdex.pokedex.PokedexManager;
 
 public class IntroActivity extends AppCompatActivity {
@@ -153,7 +152,7 @@ public class IntroActivity extends AppCompatActivity {
     public void switchToAdvancedSearch(View view){
 
         // Using Javier's code from how it enters pokedex activity
-        final Intent intent = new Intent(this,AdvancedSearch.class);
+        final Intent intent = new Intent(this,AdvancedSearchActivity.class);
         setupAndLoad();
 
         if(!contextMaster.isMinimalReady()){

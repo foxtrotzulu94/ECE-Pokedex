@@ -56,7 +56,7 @@
                 android:value="me.quadphase.qpdex.IntroActivity" />
         </activity>
         <activity
-            android:name=".AdvancedSearch"
+            android:name=".AdvancedSearchActivity"
             android:label="@string/title_activity_advanced_search"
             android:parentActivityName=".IntroActivity" >
             <meta-data

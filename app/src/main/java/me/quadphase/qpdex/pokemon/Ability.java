@@ -50,6 +50,6 @@ public class Ability {
      */
     @Override
     public String toString(){
-        return String.format("%s",name);
+        return name;
     }
 }
