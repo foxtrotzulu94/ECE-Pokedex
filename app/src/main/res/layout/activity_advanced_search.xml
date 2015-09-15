@@ -39,7 +39,9 @@
             android:layout_height="wrap_content"
             android:layout_toStartOf="@+id/confirm_button"
             android:layout_below="@id/advsearchtitle"
-            android:layout_marginBottom="10dp" />
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/custom_edittextbox"
+            android:alpha="0.8"/>
 
         <Spinner
             android:id="@+id/type2_spinner"
@@ -47,7 +49,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/advsearchtitle"
             android:layout_toEndOf="@+id/confirm_button"
-            android:layout_marginBottom="10dp" />
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/custom_edittextbox"
+            android:alpha="0.8"/>
 
         <Spinner
             android:id="@+id/ability_spinner"
@@ -55,7 +59,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/type1_spinner"
             android:layout_toStartOf="@+id/confirm_button"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/custom_edittextbox"
+            android:alpha="0.8"/>
 
         <Spinner
             android:id="@+id/generation_spinner"
@@ -63,7 +69,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/type1_spinner"
             android:layout_toEndOf="@+id/confirm_button"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/custom_edittextbox"
+            android:alpha="0.8"/>
 
         <Spinner
             android:id="@+id/egg1_spinner"
@@ -71,7 +79,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/ability_spinner"
             android:layout_toStartOf="@+id/confirm_button"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/custom_edittextbox"
+            android:alpha="0.8"/>
 
         <Spinner
             android:id="@+id/egg2_spinner"
@@ -79,7 +89,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/ability_spinner"
             android:layout_toEndOf="@+id/confirm_button"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/custom_edittextbox"
+            android:alpha="0.8"/>
 
 
 
@@ -105,19 +117,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="  HP "
+            android:text="@string/hp"
             android:textStyle="bold"
             android:id="@+id/hp_title"
-            android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp"
-            android:layout_below="@+id/lower_title"/>
+            android:layout_below="@+id/title_layout" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text=" ATT "
+            android:text="@string/attack"
             android:textStyle="bold"
             android:id="@+id/att_title"
             android:layout_below="@+id/hp_title"
@@ -128,7 +139,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text=" DEF "
+            android:text="@string/defense"
             android:textStyle="bold"
             android:id="@+id/def_title"
             android:layout_below="@+id/att_title"
@@ -139,7 +150,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text=" SP. ATT "
+            android:text="@string/spattack"
             android:textStyle="bold"
             android:id="@+id/spatt_title"
             android:layout_below="@+id/def_title"
@@ -150,7 +161,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text=" SP. DEF "
+            android:text="@string/spdefense"
             android:textStyle="bold"
             android:id="@+id/spdef_title"
             android:layout_below="@+id/spatt_title"
@@ -161,7 +172,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text=" SPEED "
+            android:text="@string/speed"
             android:textStyle="bold"
             android:layout_below="@+id/spdef_title"
             android:layout_centerHorizontal="true"
@@ -172,7 +183,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text=" TOTAL BASE STATS "
+            android:text="@string/totalbasestats"
             android:textStyle="bold"
             android:layout_below="@+id/speed_title"
             android:layout_centerHorizontal="true"
@@ -189,36 +200,49 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Lower Limit"
-            android:textStyle="bold"
-            android:id="@+id/lower_title"
-            android:layout_below="@+id/stats_explain"
-            android:layout_toStartOf="@+id/basestat_title"
-            android:layout_marginBottom="10dp" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/title_layout"
+                android:layout_below="@+id/stats_explain"
+                android:layout_toStartOf="@+id/basestat_title"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="20dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Upper Limit"
-            android:textStyle="bold"
-            android:id="@+id/upper_title"
-            android:layout_below="@+id/stats_explain"
-            android:layout_toEndOf="@+id/basestat_title"
-            android:layout_marginBottom="10dp" />
+                <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Lower Limit"
+                android:textStyle="bold"
+                android:id="@+id/lower_title"
+                android:layout_weight="0.5"
+                android:gravity="center" />
 
-        <EditText
+                <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Upper Limit"
+                android:textStyle="bold"
+                android:id="@+id/upper_title"
+                android:layout_weight="0.5"
+                android:gravity="center" />
+            </LinearLayout>
+
+            <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="number"
             android:ems="3"
             android:id="@+id/hp_lower"
-            android:layout_alignBottom="@+id/hp_title"
-            android:layout_toStartOf="@+id/basestat_title" />
+            android:background="@drawable/custom_edittextbox"
+            android:layout_alignBaseline="@+id/hp_title"
+            android:layout_toStartOf="@+id/basestat_title"
+            android:alpha="0.7"
+            android:layout_marginBottom="5dp"/>
+
 
         <EditText
             android:layout_width="wrap_content"
@@ -226,8 +250,11 @@
             android:inputType="number"
             android:ems="3"
             android:id="@+id/hp_greater"
-            android:layout_alignBottom="@+id/hp_lower"
-            android:layout_toEndOf="@+id/basestat_title" />
+            android:layout_alignBaseline="@+id/hp_title"
+            android:layout_toEndOf="@+id/basestat_title"
+            android:background="@drawable/custom_edittextbox"
+            android:alpha="0.7"
+            android:layout_marginBottom="5dp"/>
 
         <EditText
             android:layout_width="wrap_content"
@@ -235,8 +262,13 @@
             android:inputType="number"
             android:ems="3"
             android:id="@+id/att_lower"
-            android:layout_alignBottom="@+id/att_title"
-            android:layout_alignEnd="@+id/hp_lower" />
+            android:layout_alignBaseline="@+id/att_title"
+            android:layout_alignEnd="@+id/hp_lower"
+            android:layout_below="@+id/hp_lower"
+            android:background="@drawable/custom_edittextbox"
+            android:alpha="0.7"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"/>
 
         <EditText
             android:layout_width="wrap_content"
@@ -244,8 +276,13 @@
             android:inputType="number"
             android:ems="3"
             android:id="@+id/att_greater"
-            android:layout_alignBottom="@+id/att_title"
-            android:layout_alignStart="@+id/hp_greater" />
+            android:layout_alignBaseline="@+id/att_title"
+            android:layout_alignStart="@+id/hp_greater"
+            android:layout_below="@+id/hp_greater"
+            android:background="@drawable/custom_edittextbox"
+            android:alpha="0.7"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"/>
 
         <EditText
             android:layout_width="wrap_content"
@@ -254,8 +291,12 @@
             android:ems="3"
             android:id="@+id/def_lower"
             android:layout_below="@+id/att_lower"
-            android:layout_alignBottom="@+id/def_title"
-            android:layout_alignStart="@+id/spatt_lower" />
+            android:layout_alignBaseline="@+id/def_title"
+            android:layout_alignStart="@+id/spatt_lower"
+            android:background="@drawable/custom_edittextbox"
+            android:alpha="0.7"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"/>
 
         <EditText
             android:layout_width="wrap_content"
@@ -264,8 +305,12 @@
             android:ems="3"
             android:id="@+id/def_greater"
             android:layout_below="@+id/att_greater"
-            android:layout_alignBottom="@+id/def_title"
-            android:layout_alignStart="@+id/spatt_greater" />
+            android:layout_alignBaseline="@+id/def_title"
+            android:layout_alignStart="@+id/spatt_greater"
+            android:background="@drawable/custom_edittextbox"
+            android:alpha="0.7"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"/>
 
         <EditText
             android:layout_width="wrap_content"
@@ -274,8 +319,12 @@
             android:ems="3"
             android:id="@+id/spatt_lower"
             android:layout_below="@+id/def_lower"
-            android:layout_alignBottom="@+id/spatt_title"
-            android:layout_alignStart="@+id/hp_lower" />
+            android:layout_alignBaseline="@+id/spatt_title"
+            android:layout_alignStart="@+id/hp_lower"
+            android:background="@drawable/custom_edittextbox"
+            android:alpha="0.7"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"/>
 
         <EditText
             android:layout_width="wrap_content"
@@ -284,8 +333,12 @@
             android:ems="3"
             android:id="@+id/spatt_greater"
             android:layout_below="@+id/def_greater"
-            android:layout_alignBottom="@+id/spatt_title"
-            android:layout_alignStart="@+id/hp_greater" />
+            android:layout_alignBaseline="@+id/spatt_title"
+            android:layout_alignStart="@+id/hp_greater"
+            android:background="@drawable/custom_edittextbox"
+            android:alpha="0.7"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"/>
 
         <EditText
             android:layout_width="wrap_content"
@@ -294,8 +347,12 @@
             android:ems="3"
             android:id="@+id/spdef_lower"
             android:layout_below="@+id/spatt_lower"
-            android:layout_alignBottom="@+id/spdef_title"
-            android:layout_alignStart="@+id/hp_lower" />
+            android:layout_alignBaseline="@+id/spdef_title"
+            android:layout_alignStart="@+id/hp_lower"
+            android:background="@drawable/custom_edittextbox"
+            android:alpha="0.7"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"/>
 
         <EditText
             android:layout_width="wrap_content"
@@ -304,8 +361,12 @@
             android:ems="3"
             android:id="@+id/spdef_greater"
             android:layout_below="@+id/spatt_greater"
-            android:layout_alignBottom="@+id/spdef_title"
-            android:layout_alignStart="@+id/hp_greater" />
+            android:layout_alignBaseline="@+id/spdef_title"
+            android:layout_alignStart="@+id/hp_greater"
+            android:background="@drawable/custom_edittextbox"
+            android:alpha="0.7"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"/>
 
         <EditText
             android:layout_width="wrap_content"
@@ -314,8 +375,12 @@
             android:ems="3"
             android:id="@+id/speed_lower"
             android:layout_below="@+id/spdef_lower"
-            android:layout_alignBottom="@+id/speed_title"
-            android:layout_alignStart="@+id/hp_lower" />
+            android:layout_alignBaseline="@+id/speed_title"
+            android:layout_alignStart="@+id/hp_lower"
+            android:background="@drawable/custom_edittextbox"
+            android:alpha="0.7"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"/>
 
         <EditText
             android:layout_width="wrap_content"
@@ -324,8 +389,12 @@
             android:ems="3"
             android:id="@+id/speed_greater"
             android:layout_below="@+id/spdef_greater"
-            android:layout_alignBottom="@+id/speed_title"
-            android:layout_alignStart="@+id/hp_greater" />
+            android:layout_alignBaseline="@+id/speed_title"
+            android:layout_alignStart="@+id/hp_greater"
+            android:background="@drawable/custom_edittextbox"
+            android:alpha="0.7"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"/>
 
         <EditText
             android:layout_width="wrap_content"
@@ -334,8 +403,12 @@
             android:ems="3"
             android:id="@+id/basestat_lower"
             android:layout_below="@+id/speed_lower"
-            android:layout_alignBottom="@+id/basestat_title"
-            android:layout_alignStart="@+id/hp_lower" />
+            android:layout_alignBaseline="@+id/basestat_title"
+            android:layout_alignStart="@+id/hp_lower"
+            android:background="@drawable/custom_edittextbox"
+            android:alpha="0.7"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"/>
 
         <EditText
             android:layout_width="wrap_content"
@@ -344,9 +417,12 @@
             android:ems="3"
             android:id="@+id/basestat_greater"
             android:layout_below="@+id/speed_greater"
-            android:layout_alignBottom="@+id/basestat_title"
-            android:layout_alignStart="@+id/hp_greater" />
-
+            android:layout_alignBaseline="@+id/basestat_title"
+            android:layout_alignStart="@+id/hp_greater"
+            android:background="@drawable/custom_edittextbox"
+            android:alpha="0.7"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"/>
 
             </RelativeLayout>
     </ScrollView>
