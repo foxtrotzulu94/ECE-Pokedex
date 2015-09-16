@@ -118,8 +118,6 @@ public class PokemonFactory {
     private int MAX_NATIONAL_ID;
 
 
-    private HashMap<Integer,Integer> uniqueToNationalMap;
-
     /**
      * Type effectiveness sparse matrix.
      * [attacking type][defending type]
@@ -144,7 +142,7 @@ public class PokemonFactory {
         // loads all Type objects into memory
         types = new Type[getMaxTypeID() + 1];
         abilities = new Ability[getMaxAbilityID() + 1];
-        allNationalIDMappedUnique = new int[MAX_UNIQUE_ID];
+        allNationalIDMappedUnique = new int[MAX_UNIQUE_ID + 1];
         eggGroups = new EggGroup[getMaxEggGroupID() + 1];
         generations = new String[getMaxGeneration() + 1];
 
@@ -199,14 +197,13 @@ public class PokemonFactory {
      */
     public MinimalPokemon[] getAllMinimalPokemon() {
 
-        if (allMinimalPokemon==null || uniqueToNationalMap==null) {
+        if (allMinimalPokemon==null) {
 
             allMinimalPokemon = new MinimalPokemon[MAX_NATIONAL_ID+1];
-            uniqueToNationalMap = new HashMap<>();
+
 
             //Secretly added the fail-safe Pokemon...
             allMinimalPokemon[0] = PokedexManager.getInstance().missingNo.minimal();
-            uniqueToNationalMap.put(0,0);
 
 
             //SECTION I: INITIAL QUERIES
@@ -233,19 +230,8 @@ public class PokemonFactory {
 
 
             //SECTION 2: PARALLEL SETUP
-            //Defining 6 small, very specific threads for next section
-            Thread mapInit = new Thread(){
-                @Override
-                public void run(){
-                    mapCursor.moveToFirst();
-                    do {
-                        uniqueToNationalMap.put(
-                                mapCursor.getInt(mapCursor.getColumnIndex(POKEMON_UNIQUE_ID)),
-                                mapCursor.getInt(mapCursor.getColumnIndex(POKEMON_NATIONAL_ID)));
-                    }while(mapCursor.moveToNext());
-                }
-            };
-            mapInit.setPriority(Thread.MAX_PRIORITY);
+            //Defining 5 small, very specific threads for next section
+
 
             Thread caughtInit = new Thread(){
                 @Override
@@ -281,14 +267,12 @@ public class PokemonFactory {
             try {
                 //Start creating objects and setup the hashMap
                 caughtInit.start();
-                mapInit.start();
 
                 caughtInit.join(); //Wait for all objects to initialize
 
                 //Now begin calling the others
                 describeInit.start();
 
-                mapInit.join(); //Wait for the map before the next step
 
                 //Signal the start of the last two threads
                 typeInit.start();
@@ -369,12 +353,12 @@ public class PokemonFactory {
 
             List<Type> pkmnTypes = new LinkedList<>();
 
-            int currentID = uniqueToNationalMap.get(cursor.getInt(uniqueIDColumn));
+            int currentID = allNationalIDMappedUnique[cursor.getInt(uniqueIDColumn)];
             int formerID = currentID;
 
             do{
                 //Get the ID of current row
-                currentID = uniqueToNationalMap.get(cursor.getInt(uniqueIDColumn));
+                currentID = allNationalIDMappedUnique[cursor.getInt(uniqueIDColumn)];
 
                 //If ID is not the same with the last row
                 if(currentID!=formerID){
@@ -407,7 +391,7 @@ public class PokemonFactory {
             int uniqueIDColumn = cursor.getColumnIndex(POKEMON_UNIQUE_ID);
 
             do{
-                int nationalID = uniqueToNationalMap.get(cursor.getInt(uniqueIDColumn));
+                int nationalID = allNationalIDMappedUnique[cursor.getInt(uniqueIDColumn)];
                 String name = cursor.getString(nameColumn);
                 allMinimalPokemon[nationalID].setName(name);
             }while (cursor.moveToNext());
@@ -1268,7 +1252,10 @@ public class PokemonFactory {
         Cursor cursor = database.query(POKEMON_NATIONAL_ID_TO_UNIQUE_ID_TABLE, null, null, null, null,null, POKEMON_UNIQUE_ID);
         cursor.moveToFirst();
 
-        for (int i=0; i < MAX_UNIQUE_ID; i++) {
+        // Map for missingno
+        allNationalIDMappedUnique[0] = 0;
+
+        for (int i=1; i <= MAX_UNIQUE_ID; i++) {
             allNationalIDMappedUnique[i] = cursor.getInt(cursor.getColumnIndex(POKEMON_NATIONAL_ID));
             cursor.moveToNext();
         }
@@ -1475,8 +1462,8 @@ public class PokemonFactory {
         long startTime = System.nanoTime();
         ArrayList<Integer> nationalIDList = new ArrayList<>();
         for(int uniqueid : uniqueIDList){
-            if(!nationalIDList.contains(allNationalIDMappedUnique[uniqueid-1])) {
-                nationalIDList.add(allNationalIDMappedUnique[uniqueid - 1]);
+            if(!nationalIDList.contains(allNationalIDMappedUnique[uniqueid])) {
+                nationalIDList.add(allNationalIDMappedUnique[uniqueid]);
             }
         }
 
