@@ -86,6 +86,18 @@ public class Type {
      * @return array of all possible types (including bird/none type)
      */
     public static Type[] getListOfTypes() {
-        return PokemonFactory.getPokemonFactory(null).getListOfTypes();
+        return PokemonFactory.getPokemonFactory(null).getAllTypes();
+    }
+
+
+    /**
+     * Overide for advanced search to display the id and name of type
+     *
+     * @return id. TypeName in string format
+     */
+    @Override
+    public String toString(){
+        return name;
     }
 }
+

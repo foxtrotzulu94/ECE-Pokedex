@@ -87,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/adv_search"
                 android:background="@color/dex_blue_transparent"
-                android:onClick="showConstructionActivity" />
+                android:onClick="switchToAdvancedSearch" />
 
             <Button
                 android:id="@+id/button_resources"

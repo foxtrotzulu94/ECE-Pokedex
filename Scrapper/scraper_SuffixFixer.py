@@ -9,6 +9,7 @@ __author__ = 'Thinesh'
 # Next step, verify that the uniqueIDs found to be alternate forms are not already in the pokemon_suffix table
 # Last step is to rename the pokemon in the pokemon_unique_info table to a name without a dash(-) to conform with how
 # megas are named
+#
 
 
 import sqlite3
@@ -65,4 +66,7 @@ for pokemon in dashpokemonlist:
     conn.commit()
     print(newname)
     print(suffixtostore)
+
+    # We will need an exceptional behaviour for Meowstic which has -M and -F in suffix table. But We want -M to be the
+    # alternative, and -F to be present in the name
 
