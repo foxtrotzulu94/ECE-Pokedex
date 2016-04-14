@@ -805,7 +805,7 @@ public class DetailedPokemonActivity extends FragmentActivity
 
     public void onClickNextPokemon(View view){
         int currentNationalID=contextMaster.getCurrentDetailedPokemon().getPokemonNationalID();
-        int maxNationalID = PokemonFactory.getPokemonFactory(this).getMaxNationalID();
+        int maxNationalID = PokemonFactory.getPokemonFactory(this).getMAX_NATIONAL_ID();
         int nextNationalID = (currentNationalID+1) % (maxNationalID+1);
         contextMaster.updatePokedexSelection(nextNationalID,this,true);
         refreshAllDetails();

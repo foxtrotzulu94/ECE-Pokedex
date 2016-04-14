@@ -76,15 +76,6 @@
                 android:layout_marginBottom="5dp" />
 
             <Button
-                android:id="@+id/button_allgens"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/enter_gameview"
-                android:background="@color/dex_yellow_transparent"
-                android:onClick="showConstructionActivity"
-                android:layout_marginBottom="5dp" />
-
-            <Button
                 android:id="@+id/button_advsearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -100,6 +91,15 @@
                 android:text="@string/resource_button"
                 android:background="@drawable/custom_buttonresources"
                 android:onClick="switchToPokemonResources"
+                android:layout_marginBottom="5dp" />
+
+            <Button
+                android:id="@+id/button_allgens"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/enter_gameview"
+                android:background="@drawable/custom_buttonoptions"
+                android:onClick="showConstructionActivity"
                 android:layout_marginBottom="5dp" />
         </LinearLayout>
 

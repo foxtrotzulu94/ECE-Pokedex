@@ -67,7 +67,7 @@
                             android:layout_width="75dp"
                             android:layout_height="wrap_content"
                             android:text="Edit"
-                            android:id="@+id/textView4"
+                            android:id="@+id/txtview_editinfo"
                             android:background="@color/dex_detail_greylight"
                             android:layout_marginLeft="5dp"
                             android:layout_marginTop="5dp"

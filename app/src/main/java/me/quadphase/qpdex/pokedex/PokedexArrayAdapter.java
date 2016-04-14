@@ -73,10 +73,13 @@ public class PokedexArrayAdapter extends ArrayAdapter<MinimalPokemon> implements
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent){
-        super.getView(position,convertView,parent);
+    public View getView(final int position, View rowEntry, ViewGroup parent){
+        super.getView(position,rowEntry,parent);
         LayoutInflater li = (LayoutInflater) super.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowEntry = li.inflate(R.layout.pokedexrow,parent,false);
+
+        if(rowEntry==null) {
+            rowEntry = li.inflate(R.layout.pokedexrow, parent, false);
+        }
 
         LinearLayout row = (LinearLayout) rowEntry.findViewById(R.id.linlayout_pokedexrow);
         TextView entryString = (TextView) rowEntry.findViewById(R.id.textview_pkmn_list_entry);

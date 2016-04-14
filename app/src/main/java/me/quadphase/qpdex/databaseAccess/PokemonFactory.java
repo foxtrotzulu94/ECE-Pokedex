@@ -883,7 +883,7 @@ public class PokemonFactory {
      * @param value true if changing to caught, false if changing to not caught
      */
     public void setCaught(int nationalID, boolean value){
-        if (nationalID>0 && nationalID<getMaxNationalID()) {
+        if (nationalID>0 && nationalID<MAX_UNIQUE_ID) {
             int caught = value? 1 : 0;
 
             //Update the MinimalPokemon
@@ -1187,7 +1187,6 @@ public class PokemonFactory {
         do{
             typeID = cursor.getInt(cursor.getColumnIndex(TYPE_ID));
             types[typeID] = new Type(cursor.getString(cursor.getColumnIndex(NAME)), typeID);
-
         }while(cursor.moveToNext());
 
         cursor.close();
