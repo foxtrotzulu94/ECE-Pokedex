@@ -71,7 +71,7 @@
             android:text="@string/adv_search"
             android:layout_marginBottom="10dp"
             android:background="@drawable/custom_buttonsearch"
-            android:onClick="showConstructionActivity" />
+            android:onClick="switchToAdvancedSearch" />
 
         <Button
             android:id="@+id/button_resources"

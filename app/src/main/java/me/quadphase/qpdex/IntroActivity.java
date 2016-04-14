@@ -153,4 +153,52 @@ public class IntroActivity extends AppCompatActivity {
         Intent intent = new Intent(this,WIPActivity.class);
         startActivity(intent);
     }
+
+    public void switchToAdvancedSearch(View view){
+
+        // Using Javier's code from how it enters pokedex activity
+        final Intent intent = new Intent(this,AdvancedSearchActivity.class);
+        setupAndLoad();
+
+        if(!contextMaster.isMinimalReady()){
+            final ProgressDialog dialog = ProgressDialog.show(IntroActivity.this, "", "Loading. Please wait...", true);
+            Thread modalHandler = new Thread(){
+                @Override
+                public void run(){
+
+                    //Show loading
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            dialog.setCancelable(true);
+                        }
+                    });
+
+                    //Wait for a while
+                    while(!contextMaster.isMinimalReady()){
+                        try {
+                            Thread.sleep(1);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    //Dismiss the loading and proceed.
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            dialog.dismiss();
+                            startActivity(intent);
+                        }
+                    });
+                }
+            };
+            modalHandler.setPriority(Thread.MAX_PRIORITY);
+            modalHandler.start();
+
+        }
+        else {
+            startActivity(intent);
+        }
+    }
 }

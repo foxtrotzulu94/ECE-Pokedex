@@ -42,4 +42,14 @@ public class Ability {
     public String getDescription() {
         return description;
     }
+
+    /**
+     * Overide for advanced search to display the id and name of type
+     *
+     * @return id. TypeName in string format
+     */
+    @Override
+    public String toString(){
+        return name;
+    }
 }

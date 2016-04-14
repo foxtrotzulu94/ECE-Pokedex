@@ -74,13 +74,13 @@ for pokemons in data["pokemon"]:
         # Speed of the pokemon
         speed = pokemons["alts"][i]["spe"]
 
-
+        basestat = healthPoints+attack+defence+spAttack+spDefence+speed
 
         #Pushes entries into database
-        c.execute("INSERT INTO pokemon VALUES (?,?,?,?,?,?,?,?,?,?)", (None, name,
+        c.execute("INSERT INTO pokemon VALUES (?,?,?,?,?,?,?,?,?,?,?)", (None, name,
                                                                                    height, weight, attack,
                                                                                    defence, healthPoints, spAttack,
-                                                                                   spDefence, speed))
+                                                                                   spDefence, speed, basestat))
 
         conn.commit()
 

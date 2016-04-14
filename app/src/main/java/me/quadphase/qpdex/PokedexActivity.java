@@ -22,6 +22,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import me.quadphase.qpdex.databaseAccess.PokemonFactory;
 import me.quadphase.qpdex.pokedex.CentralAudioPlayer;
 import me.quadphase.qpdex.pokedex.PokedexArrayAdapter;
@@ -119,6 +121,9 @@ public class PokedexActivity extends AppCompatActivity {
     //Assistant Containers
     ArrayAdapter<MinimalPokemon> pokedexEntries;
 
+    //Extra container for advanced Search
+    ArrayAdapter<MinimalPokemon> filteredPokedexEntries;
+
     private void refreshPokedexOverviewPanel(){
         overviewDescription.setText(contextMaster.getCurrentMinimalPokemon().getDescription());
         overviewType1.setImageDrawable(contextMaster.getCurrentMinimalType1());
@@ -171,7 +176,34 @@ public class PokedexActivity extends AppCompatActivity {
 
         //Call the Factory and get the MinimalPokemon list
         final PokemonFactory pokemonFactory = PokemonFactory.getPokemonFactory(this.getApplicationContext());
-        pokedexEntries = new PokedexArrayAdapter(this,pokemonFactory.getAllMinimalPokemon());
+
+        long startTime = System.nanoTime();
+
+        // Check if coming from intro activity or from Advanced search.
+        // Advanced search will have extra info
+        Bundle extraInfo = getIntent().getExtras();
+        MinimalPokemon[] listy = pokemonFactory.getAllMinimalPokemon();
+        if(extraInfo != null){
+
+            ArrayList<Integer> filteredPokemonNationalid = extraInfo.getIntegerArrayList("FILTERED_POKEMON_NATIONALID");
+
+            MinimalPokemon [] filteredlist = new MinimalPokemon[filteredPokemonNationalid.size()];
+
+            for (int pos=0; pos<filteredPokemonNationalid.size(); pos++){
+                filteredlist[pos] = listy[filteredPokemonNationalid.get(pos)];
+            }
+            //Initialize the ArrayAdapter object.
+            pokedexEntries = new PokedexArrayAdapter(this,filteredlist);
+        }
+        else{
+            //Initialize the ArrayAdapter object with full list.
+            pokedexEntries = new PokedexArrayAdapter(this,listy);
+
+        }
+        final long minBuild = System.nanoTime();
+        Log.d("QPDEX", String.format("All MinimalPokemon done in: %s ns", minBuild - startTime));
+
+
 
         //Setup the pokedexListView object
         pokedexListView.setAdapter(pokedexEntries);

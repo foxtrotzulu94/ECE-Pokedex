@@ -28,6 +28,7 @@
     <string name="spattack">Sp. Atk.</string>
     <string name="spdefense">Sp. Def.</string>
     <string name="speed">Speed</string>
+    <string name="totalbasestats">Total Base Stats</string>
     <!-- DetailedPokemonActivity Strings End-->
 
     <!-- MyTrainerActivity Strings Start-->
@@ -84,6 +85,7 @@
     <string name="action_example">Example action</string>
     <string name="title_activity_wip">WIPActivity</string>
     <string name="title_activity_exception_caught">Uncaught Exception Occurred</string>
+    <string name="title_activity_advanced_search">AdvancedSearch</string>
     <string name="title_activity_pokemon_resources">PokemonResources</string>
     <string name="title_activity_my_trainer_activty">MyTrainerActivty</string>
 </resources>
