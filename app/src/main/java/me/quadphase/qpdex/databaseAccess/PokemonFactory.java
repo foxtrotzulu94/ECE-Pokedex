@@ -883,17 +883,26 @@ public class PokemonFactory {
      * @param value true if changing to caught, false if changing to not caught
      */
     public void setCaught(int nationalID, boolean value){
-        int caught = value? 1 : 0;
-        // create new row content
-        ContentValues content = new ContentValues();
-        content.put(POKEMON_NATIONAL_ID, nationalID);
-        content.put(CAUGHT, caught);
+        if (nationalID>0 && nationalID<MAX_UNIQUE_ID) {
+            int caught = value? 1 : 0;
 
-        // replace the row with the nationalID with the new row
-        database.beginTransaction();
-        database.replaceOrThrow(POKEMON_CAUGHT_TABLE, null, content);
-        database.setTransactionSuccessful();
-        database.endTransaction();
+            //Update the MinimalPokemon
+            if(allMinimalPokemon!=null){
+                if(allMinimalPokemon[nationalID].isCaught()!=value)
+                    allMinimalPokemon[nationalID].toggleCaught();
+            }
+
+            // create new row content
+            ContentValues content = new ContentValues();
+            content.put(POKEMON_NATIONAL_ID, nationalID);
+            content.put(CAUGHT, caught);
+
+            // replace the row with the nationalID with the new row
+            database.beginTransaction();
+            database.replaceOrThrow(POKEMON_CAUGHT_TABLE, null, content);
+            database.setTransactionSuccessful();
+            database.endTransaction();
+        }
     }
 
     /**
@@ -1178,7 +1187,6 @@ public class PokemonFactory {
         do{
             typeID = cursor.getInt(cursor.getColumnIndex(TYPE_ID));
             types[typeID] = new Type(cursor.getString(cursor.getColumnIndex(NAME)), typeID);
-
         }while(cursor.moveToNext());
 
         cursor.close();

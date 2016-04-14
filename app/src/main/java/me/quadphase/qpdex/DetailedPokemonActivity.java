@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,14 +17,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.GridLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -189,13 +192,16 @@ public class DetailedPokemonActivity extends FragmentActivity
 
     private LinearLayout typeWeak;
     private LinearLayout typeStrong;
-    private LinearLayout evolutionChain;
+    private HorizontalScrollView evolutionChain;
     private LinearLayout eggGroupBox;
     private LinearLayout abilitiesBox;
     private LinearLayout movesBox;
 
     private TextView evolutionTab;
     private TextView alternatesTab;
+
+    private CheckBox pokemonCaughtBox;
+    private CheckBox pokemonInPartyBox;
 
     /**
      * This method retrieves all necessary elements from "activity_detailed_pokemon.xml"
@@ -212,13 +218,16 @@ public class DetailedPokemonActivity extends FragmentActivity
 
         typeStrong = (LinearLayout) findViewById(R.id.linlayout_typestrong);
         typeWeak = (LinearLayout) findViewById(R.id.linlayout_typeweak);
-        evolutionChain = (LinearLayout) findViewById(R.id.linlayout_evolutions_detail);
+        evolutionChain = (HorizontalScrollView) findViewById(R.id.horizontalsv_evolutions_detail);
         eggGroupBox = (LinearLayout) findViewById(R.id.linlay_egggroupbox);
         abilitiesBox = (LinearLayout) findViewById(R.id.linlay_abilitiesbox);
         movesBox = (LinearLayout) findViewById(R.id.linlay_movebox);
 
         evolutionTab = (TextView) findViewById(R.id.title_evolutions);
         alternatesTab = (TextView) findViewById(R.id.title_altforms);
+
+        pokemonCaughtBox = (CheckBox) findViewById(R.id.checkbox_caught);
+        pokemonInPartyBox = (CheckBox) findViewById(R.id.checkbox_trainerparty);
     }
 
     /**
@@ -232,6 +241,9 @@ public class DetailedPokemonActivity extends FragmentActivity
         LinearLayout typeMatchBlock = (LinearLayout) getLayoutInflater().inflate(R.layout.custom_typematch_block, null);
         GridLayout frame=(GridLayout) typeMatchBlock.findViewById(R.id.gridlay_types);
         TextView title = (TextView) typeMatchBlock.findViewById(R.id.characteristic);
+
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        int screenDPI = metrics.densityDpi;
 
         title.setText(quantifier);
 
@@ -248,7 +260,7 @@ public class DetailedPokemonActivity extends FragmentActivity
             typeBadge.setScaleType(ImageView.ScaleType.FIT_XY);
 //            typeBadge.setMaxHeight(30);
             typeBadge.setAdjustViewBounds(true);
-            typeBadge.getLayoutParams().width = 160;
+            typeBadge.getLayoutParams().width = (screenDPI/5)*2;
             frame.addView(typeBadge);
         }
 
@@ -257,11 +269,15 @@ public class DetailedPokemonActivity extends FragmentActivity
         // (Ultra high DP devices may take 3 columns)
         // Mid DP devices can take 2
         // low DP can take only 1
-        frame.setColumnCount(1);
+
+
+
+
+        frame.setColumnCount(2);
 
         Configuration configuration = getResources().getConfiguration();
         int smallestScreenWidthDp = configuration.screenWidthDp;
-        Log.d("QPDEX", String.format("min DP of screen: %s", smallestScreenWidthDp));
+        Log.d("QPDEX", String.format("widthDP %s, DPI %s", smallestScreenWidthDp,metrics.densityDpi));
 
         return typeMatchBlock;
     }
@@ -349,6 +365,9 @@ public class DetailedPokemonActivity extends FragmentActivity
         statsBarController = new statsUpdaterMasterThread();
         statsBarController.start();
 
+        //Set up CheckBox status
+        setPokemonOwnershipInfo();
+
         //Place Description
         pkmnDescription.setText(detailedPokemon.getDescription());
 
@@ -370,6 +389,21 @@ public class DetailedPokemonActivity extends FragmentActivity
         populateMoveInfo();
     }
 
+    private void setPokemonOwnershipInfo(){
+        //TODO: fix considerably (separate task)
+        pokemonCaughtBox.setEnabled(false);
+        pokemonInPartyBox.setEnabled(false);
+
+        //Setup the caught CheckBox
+//        pokemonCaughtBox.setChecked(contextMaster.getCurrentDetailedPokemon().getCaught());
+//        pokemonCaughtBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                contextMaster.getCurrentDetailedPokemon().toggleCaught(getBaseContext());
+//            }
+//        });
+    }
+
     /**
      * Sets the Sprites for the detailedPokemon sprite badges by consulting {@see PokedexManager}
      */
@@ -389,6 +423,9 @@ public class DetailedPokemonActivity extends FragmentActivity
     private void buildEvolutionChain(){
         if(detailedPokemon.getEvolutions()!=null && !detailedPokemon.getEvolutions().isEmpty()){
             //TODO: Fix Evolution class to detect MegaEvolutions and check for those sprites.
+
+            LinearLayout boxContainer = new LinearLayout(this);
+
             for (int i = 0; i < detailedPokemon.getEvolutions().size(); i++) {
 
                 final Pokemon evoPokemon = detailedPokemon.getEvolutions().get(i).getEvolvesInto();
@@ -410,8 +447,9 @@ public class DetailedPokemonActivity extends FragmentActivity
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         .3f));
 
-                evolutionChain.addView(evolutionBox);
+                boxContainer.addView(evolutionBox);
             }
+            evolutionChain.addView(boxContainer);
 
         }
         else{
@@ -439,10 +477,10 @@ public class DetailedPokemonActivity extends FragmentActivity
                 refreshAllDetails();
             }
         });
-        altForm.setLayoutParams(new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                .3f));
+//        altForm.setLayoutParams(new LinearLayout.LayoutParams(
+//                ViewGroup.LayoutParams.WRAP_CONTENT,
+//                ViewGroup.LayoutParams.MATCH_PARENT,
+//                .3f));
         evolutionChain.addView(altForm);
 
 
@@ -763,6 +801,28 @@ public class DetailedPokemonActivity extends FragmentActivity
         buildAlternateForms();
         evolutionTab.setBackgroundColor(getResources().getColor(R.color.dex_detail_greydarkened));
         alternatesTab.setBackgroundColor(getResources().getColor(R.color.dex_detail_greylight));
+    }
+
+    public void onClickNextPokemon(View view){
+        int currentNationalID=contextMaster.getCurrentDetailedPokemon().getPokemonNationalID();
+        int maxNationalID = PokemonFactory.getPokemonFactory(this).getMAX_NATIONAL_ID();
+        int nextNationalID = (currentNationalID+1) % (maxNationalID+1);
+        contextMaster.updatePokedexSelection(nextNationalID,this,true);
+        refreshAllDetails();
+        mNavigationDrawerFragment.performItemSelection(nextNationalID);
+    }
+
+    public void onClickPreviousPokemon(View view){
+        int currentNationalID=contextMaster.getCurrentDetailedPokemon().getPokemonNationalID();
+        int maxNationalID = contextMaster.getMaxPokemonNationalID();
+        int nextNationalID = (currentNationalID-1);
+        if(nextNationalID<0){
+            nextNationalID = maxNationalID-1;
+        }
+
+        contextMaster.updatePokedexSelection(nextNationalID,this,true);
+        refreshAllDetails();
+        mNavigationDrawerFragment.performItemSelection(nextNationalID);
     }
 
     /**

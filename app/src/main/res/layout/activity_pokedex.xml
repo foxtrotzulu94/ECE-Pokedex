@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.5"
-        android:background="#ff8c8c8c">
+        android:background="#FF8C8C8C">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -139,41 +139,71 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
+        <GridLayout
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.75"
-            android:gravity="center">
+            android:gravity="center"
+            android:columnCount="4"
+            android:rowCount="1"
+            android:rowOrderPreserved="true"
+            android:columnOrderPreserved="true"
+            android:alignmentMode="alignBounds"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="DATA"
+                android:text="SEE DATA"
                 android:id="@+id/button_pkmndata"
-                android:layout_marginRight="15dp"
                 android:onClick="switchToPokemonData"
-                android:textSize="10sp"/>
+                android:textSize="10sp"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_column="0"
+                android:gravity="center"
+                android:background="@android:drawable/btn_default_small"
+                android:layout_margin="5dp" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="AREA"
-                android:id="@+id/button_pkmnlocation"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
+                android:text="HEAR INFO"
+                android:id="@+id/button_playdescription"
+                android:onClick="saySomething"
                 android:textSize="10sp"
-                android:onClick="showConstructionActivity" />
+                style="?android:attr/buttonStyleSmall"
+                android:layout_column="1"
+                android:gravity="center"
+                android:background="@android:drawable/btn_default_small"
+                android:layout_margin="5dp" />
 
             <Button
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Cry"
+                android:layout_height="wrap_content"
+                android:text="MAP AREA"
+                android:id="@+id/button_pkmnlocation"
+                android:textSize="10sp"
+                style="?android:attr/buttonStyleSmall"
+                android:onClick="showConstructionActivity"
+                android:layout_column="2"
+                android:gravity="center"
+                android:background="@android:drawable/btn_default_small"
+                android:layout_margin="5dp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PKMN CRY"
                 android:id="@+id/button_pkmncry"
-                android:layout_marginLeft="15dp"
                 android:nestedScrollingEnabled="false"
-                android:textSize="10sp"/>
-        </LinearLayout>
+                android:textSize="10sp"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_column="3"
+                android:gravity="center"
+                android:background="@android:drawable/btn_default_small"
+                android:layout_margin="5dp" />
+        </GridLayout>
 
     </LinearLayout>
 
@@ -191,7 +221,38 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.99"
-            android:background="#000000"></LinearLayout>
+            android:background="#000000">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="ALL"
+                android:id="@+id/textView2"
+                android:textColor="#FFFFFFFF"
+                android:layout_weight="0.3"
+                android:gravity="center"
+                android:textSize="10sp" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="CAUGHT"
+                android:id="@+id/textView10"
+                android:textColor="#80ffffff"
+                android:layout_weight="0.3"
+                android:gravity="center"
+                android:textSize="10sp" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="UNCAUGHT"
+                android:id="@+id/textView11"
+                android:textColor="#80ffffff"
+                android:layout_weight="0.3"
+                android:gravity="center"
+                android:textSize="10sp" />
+        </LinearLayout>
 
         <ListView
             android:layout_width="match_parent"

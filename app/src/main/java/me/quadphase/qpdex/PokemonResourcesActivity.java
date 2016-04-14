@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 
 
-public class PokemonResources extends ActionBarActivity {
+public class PokemonResourcesActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

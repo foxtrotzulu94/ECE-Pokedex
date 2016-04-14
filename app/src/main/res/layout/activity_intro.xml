@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:text="@string/enter_pokedex"
             android:layout_marginBottom="10dp"
-            android:background="@color/dex_pink_transparent"
+            android:background="@drawable/custom_buttonbrowse"
             android:onClick="switchToPokedex" />
 
         <Button
@@ -52,17 +52,8 @@
             android:layout_height="wrap_content"
             android:text="@string/enter_trainer"
             android:layout_marginBottom="10dp"
-            android:background="@color/dex_green_transparent"
-            android:onClick="showConstructionActivity" />
-
-        <Button
-            android:id="@+id/button_allgens"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/enter_gameview"
-            android:layout_marginBottom="10dp"
-            android:background="@color/dex_yellow_transparent"
-            android:onClick="showConstructionActivity" />
+            android:background="@drawable/custom_buttonmytrainer"
+            android:onClick="switchToMyTrainerActivity" />
 
         <Button
             android:id="@+id/button_advsearch"
@@ -70,15 +61,24 @@
             android:layout_height="wrap_content"
             android:text="@string/adv_search"
             android:layout_marginBottom="10dp"
-            android:background="@color/dex_blue_transparent"
+            android:background="@drawable/custom_buttonsearch"
             android:onClick="switchToAdvancedSearch" />
+
+        <Button
+            android:id="@+id/button_allgens"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/enter_gameview"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/custom_buttonoptions"
+            android:onClick="showConstructionActivity" />
 
         <Button
             android:id="@+id/button_resources"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/resource_button"
-            android:background="@color/dex_grey_transparent"
+            android:background="@drawable/custom_buttonresources"
             android:onClick="switchToPokemonResources" />
 
     </LinearLayout>
