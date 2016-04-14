@@ -56,15 +56,6 @@
             android:onClick="switchToMyTrainerActivity" />
 
         <Button
-            android:id="@+id/button_allgens"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/enter_gameview"
-            android:layout_marginBottom="10dp"
-            android:background="@color/dex_yellow_transparent"
-            android:onClick="showConstructionActivity" />
-
-        <Button
             android:id="@+id/button_advsearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -72,6 +63,15 @@
             android:layout_marginBottom="10dp"
             android:background="@drawable/custom_buttonsearch"
             android:onClick="switchToAdvancedSearch" />
+
+        <Button
+            android:id="@+id/button_allgens"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/enter_gameview"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/custom_buttonoptions"
+            android:onClick="showConstructionActivity" />
 
         <Button
             android:id="@+id/button_resources"
