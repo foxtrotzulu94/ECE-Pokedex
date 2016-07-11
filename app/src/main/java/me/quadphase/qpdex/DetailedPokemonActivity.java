@@ -29,11 +29,14 @@ import android.widget.Toast;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import me.quadphase.qpdex.databaseAccess.PokemonFactory;
 import me.quadphase.qpdex.pokedex.PokedexAssetFactory;
 import me.quadphase.qpdex.pokedex.PokedexManager;
 import me.quadphase.qpdex.pokemon.Ability;
+import me.quadphase.qpdex.pokemon.Evolution;
+import me.quadphase.qpdex.pokemon.MinimalPokemon;
 import me.quadphase.qpdex.pokemon.Move;
 import me.quadphase.qpdex.pokemon.Pokemon;
 import me.quadphase.qpdex.pokemon.Type;
@@ -421,24 +424,43 @@ public class DetailedPokemonActivity extends FragmentActivity
      * Fills the LinearLayout related to the Evolution Chain
      */
     private void buildEvolutionChain(){
-        if(detailedPokemon.getEvolutions()!=null && !detailedPokemon.getEvolutions().isEmpty()){
+        if(detailedPokemon.getEvolutions()!=null){
             //TODO: Fix Evolution class to detect MegaEvolutions and check for those sprites.
 
             LinearLayout boxContainer = new LinearLayout(this);
+            // Grab root of tree and traverse all nodes
+            Evolution rootEvolutionNode = detailedPokemon.getEvolutions();
 
-            for (int i = 0; i < detailedPokemon.getEvolutions().size(); i++) {
+            //TODO: Change how tree is traversed depending on how we're displaying.
+            // For now construct a linkedlist level by level of tree (BFS)
+            // Add root
 
-                final Pokemon evoPokemon = detailedPokemon.getEvolutions().get(i).getEvolvesInto();
+            LinkedList<Evolution> evolutionLinkedList = new LinkedList<>();
+            Queue<Evolution> evolutionQueue = new LinkedList<>();
+            evolutionLinkedList.add(rootEvolutionNode);
+            evolutionQueue.add(rootEvolutionNode);
 
+            while(!evolutionQueue.isEmpty()){
+                Evolution currentEvo = evolutionQueue.remove();
+                for (Evolution evoToAdd:currentEvo.getEvolvesInto()) {
+                    evolutionLinkedList.add(evoToAdd);
+                    evolutionQueue.add(evoToAdd);
+                }
+            }
+
+            for (int i = 0; i < evolutionLinkedList.size(); i++) {
+
+                final int evoPokemonID = evolutionLinkedList.get(i).getUniquepokemonID();
+                final MinimalPokemon evoMinimalPokemon = evolutionLinkedList.get(i).getMinimalPokemon();
                 LinearLayout evolutionBox = createCustomPokemonBox(
-                        evoPokemon.getName(),
+                        evoMinimalPokemon.getName(),
                         new BitmapDrawable(getResources(),
-                                PokedexAssetFactory.getPokemonMinimalSprite(this, evoPokemon.getPokemonNationalID())));
+                                PokedexAssetFactory.getPokemonMinimalSprite(this, evoMinimalPokemon.getPokemonNationalID())));
 
                 evolutionBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        contextMaster.updatePokedexSelection(evoPokemon,getBaseContext());
+                        contextMaster.updatePokedexSelection(evoPokemonID,getBaseContext());
                         refreshAllDetails();
                     }
                 });

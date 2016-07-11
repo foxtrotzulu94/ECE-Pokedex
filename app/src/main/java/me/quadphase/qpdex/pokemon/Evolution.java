@@ -12,25 +12,42 @@ package me.quadphase.qpdex.pokemon;
 //
 
 
+import java.util.LinkedList;
+import java.util.List;
+
 /** */
 public class Evolution {
     /**
-     * Condition needed to evolve into the next pokemon
+     * Condition needed to evolve into this pokemon
      */
     private String condition;
 
     /**
-     * pokemon that the current pokemon evolves into
+     * List of pokemon that the current pokemon evolves into
      */
-    private Pokemon evolvesInto;
+    private List<Evolution> evolvesInto;
+
+    /**
+     * Unique ID for the pokemon in question
+     */
+    private int uniquepokemonID;
+
+    /**
+     * minimal pokemon that represent the pokemon
+     */
+    private MinimalPokemon minimalPokemon;
+
 
     /**
      * Constructor
      */
-    public Evolution(String condition, Pokemon evolvesInto) {
+    public Evolution(String condition, int uniquepokemonID, MinimalPokemon minimalPokemon) {
         this.condition = condition;
-        this.evolvesInto = evolvesInto;
+        this.uniquepokemonID = uniquepokemonID;
+        this.minimalPokemon = minimalPokemon;
+        evolvesInto = new LinkedList<>();
     }
+
 
     /**
      * Getters
@@ -39,7 +56,16 @@ public class Evolution {
         return condition;
     }
 
-    public Pokemon getEvolvesInto() {
+    public List<Evolution> getEvolvesInto() {
         return evolvesInto;
+    }
+
+    public int getUniquepokemonID() {
+        return uniquepokemonID;
+    }
+
+
+    public MinimalPokemon getMinimalPokemon() {
+        return minimalPokemon;
     }
 }
