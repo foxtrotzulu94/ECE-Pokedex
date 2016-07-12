@@ -6,9 +6,11 @@
     <!-- IntroActivity String Start-->
     <string name="enter_pokedex">Browse Now</string>
     <string name="enter_trainer">My Trainer</string>
+    <string name="intro_options">Options</string>
     <string name="adv_search">Advanced Search</string>
     <string name="resource_button">Pokémon Resources</string>
     <string name="enter_gameview">Extras</string>
+    <string name="intro_credits">Credits</string>
     <!-- IntroActivity String End-->
 
     <!-- PokedexActivity String End-->
