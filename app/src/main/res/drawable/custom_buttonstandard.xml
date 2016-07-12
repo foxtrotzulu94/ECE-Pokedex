@@ -4,5 +4,5 @@
         android:state_pressed="true" />
     <item android:drawable="@color/dex_grey"
         android:state_focused="true" />
-    <item android:drawable="@drawable/custom_buttonresources" />
+    <item android:drawable="@drawable/custom_buttongrey" />
 </selector>

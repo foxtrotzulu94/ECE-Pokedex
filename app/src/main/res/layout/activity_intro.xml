@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:text="@string/enter_pokedex"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/custom_buttonbrowse"
+            android:background="@drawable/custom_buttonpink"
             android:onClick="switchToPokedex" />
 
         <Button
@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:text="@string/enter_trainer"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/custom_buttonmytrainer"
+            android:background="@drawable/custom_buttonblue"
             android:onClick="switchToMyTrainerActivity" />
 
         <Button
@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:text="@string/adv_search"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/custom_buttonsearch"
+            android:background="@drawable/custom_buttongreen"
             android:onClick="switchToAdvancedSearch" />
 
         <Button
@@ -70,7 +70,7 @@
             android:layout_height="wrap_content"
             android:text="@string/enter_gameview"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/custom_buttonoptions"
+            android:background="@drawable/custom_buttonyellow"
             android:onClick="showConstructionActivity" />
 
         <Button
@@ -78,7 +78,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/resource_button"
-            android:background="@drawable/custom_buttonresources"
+            android:background="@drawable/custom_buttongrey"
             android:onClick="switchToPokemonResources" />
 
     </LinearLayout>
