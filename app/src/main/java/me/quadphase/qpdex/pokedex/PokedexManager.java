@@ -105,7 +105,7 @@ public class PokedexManager {
                             new Type("Bird", 0),
                             new Type("Normal", 13)),
                     Arrays.asList(new EggGroup("glitch")),                // eggGroups,
-                    Arrays.asList(new Evolution("Level Up",new MissingNo()))// evolutions,
+                    null// evolutions,
             );
             rng = new Random();
             rng.setSeed(System.nanoTime());
@@ -306,6 +306,61 @@ public class PokedexManager {
             //Load second type (if any)
             currentDetailedType2 = new BitmapDrawable(currentContext.getResources(),
                     PokedexAssetFactory.getTypeBadge(currentContext, detailedPokemon.getTypes().get(1).getName()));
+        }
+        else{
+            currentDetailedType2 = new BitmapDrawable(currentContext.getResources(),
+                    PokedexAssetFactory.getTypeBadge(currentContext,"empty"));
+        }
+
+        //Spawn a thread to collect overview sprites
+        Thread bitmapRetrieve = new Thread(){
+            @Override
+            public void run(){
+                cachedDisplaySprites = new LinkedList<BitmapDrawable>();
+                for (int i = restrictUpToGeneration; i >=currentDetailedPokemon.getGenFirstAppeared(); i--) {
+                    InputStream file = PokedexAssetFactory.getPokemonSpriteInGeneration(
+                            currentContext,
+                            currentDetailedPokemon.getPokemonNationalID(),
+                            i);
+                    BitmapDrawable sprite = new BitmapDrawable(
+                            currentContext.getResources(),
+                            file
+                    );
+                    if(file!=null)
+                        cachedDisplaySprites.add(sprite);
+                }
+            }
+        };
+        bitmapRetrieve.start();
+
+        //TODO: Load form specific overview sprite (if any)
+
+    }
+
+    /**
+     * Change the currently selected Pokemon in the Pokedex, mainly in the DetailedPokemonActivty
+     * This will also store a reference to the assets the Pokemon with the National ID is associated with.
+     * @param uniquePokemonID The uniquePokemon ID. Should be given from a Pokemon's evolution list
+     * @param currentContext The context in which the update occurs (usually, "this" within an Activity)
+     */
+    public void updatePokedexSelection(int uniquePokemonID, final Context currentContext){
+        //For now, it just sets this variable. Later it should probably do more in terms of assets
+        currentDetailedPokemon = pkmnBuild.getPokemonByPokemonID(uniquePokemonID);
+
+        Log.d("QPDEX_Manager",String.format("Updating detail to %s",currentDetailedPokemon.getPokemonNationalID()));
+
+        //Load Sprite
+        currentOverviewSprite = new BitmapDrawable(currentContext.getResources(),
+                PokedexAssetFactory.getPokemonSpriteInGeneration(
+                        currentContext,currentDetailedPokemon.getPokemonNationalID(),restrictUpToGeneration));
+
+        //Load first type
+        currentDetailedType1 = new BitmapDrawable(currentContext.getResources(),
+                PokedexAssetFactory.getTypeBadge(currentContext, currentDetailedPokemon.getTypes().get(0).getName()));
+        if(currentDetailedPokemon.getTypes().size()>1) {
+            //Load second type (if any)
+            currentDetailedType2 = new BitmapDrawable(currentContext.getResources(),
+                    PokedexAssetFactory.getTypeBadge(currentContext, currentDetailedPokemon.getTypes().get(1).getName()));
         }
         else{
             currentDetailedType2 = new BitmapDrawable(currentContext.getResources(),

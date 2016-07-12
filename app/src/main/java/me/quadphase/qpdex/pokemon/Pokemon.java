@@ -130,7 +130,7 @@ public class Pokemon {
     /**
      * List of the evolutions that the pokemon can have
      */
-    private List<Evolution> evolutions;
+    private Evolution evolutions;
 
 
     /**
@@ -141,7 +141,7 @@ public class Pokemon {
                    boolean caught, int genFirstAppeared, int hatchTime, int catchRate,
                    int genderRatioMale, List<Location> locations, List<Ability> abilities,
                    List<Move> moves, List<Type> types, List<EggGroup> eggGroups,
-                   List<Evolution> evolutions) {
+                   Evolution evolutions) {
         this.pokemonUniqueID = pokemonUniqueID;
         this.pokemonNationalID = pokemonNationalID;
         this.name = name;
@@ -176,7 +176,7 @@ public class Pokemon {
                    int defence, int hp, int spAttack, int spDefence, int speed, boolean caught,
                    int genFirstAppeared, int hatchTime, int catchRate, int genderRatioMale,
                    List<Location> locations, List<Ability> abilities, List<Move> moves,
-                   List<EggGroup> eggGroups, List<Evolution> evolutions) {
+                   List<EggGroup> eggGroups, Evolution evolutions) {
         this.pokemonNationalID = MinimalPokemon.getPokemonNationalID();
         this.pokemonUniqueID = pokemonUniqueID;
         this.name = MinimalPokemon.getName();
@@ -293,7 +293,7 @@ public class Pokemon {
         return eggGroups;
     }
 
-    public List<Evolution> getEvolutions() {
+    public Evolution getEvolutions() {
         return evolutions;
     }
 

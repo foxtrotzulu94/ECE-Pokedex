@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.lang.Enum;
+import java.util.Queue;
 
 import me.quadphase.qpdex.exceptions.PartyFullException;
 import me.quadphase.qpdex.pokedex.PokedexManager;
@@ -499,7 +500,7 @@ public class PokemonFactory {
             List<Move> moves = null;//getMoves(nationalID);
             List<Type> types = getTypes(pokemonID);
             List<EggGroup> eggGroups = getEggGroups(nationalID);
-            List<Evolution> evolutions = getEvolutions(pokemonID);
+            Evolution evolutions = getEvolutions(pokemonID);
 
 
              Pokemon newEntry = new Pokemon(pokemonID, nationalID, name, description, height, weight, attack, defence, hp,
@@ -746,30 +747,87 @@ public class PokemonFactory {
      * @param pokemonID pokemonID in the pokemon table (not the nationalID)
      * @return the list of evolutions of the pokemon
      */
-    private List<Evolution> getEvolutions(int pokemonID) {
+    private Evolution getEvolutions(int pokemonID) {
+//        List<Evolution> evolutions = new LinkedList<>();
+//
+//        // move the cursor to the evolutions mapping table
+//        String[] selectionArg = {String.valueOf(pokemonID)};
+//        Cursor mappingCursor = database.query(POKEMON_EVOLUTIONS_TABLE, null, FROM_POKEMON_ID + "=? OR "+TO_POKEMON_ID + "=?", selectionArg, null, null, null);
+//        mappingCursor.moveToFirst();
+//
+//        //By having Evolutions point to a full Pokemon object, Building a single instance of a Pokemon
+//        // will result in a DFS to build all of its evolutions. Therefore, with good reason, this
+//        // should only be done once!
+//        while (!mappingCursor.isAfterLast()) {
+//            int evolvesToPokemonID = mappingCursor.getInt(mappingCursor.getColumnIndex(TO_POKEMON_ID));
+//            String condition = mappingCursor.getString(mappingCursor.getColumnIndex(CONDITION));
+//            evolutions.add(new Evolution(condition, getPokemonByPokemonID(evolvesToPokemonID)));
+//
+//            // go to the next evolution for this pokemonID
+//            mappingCursor.moveToNext();
+//        }
+//
+//        // close the cursor
+//        mappingCursor.close();
+//
+//        return evolutions;
+        //TODO: Optimize so only need to be done once per evolution chain
+        //TODO turn this list into a tree
         List<Evolution> evolutions = new LinkedList<>();
+        Queue<Evolution> evolutionQueue = new LinkedList<>();
+        int currentPokemonID = pokemonID;
 
-        // move the cursor to the evolutions mapping table
-        String[] selectionArg = {String.valueOf(pokemonID)};
-        Cursor mappingCursor = database.query(POKEMON_EVOLUTIONS_TABLE, null, FROM_POKEMON_ID + "=?", selectionArg, null, null, null);
-        mappingCursor.moveToFirst();
+        // From pokemonID drill down to first evolution by first finding if any evolve into this
+        String[] selectionArg = {String.valueOf(currentPokemonID)};
+        Cursor mappingCursor = database.query(POKEMON_EVOLUTIONS_TABLE, null, TO_POKEMON_ID + "=?", selectionArg, null, null, null);
 
-        //By having Evolutions point to a full Pokemon object, Building a single instance of a Pokemon
-        // will result in a DFS to build all of its evolutions. Therefore, with good reason, this
-        // should only be done once!
-        while (!mappingCursor.isAfterLast()) {
-            int evolvesToPokemonID = mappingCursor.getInt(mappingCursor.getColumnIndex(TO_POKEMON_ID));
-            String condition = mappingCursor.getString(mappingCursor.getColumnIndex(CONDITION));
-            evolutions.add(new Evolution(condition, getPokemonByPokemonID(evolvesToPokemonID)));
-
-            // go to the next evolution for this pokemonID
-            mappingCursor.moveToNext();
+        //while something still evolves into this pokemon, go lower
+        while (mappingCursor.moveToFirst()) {
+            currentPokemonID = mappingCursor.getInt(mappingCursor.getColumnIndex(FROM_POKEMON_ID));
+            String[] currentSelectionArg = {String.valueOf(currentPokemonID)};
+            mappingCursor = database.query(POKEMON_EVOLUTIONS_TABLE, null, TO_POKEMON_ID + "=?", currentSelectionArg, null, null, null);
         }
+        int rootPokemonID=currentPokemonID;
+        int rootNatID = allNationalIDMappedUnique[currentPokemonID];
+        Evolution rootEvolutionChain = new Evolution("Base Pokemon", rootPokemonID, allMinimalPokemon[rootNatID]);
+        evolutions.add(rootEvolutionChain);
+        evolutionQueue.add(rootEvolutionChain);
 
         // close the cursor
         mappingCursor.close();
 
-        return evolutions;
+        // Now start traversing upwards once you have root and add evo objects
+
+        while (!evolutionQueue.isEmpty()) {
+            // Add first layer of evos, and pop the base evo off queue
+            Evolution pokemonEvolutionTobuildFrom = evolutionQueue.remove();
+
+            // From pokemonID drill down to first evolution by first finding if any evolve into this
+            String[] evoSelectionArg = {String.valueOf(pokemonEvolutionTobuildFrom.getUniquepokemonID())};
+            Cursor evoMappingCursor = database.query(POKEMON_EVOLUTIONS_TABLE, null, FROM_POKEMON_ID + "=?", evoSelectionArg, null, null, null);
+            evoMappingCursor.moveToFirst();
+
+            while (!evoMappingCursor.isAfterLast()) {
+                int pokemonEvolutionToAddID = evoMappingCursor.getInt(mappingCursor.getColumnIndex(TO_POKEMON_ID));
+                String condition = evoMappingCursor.getString(mappingCursor.getColumnIndex(CONDITION));
+
+                // If condition is MegaStone/Primal then don't add to evo list
+                // TODO: Alt form refactoring
+                if(!condition.equals("MegaStone/Primal")) {
+                    int pokemonEvolutionToAddNatID = allNationalIDMappedUnique[pokemonEvolutionToAddID];
+                    Evolution pokemonEvolutionToAdd = new Evolution(condition, pokemonEvolutionToAddID, allMinimalPokemon[pokemonEvolutionToAddNatID]);
+                    pokemonEvolutionTobuildFrom.getEvolvesInto().add(pokemonEvolutionToAdd);
+                    evolutionQueue.add(pokemonEvolutionToAdd);
+                }
+
+                // go to the next evolution for this pokemonID
+                evoMappingCursor.moveToNext();
+            }
+        }
+
+
+        return rootEvolutionChain;
+
     }
 
     /**
